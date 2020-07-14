@@ -5,11 +5,20 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "babel": "babel components/ --out-dir ./ --source-maps",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Jeremy M. Reed",
   "license": "MIT",
   "devDependencies": {
+    "@babel/cli": "^7.10.4",
+    "@babel/core": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
+    "@babel/preset-react": "^7.10.4",
     "electron": "^9.1.0"
+  },
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
   }
 }
