@@ -4,8 +4,12 @@
   "description": "Test project to examine electron dev needs.",
   "main": "main.js",
   "scripts": {
+    "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Jeremy M. Reed",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^9.1.0"
+  }
 }
