@@ -2,13 +2,13 @@
   "name": "electron-spike",
   "version": "0.0.1",
   "description": "Test project to examine electron dev needs.",
-  "main": "main.js",
+  "main": "src/main.js",
   "scripts": {
     "start": "electron-forge start",
-    "babel": "babel components/ --out-dir ./ --source-maps",
+    "babel": "babel components/ --out-dir src/components --source-maps",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "echo \"Error: no linter specified\" && exit 1",
-    "clean": "rm -rf out/ app-index.js* App.js*",
+    "clean": "rm -rf out/ src/components/*",
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
