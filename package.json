@@ -1,14 +1,16 @@
 {
   "name": "electron-spike",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Test project to examine electron dev needs.",
-  "main": "main.js",
+  "main": "build/main.js",
   "scripts": {
+    "project:start": "npm run clean && npm run lint && npm run babel && npm run move-static && npm start",
     "start": "electron-forge start",
-    "babel": "babel components/ --out-dir ./ --source-maps",
+    "babel": "babel src/ --out-dir build/ --source-maps",
+    "move-static": "cp static/* build/",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "echo \"Error: no linter specified\" && exit 1",
-    "clean": "rm -rf out/ app-index.js* App.js*",
+    "lint": "eslint src/**/*",
+    "clean": "rm -rf out/ build/",
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
@@ -24,7 +26,9 @@
     "@electron-forge/maker-rpm": "^6.0.0-beta.52",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.52",
     "@electron-forge/maker-zip": "^6.0.0-beta.52",
-    "electron": "^9.1.0"
+    "electron": "^9.1.0",
+    "eslint": "^7.5.0",
+    "eslint-plugin-react": "^7.20.3"
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
