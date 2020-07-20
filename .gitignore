@@ -1,5 +1,8 @@
 #### joe made this: http://goel.io/joe
 
+#### App Specific Stuff. ####
+src/components/*  # Don't include babel-ized React components.
+
 #### node ####
 # Logs
 logs
