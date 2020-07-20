@@ -1,5 +1,5 @@
-const { BrowserWindow, app } = require('electron');
-const path = require('path');
+import { BrowserWindow, app } from 'electron';
+import path from 'path';
 
 // Creates the browser window.
 function createWindow() {
