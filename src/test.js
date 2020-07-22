@@ -12,8 +12,10 @@ db.restoreData(jsonData);
 
 console.log('db.data', db.data);
 
-// db.addTask(new Task(3, 'Last Thing', 'Do that last thing'));
+db.addTask(new Task(db.getNextId(), 'Last Thing', 'Do that last thing'));
 
-const dataArray = FilePersistence.mapData(db.data);
+const dataArray = FilePersistence.mapData(db.nextId, db.data);
 
 console.log('dataArray', dataArray);
+
+FilePersistence.saveToFile(dataArray);
