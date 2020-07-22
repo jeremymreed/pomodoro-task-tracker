@@ -33,7 +33,7 @@ class FilePersistence {
 
   static saveToFile(dataArray) {
     fs.writeFileSync(
-      'data.json',
+      path.join(process.cwd(), '/data/mock-data.json'),
       JSON.stringify(dataArray),
       {'encoding': 'utf8'}
     );
