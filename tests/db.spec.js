@@ -104,9 +104,9 @@ describe('mock db tests', () => {
         {
           "nextId": 3,
           "data": [
-            {"id": 0, "name": "Foo", "description": "Foo Bar"},
-            {"id": 1, "name": "Bar", "description": "Bar Foo"},
-            {"id": 2, "name": "Test", "description": "A test task"}
+            {"_id": 0, "_name": "Foo", "_description": "Foo Bar"},
+            {"_id": 1, "_name": "Bar", "_description": "Bar Foo"},
+            {"_id": 2, "_name": "Test", "_description": "A test task"}
           ]
         };
 
