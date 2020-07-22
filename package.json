@@ -1,7 +1,7 @@
 {
-  "name": "electron-spike",
-  "version": "0.0.3",
-  "description": "Test project to examine electron dev needs.",
+  "name": "pomodoro-task-tracker",
+  "version": "0.0.0",
+  "description": "Task Tracking using the Pomodoro technique",
   "main": "build/main.js",
   "scripts": {
     "project:start": "npm run clean && npm run lint && npm run babel && npm run move-static && npm start",
@@ -15,7 +15,7 @@
     "make": "electron-forge make"
   },
   "author": "Jeremy M. Reed",
-  "license": "MIT",
+  "license": "GPLv2",
   "devDependencies": {
     "@babel/cli": "^7.10.4",
     "@babel/core": "^7.10.4",
