@@ -1,6 +1,6 @@
 {
   "name": "electron-spike",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Test project to examine electron dev needs.",
   "main": "build/main.js",
   "scripts": {
