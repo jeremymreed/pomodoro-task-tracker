@@ -1,0 +1,8 @@
+{
+  "nextId": 3,
+  "data": [
+    {"_id": 0, "_name": "Foo", "_description": "Foo Bar"},
+    {"_id": 1, "_name": "Bar", "_description": "Bar Foo"},
+    {"_id": 2, "_name": "Test", "_description": "A test task"}
+  ]
+}

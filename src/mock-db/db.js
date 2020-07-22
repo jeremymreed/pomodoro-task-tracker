@@ -16,6 +16,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+import Task from '../data-models/task';
+
 class DB {
   constructor() {
     this.data = new Map();
@@ -39,6 +41,17 @@ class DB {
     const retval = this.nextId;
     this.nextId = this.nextId + 1;
     return retval;
+  }
+
+  restoreData(jsonData) {
+    this.nextId = jsonData.nextId;
+    for (let i = 0 ; i < jsonData.data.length ; i++ ) {
+      this.addTask(new Task(
+        jsonData.data[i]._id,
+        jsonData.data[i]._name,
+        jsonData.data[i]._description)
+      );
+    }
   }
 }
 

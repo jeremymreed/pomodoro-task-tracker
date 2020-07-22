@@ -88,4 +88,32 @@ describe('mock db tests', () => {
       }
     });
   });
+
+  describe('restoreData tests', () => {
+    it('should restore data from valid json blob', () => {
+      const task0 = new Task(0, "Foo", "Foo Bar");
+      const task1 = new Task(1, "Bar", "Bar Foo");
+      const task2 = new Task(2, "Test", "A test task");
+
+      const expectedMap = new Map();
+      expectedMap.set(task0._id, task0);
+      expectedMap.set(task1._id, task1);
+      expectedMap.set(task2._id, task2);
+
+      const jsonData =
+        {
+          "nextId": 3,
+          "data": [
+            {"_id": 0, "_name": "Foo", "_description": "Foo Bar"},
+            {"_id": 1, "_name": "Bar", "_description": "Bar Foo"},
+            {"_id": 2, "_name": "Test", "_description": "A test task"}
+          ]
+        };
+
+      const db = new DB();
+      db.restoreData(jsonData);
+      chai.assert.strictEqual(db.nextId, 3);
+      chai.assert.deepStrictEqual(db.data, expectedMap);
+    });
+  });
 });
