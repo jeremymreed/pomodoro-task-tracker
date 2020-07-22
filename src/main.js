@@ -18,6 +18,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 import { BrowserWindow, app } from 'electron';
 import path from 'path';
+import DB from './mock-db/db';
+import FilePersistence from './mock-db/file-persistence';
+
+const db = new DB();
 
 // Creates the browser window.
 function createWindow() {
@@ -28,6 +32,11 @@ function createWindow() {
       nodeIntegration: true
     }
   })
+
+  // Restore database.
+  const jsonData = FilePersistence.loadFromFile();
+  db.restoreData(jsonData);
+  console.log('db.data', db.data);
 
   // And load the index.html of the app.
   win.loadFile(path.join(__dirname, 'index.html'));
