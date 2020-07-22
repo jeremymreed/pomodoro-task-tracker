@@ -9,11 +9,11 @@
   },
   "main": "build/main.js",
   "scripts": {
-    "project:start": "npm run clean && npm run lint && npm run babel && npm run move-static && npm start",
+    "project:start": "npm run clean && npm run lint && npm run test && npm run babel && npm run move-static && npm start",
     "start": "electron-forge start",
     "babel": "babel src/ --out-dir build/ --source-maps",
     "move-static": "cp static/* build/",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha -r esm tests/**/*.spec.js",
     "lint": "eslint src/**/*",
     "clean": "rm -rf out/ build/",
     "package": "electron-forge package",
