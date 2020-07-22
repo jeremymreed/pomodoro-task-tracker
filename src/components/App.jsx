@@ -1,6 +1,7 @@
 import React from 'react';
-
-
+import { Router, Link } from '@reach/router';
+import HelloWorld from './hello-world';
+import Test from './test';
 
 class App extends React.Component {
 
@@ -11,11 +12,23 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <h1>💖 Hello World!</h1>
-        <p>Welcome to your Electron application.</p>
+        <Router>
+          <HelloWorld path='/' />
+          <Test path='test' />
+          <NotFound default />
+        </Router>
       </div>
     );
   }
+}
+
+function NotFound () {
+  return (
+    <div>
+      <p>Nothing to see here!</p>
+      <Link to='/'>Go back!</Link>
+    </div>
+  )
 }
 
 export default App;
