@@ -18,19 +18,17 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 class DB {
   constructor() {
-    this.data = {};
+    this.data = new Map();
     this.nextId = 0;
   }
 
   // Caution, this will update an existing record!
   addTask(task) {
-    this.data[task._id] = task;
+    this.data.set(task._id, task);
   }
 
   removeTask(taskId) {
-    if (this.data[taskId] !== undefined) {
-      delete this.data[taskId];
-    }
+    this.data.delete(taskId);
   }
 
   getTasks() {
