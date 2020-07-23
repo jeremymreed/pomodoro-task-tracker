@@ -18,7 +18,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 import React from 'react';
 import { Router, createMemorySource, createHistory, LocationProvider, Link } from '@reach/router';
-import HelloWorld from './hello-world';
+import MainView from './main-view';
 import Test from './test';
 
 class App extends React.Component {
@@ -35,7 +35,7 @@ class App extends React.Component {
       <div>
         <LocationProvider history={ this.history } >
           <Router>
-            <HelloWorld path='/' />
+            <MainView path='/' />
             <Test path='test' />
             <NotFound default />
           </Router>
