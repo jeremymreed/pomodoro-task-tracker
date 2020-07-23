@@ -18,6 +18,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 import React from 'react';
 import { ipcRenderer } from 'electron';
+import TaskList from './TaskList';
 
 class MainView extends React.Component {
   constructor (props) {
@@ -48,42 +49,10 @@ class MainView extends React.Component {
     this.setState({data: data});
   }
 
-  getTaskList() {
-    const listTasks = this.state.data.map((task) => {
-      return (
-        <tr key={ task._id }>
-          <td>{ task._id }</td>
-          <td>{ task._name }</td>
-          <td>{ task._description }</td>
-          <td><button>Start</button></td>
-          <td><button>Edit</button></td>
-          <td><button>Remove</button></td>
-        </tr>
-      );
-    });
-
-    return (
-      <table>
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          { listTasks }
-        </tbody>
-      </table>
-    );
-  }
-
-  render () {
+  render() {
     return (
       <div>
-        <p>Testing Main View</p>
-        { this.getTaskList() }
-        <p><button>Add new task</button></p>
+        <TaskList data={this.state.data} />
       </div>
     );
   }
