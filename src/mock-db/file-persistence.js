@@ -5,8 +5,6 @@ import path from 'path';
 class FilePersistence {
   // Load raw data from file.
   static loadFromFile() {
-    console.log('__dirname', __dirname);
-    console.log('process.cwd()', process.cwd());
     const rawData = fs.readFileSync(path.join(process.cwd(), '/data/mock-data.json'), 'utf8');
     const jsonData = JSON.parse(rawData);
 
