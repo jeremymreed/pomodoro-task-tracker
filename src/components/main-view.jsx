@@ -32,37 +32,54 @@ class MainView extends React.Component {
 
   componentDidMount() {
     ipcRenderer.on('dataReady', this.handleDataReady);
-
     ipcRenderer.send('getData');
   }
 
   handleDataReady(event, args) {
-    console.log('args:', args);
-      
-      const iter = args.values();
+    let data = [];
+    const iter = args.values();
 
-      let value = iter.next();
-      while ( !value.done ) {
-        this.state.data.push(value);
-        value = iter.next();
-      }
+    let item = iter.next();
+    while ( !item.done ) {
+      data.push(item.value);
+      item = iter.next();
+    }
+
+    this.setState({data: data});
+  }
+
+  getTaskList() {
+    const listTasks = this.state.data.map((task) => {
+      return (
+        <tr key={ task._id }>
+          <td>{ task._id }</td>
+          <td>{ task._name }</td>
+          <td>{ task._description }</td>
+        </tr>
+      );
+    });
+
+    return (
+      <table>
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          { listTasks }
+        </tbody>
+      </table>
+    );
   }
 
   render () {
     return (
       <div>
         <p>Testing Main View</p>
-        <table>
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Name</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-          </tbody>
-        </table>
+        { this.getTaskList() }
       </div>
     );
   }
