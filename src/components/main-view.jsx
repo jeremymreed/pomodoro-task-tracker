@@ -55,6 +55,9 @@ class MainView extends React.Component {
           <td>{ task._id }</td>
           <td>{ task._name }</td>
           <td>{ task._description }</td>
+          <td><button>Start</button></td>
+          <td><button>Edit</button></td>
+          <td><button>Remove</button></td>
         </tr>
       );
     });
@@ -80,6 +83,7 @@ class MainView extends React.Component {
       <div>
         <p>Testing Main View</p>
         { this.getTaskList() }
+        <p><button>Add new task</button></p>
       </div>
     );
   }
