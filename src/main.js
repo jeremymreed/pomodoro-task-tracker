@@ -16,7 +16,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import { BrowserWindow, app } from 'electron';
+import { BrowserWindow, app, ipcMain } from 'electron';
 import path from 'path';
 import DB from './mock-db/db';
 import FilePersistence from './mock-db/file-persistence';
@@ -66,3 +66,7 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process code.
 // You can also put them in separate files and require them here.
+
+ipcMain.on('getData', (event) => {
+  event.reply('dataReady', db.data);
+});
