@@ -5,6 +5,7 @@ class EditTaskDialog extends React.Component {
   constructor(props) {
     super(props);
 
+    this.handleTaskData = this.handleTaskData.bind(this);
     this.handleNameChange = this.handleNameChange.bind(this);
 
     this.state = {
@@ -14,8 +15,16 @@ class EditTaskDialog extends React.Component {
   }
 
   componentDidMount() {
-    ipcRenderer.on('ping', (event, args) => {
-      console.log('args:', args);
+    ipcRenderer.on('taskData', this.handleTaskData);
+  }
+
+  handleTaskData(event, task) {
+    console.log('task:', task);
+
+    this.setState({
+      id: task._id,
+      name: task._name,
+      description: task._description
     });
   }
 
@@ -35,7 +44,7 @@ class EditTaskDialog extends React.Component {
     console.log('this.state.description:', this.state.description);
     console.log('form submitted');
 
-    ipcRenderer.send('submitTaskData', { name: this.state.name, description: this.state.description });
+    ipcRenderer.send('submitTaskData', { _id: this.state.id, _name: this.state.name, _description: this.state.description });
   }
 
   render() {
