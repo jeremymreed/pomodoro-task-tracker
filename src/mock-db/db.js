@@ -37,6 +37,10 @@ class DB {
     return this.data;
   }
 
+  getTaskById(taskId) {
+    return this.data.get(taskId);
+  }
+
   getNextId() {
     const retval = this.nextId;
     this.nextId = this.nextId + 1;
