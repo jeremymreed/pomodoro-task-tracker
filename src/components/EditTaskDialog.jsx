@@ -61,7 +61,6 @@ class EditTaskDialog extends React.Component {
             <input type="submit" value="Submit"></input>
           </p>
         </form>
-        <p><button onClick={ (event) => this.sayHello(event)}>Say Hello</button></p>
       </div>
     );
   }
