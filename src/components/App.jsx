@@ -19,8 +19,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import React from 'react';
 import { Router, createMemorySource, createHistory, LocationProvider, Link } from '@reach/router';
 import MainView from './main-view';
-import EditTask from './edit-task';
-import Test from './test';
 
 class App extends React.Component {
 
@@ -37,8 +35,6 @@ class App extends React.Component {
         <LocationProvider history={ this.history } >
           <Router>
             <MainView path='/' />
-            <EditTask path='edit-task/:taskId' />
-            <Test path='test' />
             <NotFound default />
           </Router>
         </LocationProvider>

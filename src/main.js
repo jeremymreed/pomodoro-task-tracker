@@ -22,10 +22,12 @@ import DB from './mock-db/db';
 import FilePersistence from './mock-db/file-persistence';
 
 const db = new DB();
+let mainWindow = null;
+let dialogWindow = null;
 
 // Creates the browser window.
 function createWindow() {
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
@@ -38,10 +40,10 @@ function createWindow() {
   db.restoreData(jsonData);
 
   // And load the index.html of the app.
-  win.loadFile(path.join(__dirname, 'index.html'));
+  mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
   // Opens the DevTools.
-  win.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 }
 
 app.whenReady().then(createWindow);
@@ -69,3 +71,28 @@ app.on('activate', () => {
 ipcMain.on('getData', (event) => {
   event.reply('dataReady', db.data);
 });
+
+ipcMain.on('openEditTaskDialog', () => {
+  dialogWindow = new BrowserWindow({
+    width: 400,
+    height: 400,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  });
+
+  dialogWindow.loadFile(path.join(__dirname, 'edit-task-dialog.html'));
+
+  dialogWindow.webContents.openDevTools();
+
+  dialogWindow.webContents.on('did-finish-load', () => {
+    console.log('did-finish-load fired');
+    dialogWindow.webContents.send('ping', 'pong');
+  });
+});
+
+ipcMain.on('submitTaskData', (event, taskData) => {
+  console.log('Got taskData: ', taskData);
+  dialogWindow.close();
+});
+

@@ -1,10 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from '@reach/router';
+import { ipcRenderer } from 'electron';
 
 class TaskList extends React.Component {
   constructor(props) {
     super(props);
+  }
+
+  openEditTaskDialog(event) {
+    event.preventDefault();
+
+    ipcRenderer.send('openEditTaskDialog');
   }
 
   getTaskList() {
@@ -15,7 +21,7 @@ class TaskList extends React.Component {
           <td>{ task._name }</td>
           <td>{ task._description }</td>
           <td><button>Start</button></td>
-          <td><Link to={`edit-task/${task._id}`}>Edit</Link></td>
+          <td><button onClick={(e) => this.openEditTaskDialog(e)}>Edit</button></td>
           <td><button>Remove</button></td>
         </tr>
       );
