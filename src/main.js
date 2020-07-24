@@ -72,7 +72,7 @@ ipcMain.on('getData', (event) => {
   event.reply('dataReady', db.data);
 });
 
-ipcMain.on('openEditTaskDialog', () => {
+ipcMain.on('openEditTaskDialog', (event, taskId) => {
   dialogWindow = new BrowserWindow({
     width: 400,
     height: 400,
@@ -87,12 +87,14 @@ ipcMain.on('openEditTaskDialog', () => {
 
   dialogWindow.webContents.on('did-finish-load', () => {
     console.log('did-finish-load fired');
-    dialogWindow.webContents.send('ping', 'pong');
+    dialogWindow.webContents.send('taskData', db.getTaskById(taskId));
   });
 });
 
 ipcMain.on('submitTaskData', (event, taskData) => {
   console.log('Got taskData: ', taskData);
+
+  db.addTask(taskData);
+  FilePersistence.saveToFile(FilePersistence.mapData(db.nextId, db.data));
   dialogWindow.close();
 });
-
