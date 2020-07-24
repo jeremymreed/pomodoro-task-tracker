@@ -7,10 +7,10 @@ class TaskList extends React.Component {
     super(props);
   }
 
-  openEditTaskDialog(event) {
+  openEditTaskDialog(event, taskId) {
     event.preventDefault();
 
-    ipcRenderer.send('openEditTaskDialog');
+    ipcRenderer.send('openEditTaskDialog', taskId);
   }
 
   getTaskList() {
@@ -21,7 +21,7 @@ class TaskList extends React.Component {
           <td>{ task._name }</td>
           <td>{ task._description }</td>
           <td><button>Start</button></td>
-          <td><button onClick={(e) => this.openEditTaskDialog(e)}>Edit</button></td>
+          <td><button onClick={(e) => this.openEditTaskDialog(e, task._id)}>Edit</button></td>
           <td><button>Remove</button></td>
         </tr>
       );
