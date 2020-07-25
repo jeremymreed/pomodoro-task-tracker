@@ -16,10 +16,10 @@ class FilePersistence {
     const iter = dataMap.values();
     const dataArray = Array();
 
-    let value = iter.next();
-    while ( !value.done ) {
-      dataArray.push(value);
-      value = iter.next();
+    let item = iter.next();
+    while ( !item.done ) {
+      dataArray.push(item.value);
+      item = iter.next();
     }
 
     return (
