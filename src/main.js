@@ -19,6 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import { BrowserWindow, app, ipcMain } from 'electron';
 import path from 'path';
 import DB from './mock-db/db';
+import Task from './data-models/task';
 import FilePersistence from './mock-db/file-persistence';
 
 const db = new DB();
@@ -87,7 +88,12 @@ ipcMain.on('openEditTaskDialog', (event, taskId) => {
 
   dialogWindow.webContents.on('did-finish-load', () => {
     console.log('did-finish-load fired');
-    dialogWindow.webContents.send('taskData', db.getTaskById(taskId));
+    if (taskId !== -1) {
+      dialogWindow.webContents.send('taskData', db.getTaskById(taskId));
+    } else {
+      dialogWindow.webContents.send('taskData', new Task(db.getNextId(), '', ''));
+    }
+
   });
 });
 
@@ -100,3 +106,12 @@ ipcMain.on('submitTaskData', (event, taskData) => {
 
   mainWindow.webContents.send('dataReady', db.data);
 });
+
+ipcMain.on('removeTask', (event, taskId) => {
+  console.log('removeTask: got taskId:', taskId);
+
+  db.removeTask(taskId);
+  FilePersistence.saveToFile(FilePersistence.mapData(db.nextId, db.data));
+
+  mainWindow.webContents.send('dataReady', db.data);
+})

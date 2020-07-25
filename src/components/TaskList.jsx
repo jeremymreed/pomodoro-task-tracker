@@ -13,6 +13,18 @@ class TaskList extends React.Component {
     ipcRenderer.send('openEditTaskDialog', taskId);
   }
 
+  openAddTaskDialog(event) {
+    event.preventDefault();
+
+    ipcRenderer.send('openEditTaskDialog', -1);
+  }
+
+  removeTask(event, taskId) {
+    event.preventDefault();
+
+    ipcRenderer.send('removeTask', taskId);
+  }
+
   getTaskList() {
     const listTasks = this.props.data.map((task) => {
       return (
@@ -22,7 +34,7 @@ class TaskList extends React.Component {
           <td>{ task._description }</td>
           <td><button>Start</button></td>
           <td><button onClick={(e) => this.openEditTaskDialog(e, task._id)}>Edit</button></td>
-          <td><button>Remove</button></td>
+          <td><button onClick={(e) => this.removeTask(e, task._id)}>Remove</button></td>
         </tr>
       );
     });
@@ -48,7 +60,7 @@ class TaskList extends React.Component {
       <div>
         <p>Testing Main View</p>
         { this.getTaskList() }
-        <p><button>Add new task</button></p>
+        <p><button onClick={(event) => this.openAddTaskDialog(event)}>Add new task</button></p>
       </div>
     );
   }
