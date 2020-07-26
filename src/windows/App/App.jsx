@@ -17,10 +17,39 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './components/App';
+import { Router, createMemorySource, createHistory, LocationProvider, Link } from '@reach/router';
+import MainView from '../../views/main-view';
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('root')
-);
+class App extends React.Component {
+
+  constructor(props) {
+    super(props);
+
+    this.source = createMemorySource('/');
+    this.history = createHistory(this.source);
+  }
+
+  render() {
+    return (
+      <div>
+        <LocationProvider history={ this.history } >
+          <Router>
+            <MainView path='/' />
+            <NotFound default />
+          </Router>
+        </LocationProvider>
+      </div>
+    );
+  }
+}
+
+function NotFound () {
+  return (
+    <div>
+      <p>Nothing to see here!</p>
+      <Link to='/'>Go back!</Link>
+    </div>
+  )
+}
+
+export default App;
