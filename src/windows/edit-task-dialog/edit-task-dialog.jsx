@@ -50,7 +50,7 @@ class EditTaskDialog extends React.Component {
   render() {
     return (
       <div>
-        <h1>This is a test dialog!</h1>
+        <h1>Task Editor</h1>
         <form onSubmit={(event) => this.formSubmit(event)}>
           <p>
             <label>
