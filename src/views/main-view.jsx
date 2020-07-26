@@ -18,7 +18,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 import React from 'react';
 import { ipcRenderer } from 'electron';
-import TaskList from '../components/TaskList';
+import TaskList from '../components/task-list';
 
 class MainView extends React.Component {
   constructor (props) {
