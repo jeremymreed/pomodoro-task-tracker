@@ -5,6 +5,9 @@ import { ipcRenderer } from 'electron';
 class TaskList extends React.Component {
   constructor(props) {
     super(props);
+
+    this.startTask = this.startTask.bind(this);
+    this.editTask = this.editTask.bind(this);
   }
 
   startTask(event) {

@@ -1,31 +1,19 @@
 import React from 'react';
 import { ipcRenderer } from 'electron';
+import PropTypes from 'prop-types';
 
 class EditTaskView extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handleTaskData = this.handleTaskData.bind(this);
     this.handleNameChange = this.handleNameChange.bind(this);
+    this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
 
     this.state = {
-      name: '',
-      description: ''
+      id: this.props.task._id,
+      name: this.props.task._name,
+      description: this.props.task._description
     }
-  }
-
-  componentDidMount() {
-    ipcRenderer.on('taskData', this.handleTaskData);
-  }
-
-  handleTaskData(event, task) {
-    console.log('task:', task);
-
-    this.setState({
-      id: task._id,
-      name: task._name,
-      description: task._description
-    });
   }
 
   handleNameChange(event) {
@@ -45,6 +33,7 @@ class EditTaskView extends React.Component {
     console.log('form submitted');
 
     ipcRenderer.send('submitTaskData', { _id: this.state.id, _name: this.state.name, _description: this.state.description });
+    this.props.closeEditTaskView();
   }
 
   render() {
@@ -73,6 +62,11 @@ class EditTaskView extends React.Component {
       </div>
     );
   }
+}
+
+EditTaskView.propTypes = {
+  task: PropTypes.object,
+  closeEditTaskView: PropTypes.func
 }
 
 export default EditTaskView;

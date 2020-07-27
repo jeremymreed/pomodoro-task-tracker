@@ -34,7 +34,9 @@ class App extends React.Component {
 
     // Place all App state variables here.
     this.state = {
+      dataMap: new Map(),
       data: [],
+      currentTask: -1,
       showEditTask: false,  // Show EditTaskDialog.
       taskRunning: false    // Show TaskRunningView.
     }
@@ -51,6 +53,7 @@ class App extends React.Component {
   }
 
   handleDataReady(event, args) {
+    console.log('App: handleDataReady: args:', args);
     let data = [];
     const iter = args.values();
 
@@ -61,7 +64,7 @@ class App extends React.Component {
     }
 
     if (this._isMounted) {
-      this.setState({data: data});
+      this.setState({dataMap: args, data: data});
     }
   }
 
@@ -70,9 +73,9 @@ class App extends React.Component {
     return !(this.showEditTask && this.taskRunning);
   }
 
-  openEditTaskView() {
+  openEditTaskView(taskId) {
     if (this.validateState()) {
-      this.setState({showEditTask: true});
+      this.setState({currentTask: taskId, showEditTask: true});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -80,7 +83,7 @@ class App extends React.Component {
 
   closeEditTaskView() {
     if (this.validateState()) {
-      this.setState({showEditTask: false});
+      this.setState({currentTask: -1, showEditTask: false});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -108,7 +111,7 @@ class App extends React.Component {
     } else if (!this.state.taskRunning && this.state.showEditTask) {
       return (
           <div>
-          <EditTaskView closeEditTaskView={ this.closeEditTaskView }/>
+          <EditTaskView task={ this.state.dataMap.get(this.state.currentTask) } closeEditTaskView={ this.closeEditTaskView }/>
         </div>
       );
     } else if (!this.state.taskRunning && !this.state.showEditTask) {
