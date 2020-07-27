@@ -17,39 +17,44 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import React from 'react';
-import { Router, createMemorySource, createHistory, LocationProvider, Link } from '@reach/router';
 import MainView from '../../views/main-view';
+import TaskRunningView from '../../views/task-running-view';
 
 class App extends React.Component {
 
   constructor(props) {
     super(props);
 
-    this.source = createMemorySource('/');
-    this.history = createHistory(this.source);
+    this.toggleTaskRunning = this.toggleTaskRunning.bind(this);
+
+    this.state = {
+      taskRunning: false
+    }
+  }
+
+  toggleTaskRunning() {
+    if (this.state.taskRunning) {
+      this.setState({taskRunning: false});
+    } else {
+      this.setState({taskRunning: true});
+    }
   }
 
   render() {
-    return (
-      <div>
-        <LocationProvider history={ this.history } >
-          <Router>
-            <MainView path='/' />
-            <NotFound default />
-          </Router>
-        </LocationProvider>
-      </div>
-    );
+    if (this.state.taskRunning) {
+      return (
+        <div>
+          <TaskRunningView path='/' toggleTaskRunning={ this.toggleTaskRunning }/>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <MainView path='/' toggleTaskRunning={ this.toggleTaskRunning }/>
+        </div>
+      );
+    }
   }
-}
-
-function NotFound () {
-  return (
-    <div>
-      <p>Nothing to see here!</p>
-      <Link to='/'>Go back!</Link>
-    </div>
-  )
 }
 
 export default App;

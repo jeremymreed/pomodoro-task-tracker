@@ -7,6 +7,12 @@ class TaskList extends React.Component {
     super(props);
   }
 
+  startTask(event) {
+    event.preventDefault();
+
+    this.props.toggleTaskRunning();
+  }
+
   openEditTaskDialog(event, taskId) {
     event.preventDefault();
 
@@ -32,7 +38,7 @@ class TaskList extends React.Component {
           <td>{ task._id }</td>
           <td>{ task._name }</td>
           <td>{ task._description }</td>
-          <td><button>Start</button></td>
+          <td><button onClick={(e) => this.startTask(e)}>Start</button></td>
           <td><button onClick={(e) => this.openEditTaskDialog(e, task._id)}>Edit</button></td>
           <td><button onClick={(e) => this.removeTask(e, task._id)}>Remove</button></td>
         </tr>
@@ -67,7 +73,8 @@ class TaskList extends React.Component {
 }
 
 TaskList.propTypes = {
-  data: PropTypes.array
+  data: PropTypes.array,
+  toggleTaskRunning: PropTypes.func
 };
 
 export default TaskList;

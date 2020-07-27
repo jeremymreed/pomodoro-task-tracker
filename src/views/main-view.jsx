@@ -19,6 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import React from 'react';
 import { ipcRenderer } from 'electron';
 import TaskList from '../components/task-list';
+import PropTypes from 'prop-types';
 
 class MainView extends React.Component {
   constructor (props) {
@@ -32,8 +33,13 @@ class MainView extends React.Component {
   }
 
   componentDidMount() {
+    this._isMounted = true;
     ipcRenderer.on('dataReady', this.handleDataReady);
     ipcRenderer.send('getData');
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   handleDataReady(event, args) {
@@ -46,16 +52,22 @@ class MainView extends React.Component {
       item = iter.next();
     }
 
-    this.setState({data: data});
+    if (this._isMounted) {
+      this.setState({data: data});
+    }
   }
 
   render() {
     return (
       <div>
-        <TaskList data={this.state.data} />
+        <TaskList data={this.state.data} toggleTaskRunning={ this.props.toggleTaskRunning }/>
       </div>
     );
   }
 }
+
+MainView.propTypes = {
+  toggleTaskRunning: PropTypes.func
+};
 
 export default MainView;
