@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Timer from '../components/timer';
 
 class TaskRunningView extends React.Component {
   constructor(props) {
@@ -16,6 +17,7 @@ class TaskRunningView extends React.Component {
     return (
       <div>
         <p>This task is running hot!</p>
+        <Timer />
         <p>Task Name: { this.props.task._name }</p>
         <p>Task Description: { this.props.task._description }</p>
         <p><button onClick={(e) => this.stopTask(e)}>Stop Task</button></p>
