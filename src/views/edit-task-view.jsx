@@ -1,7 +1,7 @@
 import React from 'react';
 import { ipcRenderer } from 'electron';
 
-class EditTaskDialog extends React.Component {
+class EditTaskView extends React.Component {
   constructor(props) {
     super(props);
 
@@ -75,4 +75,4 @@ class EditTaskDialog extends React.Component {
   }
 }
 
-export default EditTaskDialog;
+export default EditTaskView;
