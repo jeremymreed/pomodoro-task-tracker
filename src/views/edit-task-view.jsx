@@ -28,9 +28,6 @@ class EditTaskView extends React.Component {
 
   formSubmit(event) {
     event.preventDefault();
-    console.log('this.state.name:', this.state.name);
-    console.log('this.state.description:', this.state.description);
-    console.log('form submitted');
 
     ipcRenderer.send('submitTaskData', { _id: this.state.id, _name: this.state.name, _description: this.state.description });
     this.props.closeEditTaskView();
