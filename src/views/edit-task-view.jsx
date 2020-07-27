@@ -33,6 +33,12 @@ class EditTaskView extends React.Component {
     this.props.closeEditTaskView();
   }
 
+  cancelEdit(event) {
+    event.preventDefault();
+
+    this.props.cancelEdit();
+  }
+
   render() {
     return (
       <div>
@@ -54,6 +60,7 @@ class EditTaskView extends React.Component {
 
           <p>
             <input type="submit" value="Submit"></input>
+            <button onClick={(e) => this.cancelEdit(e)}>Cancel</button>
           </p>
         </form>
       </div>
@@ -63,6 +70,7 @@ class EditTaskView extends React.Component {
 
 EditTaskView.propTypes = {
   task: PropTypes.object,
+  cancelEdit: PropTypes.func,
   closeEditTaskView: PropTypes.func
 }
 

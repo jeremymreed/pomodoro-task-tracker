@@ -31,6 +31,7 @@ class App extends React.Component {
     this.handleDataReady = this.handleDataReady.bind(this);
     this.openEditTaskView = this.openEditTaskView.bind(this);
     this.closeEditTaskView = this.closeEditTaskView.bind(this);
+    this.cancelEdit = this.cancelEdit.bind(this);
     this.startTask = this.startTask.bind(this);
     this.stopTask = this.stopTask.bind(this);
 
@@ -98,6 +99,14 @@ class App extends React.Component {
     }
   }
 
+  cancelEdit() {
+    if (this.validateState()) {
+      this.setState({currentTask: -1, showEditTask: false});
+    } else {
+      throw new Error('invalid state detected!');
+    }
+  }
+
   startTask(taskId) {
     if (this.validateState()) {
       this.setState({currentTask: taskId, taskRunning: true});
@@ -124,7 +133,7 @@ class App extends React.Component {
     } else if (!this.state.taskRunning && this.state.showEditTask) {
       return (
           <div>
-          <EditTaskView task={ this.getCurrentTask() } closeEditTaskView={ this.closeEditTaskView }/>
+          <EditTaskView task={ this.getCurrentTask() } closeEditTaskView={ this.closeEditTaskView } cancelEdit={ this.cancelEdit }/>
         </div>
       );
     } else if (!this.state.taskRunning && !this.state.showEditTask) {
