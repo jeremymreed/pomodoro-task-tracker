@@ -53,10 +53,9 @@ class App extends React.Component {
     this._isMounted = false;
   }
 
-  handleDataReady(event, args) {
-    console.log('App: handleDataReady: args:', args);
+  handleDataReady(event, dataMap) {
     let data = [];
-    const iter = args.values();
+    const iter = dataMap.values();
 
     let item = iter.next();
     while ( !item.done ) {
@@ -65,7 +64,7 @@ class App extends React.Component {
     }
 
     if (this._isMounted) {
-      this.setState({dataMap: args, data: data});
+      this.setState({dataMap: dataMap, data: data});
     }
   }
 
