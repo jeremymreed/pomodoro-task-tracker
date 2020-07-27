@@ -17,23 +17,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import React from 'react';
-import { Link } from '@reach/router';
+import ReactDOM from 'react-dom';
+import App from './windows/app/app';
 
-class HelloWorld extends React.Component {
-
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <div>
-        <h1>💖 Hello World!</h1>
-        <p>Welcome to your Electron application.</p>
-        <Link to='test'>Go to Test View!</Link>
-      </div>
-    );
-  }
-}
-
-export default HelloWorld;
+ReactDOM.render(
+  <App />,
+  document.getElementById('root')
+);

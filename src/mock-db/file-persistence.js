@@ -5,8 +5,6 @@ import path from 'path';
 class FilePersistence {
   // Load raw data from file.
   static loadFromFile() {
-    console.log('__dirname', __dirname);
-    console.log('process.cwd()', process.cwd());
     const rawData = fs.readFileSync(path.join(process.cwd(), '/data/mock-data.json'), 'utf8');
     const jsonData = JSON.parse(rawData);
 
@@ -18,10 +16,10 @@ class FilePersistence {
     const iter = dataMap.values();
     const dataArray = Array();
 
-    let value = iter.next();
-    while ( !value.done ) {
-      dataArray.push(value);
-      value = iter.next();
+    let item = iter.next();
+    while ( !item.done ) {
+      dataArray.push(item.value);
+      item = iter.next();
     }
 
     return (

@@ -17,41 +17,27 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import React from 'react';
-import { Router, createMemorySource, createHistory, LocationProvider, Link } from '@reach/router';
-import HelloWorld from './hello-world';
-import Test from './test';
+import TaskList from '../components/task-list';
+import PropTypes from 'prop-types';
 
-class App extends React.Component {
-
-  constructor(props) {
+class MainView extends React.Component {
+  constructor (props) {
     super(props);
-
-    this.source = createMemorySource('/');
-    this.history = createHistory(this.source);
   }
 
   render() {
     return (
       <div>
-        <LocationProvider history={ this.history } >
-          <Router>
-            <HelloWorld path='/' />
-            <Test path='test' />
-            <NotFound default />
-          </Router>
-        </LocationProvider>
+        <TaskList data={this.props.data} toggleTaskRunning={ this.props.toggleTaskRunning } openEditTaskView={ this.props.openEditTaskView }/>
       </div>
     );
   }
 }
 
-function NotFound () {
-  return (
-    <div>
-      <p>Nothing to see here!</p>
-      <Link to='/'>Go back!</Link>
-    </div>
-  )
-}
+MainView.propTypes = {
+  data: PropTypes.array,
+  openEditTaskView: PropTypes.func,
+  toggleTaskRunning: PropTypes.func
+};
 
-export default App;
+export default MainView;

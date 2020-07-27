@@ -16,12 +16,17 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import { BrowserWindow, app } from 'electron';
+import { BrowserWindow, app, ipcMain } from 'electron';
 import path from 'path';
+import DB from './mock-db/db';
+import FilePersistence from './mock-db/file-persistence';
+
+const db = new DB();
+let mainWindow = null;
 
 // Creates the browser window.
 function createWindow() {
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
@@ -29,11 +34,15 @@ function createWindow() {
     }
   })
 
+  // Restore database.
+  const jsonData = FilePersistence.loadFromFile();
+  db.restoreData(jsonData);
+
   // And load the index.html of the app.
-  win.loadFile(path.join(__dirname, 'index.html'));
+  mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
   // Opens the DevTools.
-  win.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 }
 
 app.whenReady().then(createWindow);
@@ -57,3 +66,29 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process code.
 // You can also put them in separate files and require them here.
+
+ipcMain.on('getData', (event) => {
+  event.reply('dataReady', db.data);
+});
+
+ipcMain.on('submitTaskData', (event, taskData) => {
+  console.log('Got taskData: ', taskData);
+
+  if (taskData._id === -1) {
+    taskData._id = db.getNextId();
+  }
+
+  db.addTask(taskData);
+  FilePersistence.saveToFile(FilePersistence.mapData(db.nextId, db.data));
+
+  mainWindow.webContents.send('dataReady', db.data);
+});
+
+ipcMain.on('removeTask', (event, taskId) => {
+  console.log('removeTask: got taskId:', taskId);
+
+  db.removeTask(taskId);
+  FilePersistence.saveToFile(FilePersistence.mapData(db.nextId, db.data));
+
+  mainWindow.webContents.send('dataReady', db.data);
+})
