@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 
 class Timer extends React.Component {
   constructor(props) {
@@ -7,12 +8,14 @@ class Timer extends React.Component {
     this.updateDate = this.updateDate.bind(this);
 
     this.state = {
-      date: new Date()
+      time: moment.duration(5, 'seconds')
     }
   }
 
   updateDate() {
-    this.setState({date: new Date()});
+    if (!(this.state.time.minutes() === 0 && this.state.time.seconds() === 0)) {
+      this.setState({time: this.state.time.subtract(1, 'second')});
+    }
   }
 
   componentDidMount() {
@@ -23,10 +26,26 @@ class Timer extends React.Component {
     clearInterval(this.interval);
   }
 
+  getMinutes() {
+    if (this.state.time.minutes() < 10 ) {
+      return `0${this.state.time.minutes()}`;
+    } else {
+      return `${this.state.time.minutes()}`;
+    }
+  }
+
+  getSeconds() {
+    if (this.state.time.seconds() < 10 ) {
+      return `0${this.state.time.seconds()}`;
+    } else {
+      return `${this.state.time.seconds()}`;
+    }
+  }
+
   render() {
     return (
       <div>
-        Date: { this.state.date.toISOString() }
+        Time remaning { this.getMinutes() } : { this.getSeconds() }
       </div>
     );
   }
