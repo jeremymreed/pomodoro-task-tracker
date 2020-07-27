@@ -18,6 +18,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 import React from 'react';
 import MainView from '../../views/main-view';
+import EditTaskView from '../../views/edit-task-view';
 import TaskRunningView from '../../views/task-running-view';
 
 class App extends React.Component {
@@ -25,6 +26,8 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
+    this.openEditTaskView = this.openEditTaskView.bind(this);
+    this.closeEditTaskView = this.closeEditTaskView.bind(this);
     this.toggleTaskRunning = this.toggleTaskRunning.bind(this);
 
     // Place all App state variables here.
@@ -37,6 +40,22 @@ class App extends React.Component {
   validateState() {
     // showEditTask and taskRunning cannot both be true.
     return !(this.showEditTask && this.taskRunning);
+  }
+
+  openEditTaskView() {
+    if (this.validateState()) {
+      this.setState({showEditTask: true});
+    } else {
+      throw new Error('invalid state detected!');
+    }
+  }
+
+  closeEditTaskView() {
+    if (this.validateState()) {
+      this.setState({showEditTask: false});
+    } else {
+      throw new Error('invalid state detected!');
+    }
   }
 
   toggleTaskRunning() {
@@ -52,16 +71,22 @@ class App extends React.Component {
   }
 
   render() {
-    if (this.state.taskRunning) {
+    if (this.state.taskRunning && !this.state.showEditTask) {
       return (
         <div>
-          <TaskRunningView path='/' toggleTaskRunning={ this.toggleTaskRunning }/>
+          <TaskRunningView toggleTaskRunning={ this.toggleTaskRunning }/>
         </div>
       );
-    } else {
+    } else if (!this.state.taskRunning && this.state.showEditTask) {
+      return (
+          <div>
+          <EditTaskView closeEditTaskView={ this.closeEditTaskView }/>
+        </div>
+      );
+    } else if (!this.state.taskRunning && !this.state.showEditTask) {
       return (
         <div>
-          <MainView path='/' toggleTaskRunning={ this.toggleTaskRunning }/>
+          <MainView toggleTaskRunning={ this.toggleTaskRunning } openEditTaskView={ this.openEditTaskView }/>
         </div>
       );
     }
