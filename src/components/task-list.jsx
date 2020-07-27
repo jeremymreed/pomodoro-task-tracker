@@ -10,10 +10,10 @@ class TaskList extends React.Component {
     this.editTask = this.editTask.bind(this);
   }
 
-  startTask(event) {
+  startTask(event, taskId) {
     event.preventDefault();
 
-    this.props.toggleTaskRunning();
+    this.props.startTask(taskId);
   }
 
   addTask(event) {
@@ -41,7 +41,7 @@ class TaskList extends React.Component {
           <td>{ task._id }</td>
           <td>{ task._name }</td>
           <td>{ task._description }</td>
-          <td><button onClick={(e) => this.startTask(e)}>Start</button></td>
+          <td><button onClick={(e) => this.startTask(e, task._id)}>Start</button></td>
           <td><button onClick={(e) => this.editTask(e, task._id)}>Edit</button></td>
           <td><button onClick={(e) => this.removeTask(e, task._id)}>Remove</button></td>
         </tr>
@@ -78,7 +78,7 @@ class TaskList extends React.Component {
 TaskList.propTypes = {
   data: PropTypes.array,
   openEditTaskView: PropTypes.func,
-  toggleTaskRunning: PropTypes.func
+  startTask: PropTypes.func
 };
 
 export default TaskList;

@@ -9,13 +9,15 @@ class TaskRunningView extends React.Component {
   stopTask(event) {
     event.preventDefault();
 
-    this.props.toggleTaskRunning();
+    this.props.stopTask();
   }
 
   render() {
     return (
       <div>
-        <h1>This task is running hot!</h1>
+        <p>This task is running hot!</p>
+        <p>Task Name: { this.props.task._name }</p>
+        <p>Task Description: { this.props.task._description }</p>
         <p><button onClick={(e) => this.stopTask(e)}>Stop Task</button></p>
       </div>
     );
@@ -23,7 +25,8 @@ class TaskRunningView extends React.Component {
 }
 
 TaskRunningView.propTypes = {
-  toggleTaskRunning: PropTypes.func
+  task: PropTypes.object,
+  stopTask: PropTypes.func
 }
 
 export default TaskRunningView;
