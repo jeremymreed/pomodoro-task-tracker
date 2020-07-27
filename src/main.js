@@ -76,7 +76,6 @@ ipcMain.on('submitTaskData', (event, taskData) => {
 
   db.addTask(taskData);
   FilePersistence.saveToFile(FilePersistence.mapData(db.nextId, db.data));
-  dialogWindow.close();
 
   mainWindow.webContents.send('dataReady', db.data);
 });
