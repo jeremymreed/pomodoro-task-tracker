@@ -16,6 +16,12 @@ class TaskList extends React.Component {
     this.props.toggleTaskRunning();
   }
 
+  addTask(event) {
+    event.preventDefault();
+
+    this.props.openEditTaskView(-1);
+  }
+
   editTask(event, taskId) {
     event.preventDefault();
 
@@ -63,7 +69,7 @@ class TaskList extends React.Component {
       <div>
         <p>Testing Main View</p>
         { this.getTaskList() }
-        <p><button>Add new task</button></p>
+        <p><button onClick={(e) => this.addTask(e)}>Add new task</button></p>
       </div>
     );
   }

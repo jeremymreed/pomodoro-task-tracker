@@ -21,6 +21,7 @@ import { ipcRenderer } from 'electron';
 import MainView from '../../views/main-view';
 import EditTaskView from '../../views/edit-task-view';
 import TaskRunningView from '../../views/task-running-view';
+import Task from '../../data-models/task';
 
 class App extends React.Component {
 
@@ -68,6 +69,14 @@ class App extends React.Component {
     }
   }
 
+  getCurrentTask() {
+    if (this.state.currentTask === -1) {
+      return new Task(-1, '', '');
+    } else {
+      return this.state.dataMap.get(this.state.currentTask);
+    }
+  }
+
   validateState() {
     // showEditTask and taskRunning cannot both be true.
     return !(this.showEditTask && this.taskRunning);
@@ -111,7 +120,7 @@ class App extends React.Component {
     } else if (!this.state.taskRunning && this.state.showEditTask) {
       return (
           <div>
-          <EditTaskView task={ this.state.dataMap.get(this.state.currentTask) } closeEditTaskView={ this.closeEditTaskView }/>
+          <EditTaskView task={ this.getCurrentTask() } closeEditTaskView={ this.closeEditTaskView }/>
         </div>
       );
     } else if (!this.state.taskRunning && !this.state.showEditTask) {
