@@ -5,6 +5,9 @@ import { ipcRenderer } from 'electron';
 class TaskList extends React.Component {
   constructor(props) {
     super(props);
+
+    this.startTask = this.startTask.bind(this);
+    this.editTask = this.editTask.bind(this);
   }
 
   startTask(event) {
@@ -13,16 +16,16 @@ class TaskList extends React.Component {
     this.props.toggleTaskRunning();
   }
 
-  openEditTaskDialog(event, taskId) {
+  addTask(event) {
     event.preventDefault();
 
-    ipcRenderer.send('openEditTaskDialog', taskId);
+    this.props.openEditTaskView(-1);
   }
 
-  openAddTaskDialog(event) {
+  editTask(event, taskId) {
     event.preventDefault();
 
-    ipcRenderer.send('openEditTaskDialog', -1);
+    this.props.openEditTaskView(taskId)
   }
 
   removeTask(event, taskId) {
@@ -39,7 +42,7 @@ class TaskList extends React.Component {
           <td>{ task._name }</td>
           <td>{ task._description }</td>
           <td><button onClick={(e) => this.startTask(e)}>Start</button></td>
-          <td><button onClick={(e) => this.openEditTaskDialog(e, task._id)}>Edit</button></td>
+          <td><button onClick={(e) => this.editTask(e, task._id)}>Edit</button></td>
           <td><button onClick={(e) => this.removeTask(e, task._id)}>Remove</button></td>
         </tr>
       );
@@ -66,7 +69,7 @@ class TaskList extends React.Component {
       <div>
         <p>Testing Main View</p>
         { this.getTaskList() }
-        <p><button onClick={(event) => this.openAddTaskDialog(event)}>Add new task</button></p>
+        <p><button onClick={(e) => this.addTask(e)}>Add new task</button></p>
       </div>
     );
   }
@@ -74,6 +77,7 @@ class TaskList extends React.Component {
 
 TaskList.propTypes = {
   data: PropTypes.array,
+  openEditTaskView: PropTypes.func,
   toggleTaskRunning: PropTypes.func
 };
 

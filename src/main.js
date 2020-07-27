@@ -19,12 +19,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import { BrowserWindow, app, ipcMain } from 'electron';
 import path from 'path';
 import DB from './mock-db/db';
-import Task from './data-models/task';
 import FilePersistence from './mock-db/file-persistence';
 
 const db = new DB();
 let mainWindow = null;
-let dialogWindow = null;
 
 // Creates the browser window.
 function createWindow() {
@@ -73,36 +71,15 @@ ipcMain.on('getData', (event) => {
   event.reply('dataReady', db.data);
 });
 
-ipcMain.on('openEditTaskDialog', (event, taskId) => {
-  dialogWindow = new BrowserWindow({
-    width: 400,
-    height: 400,
-    webPreferences: {
-      nodeIntegration: true
-    }
-  });
-
-  dialogWindow.loadFile(path.join(__dirname, 'edit-task-dialog.html'));
-
-  dialogWindow.webContents.openDevTools();
-
-  dialogWindow.webContents.on('did-finish-load', () => {
-    console.log('did-finish-load fired');
-    if (taskId !== -1) {
-      dialogWindow.webContents.send('taskData', db.getTaskById(taskId));
-    } else {
-      dialogWindow.webContents.send('taskData', new Task(db.getNextId(), '', ''));
-    }
-
-  });
-});
-
 ipcMain.on('submitTaskData', (event, taskData) => {
   console.log('Got taskData: ', taskData);
 
+  if (taskData._id === -1) {
+    taskData._id = db.getNextId();
+  }
+
   db.addTask(taskData);
   FilePersistence.saveToFile(FilePersistence.mapData(db.nextId, db.data));
-  dialogWindow.close();
 
   mainWindow.webContents.send('dataReady', db.data);
 });
