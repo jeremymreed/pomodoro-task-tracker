@@ -27,16 +27,27 @@ class App extends React.Component {
 
     this.toggleTaskRunning = this.toggleTaskRunning.bind(this);
 
+    // Place all App state variables here.
     this.state = {
-      taskRunning: false
+      showEditTask: false,  // Show EditTaskDialog.
+      taskRunning: false    // Show TaskRunningView.
     }
   }
 
+  validateState() {
+    // showEditTask and taskRunning cannot both be true.
+    return !(this.showEditTask && this.taskRunning);
+  }
+
   toggleTaskRunning() {
-    if (this.state.taskRunning) {
-      this.setState({taskRunning: false});
+    if (this.validateState()) {
+      if (this.state.taskRunning) {
+        this.setState({taskRunning: false});
+      } else {
+        this.setState({taskRunning: true});
+      }
     } else {
-      this.setState({taskRunning: true});
+      throw new Error('invalid state detected!');
     }
   }
 
