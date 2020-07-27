@@ -17,6 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import React from 'react';
+import { ipcRenderer } from 'electron';
 import MainView from '../../views/main-view';
 import EditTaskView from '../../views/edit-task-view';
 import TaskRunningView from '../../views/task-running-view';
@@ -26,14 +27,41 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
+    this.handleDataReady = this.handleDataReady.bind(this);
     this.openEditTaskView = this.openEditTaskView.bind(this);
     this.closeEditTaskView = this.closeEditTaskView.bind(this);
     this.toggleTaskRunning = this.toggleTaskRunning.bind(this);
 
     // Place all App state variables here.
     this.state = {
+      data: [],
       showEditTask: false,  // Show EditTaskDialog.
       taskRunning: false    // Show TaskRunningView.
+    }
+  }
+
+  componentDidMount() {
+    this._isMounted = true;
+    ipcRenderer.on('dataReady', this.handleDataReady);
+    ipcRenderer.send('getData');
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
+  handleDataReady(event, args) {
+    let data = [];
+    const iter = args.values();
+
+    let item = iter.next();
+    while ( !item.done ) {
+      data.push(item.value);
+      item = iter.next();
+    }
+
+    if (this._isMounted) {
+      this.setState({data: data});
     }
   }
 
@@ -86,7 +114,7 @@ class App extends React.Component {
     } else if (!this.state.taskRunning && !this.state.showEditTask) {
       return (
         <div>
-          <MainView toggleTaskRunning={ this.toggleTaskRunning } openEditTaskView={ this.openEditTaskView }/>
+          <MainView data={ this.state.data } toggleTaskRunning={ this.toggleTaskRunning } openEditTaskView={ this.openEditTaskView }/>
         </div>
       );
     }

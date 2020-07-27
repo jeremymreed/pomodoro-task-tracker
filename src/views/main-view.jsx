@@ -17,56 +17,25 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import React from 'react';
-import { ipcRenderer } from 'electron';
 import TaskList from '../components/task-list';
 import PropTypes from 'prop-types';
 
 class MainView extends React.Component {
   constructor (props) {
     super(props);
-
-    this.handleDataReady = this.handleDataReady.bind(this);
-
-    this.state = {
-      data: [],
-    }
-  }
-
-  componentDidMount() {
-    this._isMounted = true;
-    ipcRenderer.on('dataReady', this.handleDataReady);
-    ipcRenderer.send('getData');
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
-
-  handleDataReady(event, args) {
-    let data = [];
-    const iter = args.values();
-
-    let item = iter.next();
-    while ( !item.done ) {
-      data.push(item.value);
-      item = iter.next();
-    }
-
-    if (this._isMounted) {
-      this.setState({data: data});
-    }
   }
 
   render() {
     return (
       <div>
-        <TaskList data={this.state.data} toggleTaskRunning={ this.props.toggleTaskRunning } openEditTaskView={ this.props.openEditTaskView }/>
+        <TaskList data={this.props.data} toggleTaskRunning={ this.props.toggleTaskRunning } openEditTaskView={ this.props.openEditTaskView }/>
       </div>
     );
   }
 }
 
 MainView.propTypes = {
+  data: PropTypes.array,
   openEditTaskView: PropTypes.func,
   toggleTaskRunning: PropTypes.func
 };
