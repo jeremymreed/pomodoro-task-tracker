@@ -31,7 +31,10 @@ class App extends React.Component {
     this.handleDataReady = this.handleDataReady.bind(this);
     this.openEditTaskView = this.openEditTaskView.bind(this);
     this.closeEditTaskView = this.closeEditTaskView.bind(this);
-    this.toggleTaskRunning = this.toggleTaskRunning.bind(this);
+    this.cancelEdit = this.cancelEdit.bind(this);
+    this.startTask = this.startTask.bind(this);
+    this.stopTask = this.stopTask.bind(this);
+    this.taskDone = this.taskDone.bind(this);
 
     // Place all App state variables here.
     this.state = {
@@ -97,13 +100,36 @@ class App extends React.Component {
     }
   }
 
-  toggleTaskRunning() {
+  cancelEdit() {
     if (this.validateState()) {
-      if (this.state.taskRunning) {
-        this.setState({taskRunning: false});
-      } else {
-        this.setState({taskRunning: true});
-      }
+      this.setState({currentTask: -1, showEditTask: false});
+    } else {
+      throw new Error('invalid state detected!');
+    }
+  }
+
+  startTask(taskId) {
+    if (this.validateState()) {
+      this.setState({currentTask: taskId, taskRunning: true});
+    } else {
+      throw new Error('invalid state detected!');
+    }
+  }
+
+  stopTask() {
+    if (this.validateState()) {
+      this.setState({currentTask: -1, taskRunning: false});
+    } else {
+      throw new Error('invalid state detected!');
+    }
+  }
+
+  taskDone() {
+    if (this.validateState()) {
+      let task = this.getCurrentTask();
+      task.done = true;
+      ipcRenderer.send('submitTaskData', task);
+      this.setState({currentTask: -1, taskRunning: false});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -113,19 +139,19 @@ class App extends React.Component {
     if (this.state.taskRunning && !this.state.showEditTask) {
       return (
         <div>
-          <TaskRunningView toggleTaskRunning={ this.toggleTaskRunning }/>
+          <TaskRunningView task={ this.getCurrentTask() } stopTask={ this.stopTask } taskDone={ this.taskDone }/>
         </div>
       );
     } else if (!this.state.taskRunning && this.state.showEditTask) {
       return (
           <div>
-          <EditTaskView task={ this.getCurrentTask() } closeEditTaskView={ this.closeEditTaskView }/>
+          <EditTaskView task={ this.getCurrentTask() } closeEditTaskView={ this.closeEditTaskView } cancelEdit={ this.cancelEdit }/>
         </div>
       );
     } else if (!this.state.taskRunning && !this.state.showEditTask) {
       return (
         <div>
-          <MainView data={ this.state.data } toggleTaskRunning={ this.toggleTaskRunning } openEditTaskView={ this.openEditTaskView }/>
+          <MainView data={ this.state.data } startTask={ this.startTask } openEditTaskView={ this.openEditTaskView }/>
         </div>
       );
     }

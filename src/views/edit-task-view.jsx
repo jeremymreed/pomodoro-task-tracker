@@ -1,6 +1,7 @@
 import React from 'react';
 import { ipcRenderer } from 'electron';
 import PropTypes from 'prop-types';
+import Task from '../data-models/task';
 
 class EditTaskView extends React.Component {
   constructor(props) {
@@ -29,8 +30,14 @@ class EditTaskView extends React.Component {
   formSubmit(event) {
     event.preventDefault();
 
-    ipcRenderer.send('submitTaskData', { _id: this.state.id, _name: this.state.name, _description: this.state.description });
+    ipcRenderer.send('submitTaskData', new Task(this.state.id, this.state.name, this.state.description, this.props.task._done));
     this.props.closeEditTaskView();
+  }
+
+  cancelEdit(event) {
+    event.preventDefault();
+
+    this.props.cancelEdit();
   }
 
   render() {
@@ -54,6 +61,7 @@ class EditTaskView extends React.Component {
 
           <p>
             <input type="submit" value="Submit"></input>
+            <button onClick={(e) => this.cancelEdit(e)}>Cancel</button>
           </p>
         </form>
       </div>
@@ -63,6 +71,7 @@ class EditTaskView extends React.Component {
 
 EditTaskView.propTypes = {
   task: PropTypes.object,
+  cancelEdit: PropTypes.func,
   closeEditTaskView: PropTypes.func
 }
 

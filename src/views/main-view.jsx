@@ -28,7 +28,7 @@ class MainView extends React.Component {
   render() {
     return (
       <div>
-        <TaskList data={this.props.data} toggleTaskRunning={ this.props.toggleTaskRunning } openEditTaskView={ this.props.openEditTaskView }/>
+        <TaskList data={this.props.data} startTask={ this.props.startTask } openEditTaskView={ this.props.openEditTaskView }/>
       </div>
     );
   }
@@ -37,7 +37,7 @@ class MainView extends React.Component {
 MainView.propTypes = {
   data: PropTypes.array,
   openEditTaskView: PropTypes.func,
-  toggleTaskRunning: PropTypes.func
+  startTask: PropTypes.func
 };
 
 export default MainView;

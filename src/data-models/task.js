@@ -18,9 +18,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 class Task {
   constructor(id = 0, name = '', description = '', done = false) {
-    this._id = id;
-    this._name = name;
-    this._description = description;
+    this.id = id;
+    this.name = name;
+    this.description = description;
     this.done = done;
   }
 }
