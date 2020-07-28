@@ -26,7 +26,7 @@ class DB {
 
   // Caution, this will update an existing record!
   addTask(task) {
-    this.data.set(task._id, task);
+    this.data.set(task.id, task);
   }
 
   removeTask(taskId) {
@@ -51,9 +51,10 @@ class DB {
     this.nextId = jsonData.nextId;
     for (let i = 0 ; i < jsonData.data.length ; i++ ) {
       this.addTask(new Task(
-        jsonData.data[i]._id,
-        jsonData.data[i]._name,
-        jsonData.data[i]._description)
+        jsonData.data[i].id,
+        jsonData.data[i].name,
+        jsonData.data[i].description,
+        jsonData.data[i].done)
       );
     }
   }
