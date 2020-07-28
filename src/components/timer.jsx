@@ -17,6 +17,10 @@ class Timer extends React.Component {
     if (this.props.shouldRun && !(this.state.time.minutes() === 0 && this.state.time.seconds() === 0)) {
       this.setState({time: this.state.time.subtract(1, 'second')});
     }
+
+    if (this.props.shouldRun && this.state.time.minutes() === 0 && this.state.time.seconds() === 0) {
+      this.props.handleTimerExpiration();
+    }
   }
 
   componentDidMount() {
@@ -53,7 +57,8 @@ class Timer extends React.Component {
 }
 
 Timer.propTypes = {
-  shouldRun: PropTypes.bool
+  shouldRun: PropTypes.bool,
+  handleTimerExpiration: PropTypes.func
 }
 
 export default Timer;
