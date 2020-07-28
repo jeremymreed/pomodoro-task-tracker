@@ -1,23 +1,19 @@
 import React from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+import Pomodoro from '../utils/pomodoro';
 
 class Timer extends React.Component {
   constructor(props) {
     super(props);
 
+    this.pomodoro = new Pomodoro();
+
     this.updateDate = this.updateDate.bind(this);
     this.timerStatus = this.timerStatus.bind(this);
 
-    // Timer settings.
-    // These are in minutes.
-    // TODO: These should be in a settings file.  Something like settings.json.
-    this.pomodoro = 25;
-    this.shortRest = 5;
-    this.longRest = 15;
-
     this.state = {
-      time: moment.duration(this.pomodoro, 'minutes')
+      time: moment.duration(this.pomodoro.getNextTimerSetting(), 'seconds')
     }
   }
 
@@ -27,6 +23,7 @@ class Timer extends React.Component {
     }
 
     if (this.props.shouldRun && this.state.time.minutes() === 0 && this.state.time.seconds() === 0) {
+      this.setState({time: moment.duration(this.pomodoro.getNextTimerSetting(), 'seconds')});
       this.props.handleTimerExpiration();
     }
   }
@@ -57,7 +54,7 @@ class Timer extends React.Component {
   }
 
   timerStatus() {
-    return ((this.pomodoro * 60) - this.state.time.asSeconds());
+    return (this.pomodoro.getCurrentTimerSetting() - this.state.time.asSeconds());
   }
 
   render() {
