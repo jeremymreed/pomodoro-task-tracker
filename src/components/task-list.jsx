@@ -37,13 +37,13 @@ class TaskList extends React.Component {
   getTaskList() {
     const listTasks = this.props.data.map((task) => {
       return (
-        <tr key={ task._id }>
-          <td>{ task._id }</td>
-          <td>{ task._name }</td>
-          <td>{ task._description }</td>
-          <td><button onClick={(e) => this.startTask(e, task._id)}>Start</button></td>
-          <td><button onClick={(e) => this.editTask(e, task._id)}>Edit</button></td>
-          <td><button onClick={(e) => this.removeTask(e, task._id)}>Remove</button></td>
+        <tr key={ task.id }>
+          <td>{ task.id }</td>
+          <td>{ task.name }</td>
+          <td>{ task.description }</td>
+          <td><button onClick={(e) => this.startTask(e, task.id)}>Start</button></td>
+          <td><button onClick={(e) => this.editTask(e, task.id)}>Edit</button></td>
+          <td><button onClick={(e) => this.removeTask(e, task.id)}>Remove</button></td>
         </tr>
       );
     });
