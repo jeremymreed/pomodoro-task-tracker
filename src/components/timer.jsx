@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 
 class Timer extends React.Component {
   constructor(props) {
@@ -8,12 +9,12 @@ class Timer extends React.Component {
     this.updateDate = this.updateDate.bind(this);
 
     this.state = {
-      time: moment.duration(5, 'seconds')
+      time: moment.duration(25, 'minutes')
     }
   }
 
   updateDate() {
-    if (!(this.state.time.minutes() === 0 && this.state.time.seconds() === 0)) {
+    if (this.props.shouldRun && !(this.state.time.minutes() === 0 && this.state.time.seconds() === 0)) {
       this.setState({time: this.state.time.subtract(1, 'second')});
     }
   }
@@ -49,6 +50,10 @@ class Timer extends React.Component {
       </div>
     );
   }
+}
+
+Timer.propTypes = {
+  shouldRun: PropTypes.bool
 }
 
 export default Timer;
