@@ -59,7 +59,7 @@ describe('mock db tests', () => {
       chai.assert.strictEqual(db.data.size, 1);
       chai.assert.deepStrictEqual(db.data.get(0), testTask);
 
-      db.removeTask(testTask._id);
+      db.removeTask(testTask.id);
       chai.assert.strictEqual(db.data.size, 0);
     });
 
@@ -91,22 +91,22 @@ describe('mock db tests', () => {
 
   describe('restoreData tests', () => {
     it('should restore data from valid json blob', () => {
-      const task0 = new Task(0, "Foo", "Foo Bar");
-      const task1 = new Task(1, "Bar", "Bar Foo");
-      const task2 = new Task(2, "Test", "A test task");
+      const task0 = new Task(0, "Foo", "Foo Bar", true);
+      const task1 = new Task(1, "Bar", "Bar Foo", false);
+      const task2 = new Task(2, "Test", "A test task", true);
 
       const expectedMap = new Map();
-      expectedMap.set(task0._id, task0);
-      expectedMap.set(task1._id, task1);
-      expectedMap.set(task2._id, task2);
+      expectedMap.set(task0.id, task0);
+      expectedMap.set(task1.id, task1);
+      expectedMap.set(task2.id, task2);
 
       const jsonData =
         {
           "nextId": 3,
           "data": [
-            {"_id": 0, "_name": "Foo", "_description": "Foo Bar"},
-            {"_id": 1, "_name": "Bar", "_description": "Bar Foo"},
-            {"_id": 2, "_name": "Test", "_description": "A test task"}
+            {"id": 0, "name": "Foo", "description": "Foo Bar", "done": true},
+            {"id": 1, "name": "Bar", "description": "Bar Foo", "done": false},
+            {"id": 2, "name": "Test", "description": "A test task", "done": true}
           ]
         };
 
