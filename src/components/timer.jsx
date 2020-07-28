@@ -7,9 +7,17 @@ class Timer extends React.Component {
     super(props);
 
     this.updateDate = this.updateDate.bind(this);
+    this.timerStatus = this.timerStatus.bind(this);
+
+    // Timer settings.
+    // These are in minutes.
+    // TODO: These should be in a settings file.  Something like settings.json.
+    this.pomodoro = 25;
+    this.shortRest = 5;
+    this.longRest = 15;
 
     this.state = {
-      time: moment.duration(25, 'minutes')
+      time: moment.duration(this.pomodoro, 'minutes')
     }
   }
 
@@ -24,6 +32,7 @@ class Timer extends React.Component {
   }
 
   componentDidMount() {
+    this.props.submitTimerStatus(this.timerStatus);
     this.interval = setInterval(() => this.updateDate(), 1000);
   }
 
@@ -47,6 +56,10 @@ class Timer extends React.Component {
     }
   }
 
+  timerStatus() {
+    return ((this.pomodoro * 60) - this.state.time.asSeconds());
+  }
+
   render() {
     return (
       <div>
@@ -58,6 +71,7 @@ class Timer extends React.Component {
 
 Timer.propTypes = {
   shouldRun: PropTypes.bool,
+  submitTimerStatus: PropTypes.func,
   handleTimerExpiration: PropTypes.func
 }
 
