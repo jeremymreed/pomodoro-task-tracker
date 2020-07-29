@@ -20,9 +20,6 @@ class TaskRunningView extends React.Component {
 
   _stopTimer() {
     this.setState({shouldRun: false});
-    let seconds = this.getTotalTimeRan();
-    console.log('TaskRunningView: _stopTimer: seconds:', seconds);
-    return (seconds);
   }
 
   // Called by Timer, to pass in its getTotalTimeRan function, so we can call it here.
@@ -33,6 +30,7 @@ class TaskRunningView extends React.Component {
   // Timer tells us it has expired.
   handleTimerExpiration() {
     this._stopTimer();
+    this.props.updateTask(this.getTotalTimeRan(), false);
   }
 
   // User wants to pause the timer.
@@ -40,6 +38,7 @@ class TaskRunningView extends React.Component {
     event.preventDefault();
 
     this._stopTimer();
+    this.props.updateTask(this.getTotalTimeRan(), false);
   }
 
   // User wants to resume the timer.
@@ -54,13 +53,17 @@ class TaskRunningView extends React.Component {
   stopTask(event) {
     event.preventDefault();
 
-    this.props.stopTask(this._stopTimer(), false);
+    this._stopTimer();
+    this.props.updateTask(this.getTotalTimeRan(), false);
+    this.props.stopTask();
   }
 
   taskDone(event) {
     event.preventDefault();
 
-    this.props.stopTask(this._stopTimer(), true);
+    this._stopTimer();
+    this.props.updateTask(this.getTotalTimeRan(), false);
+    this.props.stopTask();
   }
 
   render() {
@@ -85,6 +88,7 @@ class TaskRunningView extends React.Component {
 
 TaskRunningView.propTypes = {
   task: PropTypes.object,
+  updateTask: PropTypes.func,
   stopTask: PropTypes.func
 }
 
