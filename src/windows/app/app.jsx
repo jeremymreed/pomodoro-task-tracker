@@ -116,17 +116,34 @@ class App extends React.Component {
     }
   }
 
-  stopTask() {
+  updateTask(timeSpentOnTask) {
+    console.log('App: updateTask: timeSpentOnTask:', timeSpentOnTask);
     if (this.validateState()) {
+      let task = this.getCurrentTask();
+      task.timeSpent = task.timeSpent + timeSpentOnTask;
+      ipcRenderer.send('submitTaskData', task);
+    } else {
+      throw new Error('invalid state detected!');
+    }
+  }
+
+  stopTask(timeSpentOnTask) {
+    console.log('App: stopTask: timeSpentOnTask:', timeSpentOnTask);
+    if (this.validateState()) {
+      let task = this.getCurrentTask();
+      task.timeSpent = task.timeSpent + timeSpentOnTask;
+      ipcRenderer.send('submitTaskData', task);
       this.setState({currentTask: -1, taskRunning: false});
     } else {
       throw new Error('invalid state detected!');
     }
   }
 
-  taskDone() {
+  taskDone(timeSpentOnTask) {
+    console.log('App: taskDone: timeSpentOnTask:', timeSpentOnTask);
     if (this.validateState()) {
       let task = this.getCurrentTask();
+      task.timeSpent = task.timeSpent + timeSpentOnTask;
       task.done = true;
       ipcRenderer.send('submitTaskData', task);
       this.setState({currentTask: -1, taskRunning: false});
