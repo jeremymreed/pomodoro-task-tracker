@@ -20,8 +20,8 @@ class TaskRunningView extends React.Component {
 
   _stopTimer() {
     this.setState({shouldRun: false});
-    let minutes = this.timerStatus();
-    console.log('TaskRunningView: _stopTimer: seconds:', minutes);
+    let seconds = this.timerStatus();
+    console.log('TaskRunningView: _stopTimer: seconds:', seconds);
   }
 
   // Called by Timer, to pass in its timerStatus function, so we can call it here.
