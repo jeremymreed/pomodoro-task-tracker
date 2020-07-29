@@ -91,9 +91,9 @@ describe('mock db tests', () => {
 
   describe('restoreData tests', () => {
     it('should restore data from valid json blob', () => {
-      const task0 = new Task(0, "Foo", "Foo Bar", true);
-      const task1 = new Task(1, "Bar", "Bar Foo", false);
-      const task2 = new Task(2, "Test", "A test task", true);
+      const task0 = new Task(0, "Foo", "Foo Bar", 5, true);
+      const task1 = new Task(1, "Bar", "Bar Foo", 15, false);
+      const task2 = new Task(2, "Test", "A test task", 25, true);
 
       const expectedMap = new Map();
       expectedMap.set(task0.id, task0);
@@ -104,9 +104,9 @@ describe('mock db tests', () => {
         {
           "nextId": 3,
           "data": [
-            {"id": 0, "name": "Foo", "description": "Foo Bar", "done": true},
-            {"id": 1, "name": "Bar", "description": "Bar Foo", "done": false},
-            {"id": 2, "name": "Test", "description": "A test task", "done": true}
+            {"id": 0, "name": "Foo", "description": "Foo Bar", "timeSpent": 5, "done": true},
+            {"id": 1, "name": "Bar", "description": "Bar Foo", "timeSpent": 15, "done": false},
+            {"id": 2, "name": "Test", "description": "A test task", "timeSpent": 25, "done": true}
           ]
         };
 
