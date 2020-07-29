@@ -34,7 +34,6 @@ class App extends React.Component {
     this.cancelEdit = this.cancelEdit.bind(this);
     this.startTask = this.startTask.bind(this);
     this.stopTask = this.stopTask.bind(this);
-    this.taskDone = this.taskDone.bind(this);
 
     // Place all App state variables here.
     this.state = {
@@ -127,24 +126,12 @@ class App extends React.Component {
     }
   }
 
-  stopTask(timeSpentOnTask) {
+  stopTask(timeSpentOnTask, done) {
     console.log('App: stopTask: timeSpentOnTask:', timeSpentOnTask);
     if (this.validateState()) {
       let task = this.getCurrentTask();
       task.timeSpent = task.timeSpent + timeSpentOnTask;
-      ipcRenderer.send('submitTaskData', task);
-      this.setState({currentTask: -1, taskRunning: false});
-    } else {
-      throw new Error('invalid state detected!');
-    }
-  }
-
-  taskDone(timeSpentOnTask) {
-    console.log('App: taskDone: timeSpentOnTask:', timeSpentOnTask);
-    if (this.validateState()) {
-      let task = this.getCurrentTask();
-      task.timeSpent = task.timeSpent + timeSpentOnTask;
-      task.done = true;
+      task.done = done;
       ipcRenderer.send('submitTaskData', task);
       this.setState({currentTask: -1, taskRunning: false});
     } else {
@@ -156,7 +143,7 @@ class App extends React.Component {
     if (this.state.taskRunning && !this.state.showEditTask) {
       return (
         <div>
-          <TaskRunningView task={ this.getCurrentTask() } stopTask={ this.stopTask } taskDone={ this.taskDone }/>
+          <TaskRunningView task={ this.getCurrentTask() } stopTask={ this.stopTask }/>
         </div>
       );
     } else if (!this.state.taskRunning && this.state.showEditTask) {

@@ -54,13 +54,13 @@ class TaskRunningView extends React.Component {
   stopTask(event) {
     event.preventDefault();
 
-    this.props.stopTask(this._stopTimer());
+    this.props.stopTask(this._stopTimer(), false);
   }
 
   taskDone(event) {
     event.preventDefault();
 
-    this.props.taskDone(this._stopTimer());
+    this.props.stopTask(this._stopTimer(), true);
   }
 
   render() {
@@ -85,8 +85,7 @@ class TaskRunningView extends React.Component {
 
 TaskRunningView.propTypes = {
   task: PropTypes.object,
-  stopTask: PropTypes.func,
-  taskDone: PropTypes.func
+  stopTask: PropTypes.func
 }
 
 export default TaskRunningView;
