@@ -10,7 +10,8 @@ class Timer extends React.Component {
     this.pomodoro = new Pomodoro();
 
     this.updateDate = this.updateDate.bind(this);
-    this.timerStatus = this.timerStatus.bind(this);
+    this.getTotalTimeRan = this.getTotalTimeRan.bind(this);
+    this.totalTimeRan = 0;
 
     this.state = {
       time: moment.duration(this.pomodoro.getNextTimerSetting(), 'seconds')
@@ -18,18 +19,22 @@ class Timer extends React.Component {
   }
 
   updateDate() {
-    if (this.props.shouldRun && !(this.state.time.minutes() === 0 && this.state.time.seconds() === 0)) {
-      this.setState({time: this.state.time.subtract(1, 'second')});
-    }
+    if (this.props.shouldRun) {
+      this.totalTimeRan += 1;
 
-    if (this.props.shouldRun && this.state.time.minutes() === 0 && this.state.time.seconds() === 0) {
-      this.props.handleTimerExpiration();
-      this.setState({time: moment.duration(this.pomodoro.getNextTimerSetting(), 'seconds')});
+      if (this.props.shouldRun && !(this.state.time.minutes() === 0 && this.state.time.seconds() === 0)) {
+        this.setState({time: this.state.time.subtract(1, 'second')});
+      }
+
+      if (this.props.shouldRun && this.state.time.minutes() === 0 && this.state.time.seconds() === 0) {
+        this.props.handleTimerExpiration();
+        this.setState({time: moment.duration(this.pomodoro.getNextTimerSetting(), 'seconds')});
+      }
     }
   }
 
   componentDidMount() {
-    this.props.submitTimerStatus(this.timerStatus);
+    this.props.submitGetTotalTimeRan(this.getTotalTimeRan);
     this.interval = setInterval(() => this.updateDate(), 1000);
   }
 
@@ -53,9 +58,15 @@ class Timer extends React.Component {
     }
   }
 
-  // How many seconds did the timer run?
-  timerStatus() {
-    return (this.pomodoro.getCurrentTimerSetting() - this.state.time.asSeconds());
+  // Reset to zero when consumed.  We may continue running this timer.
+  // Resetting eliminates a bug where an incorrect time will be reported when the user clicks pause, then stop.
+  // This behavior is also seen when letting the timer expire, and the user clicks stop.
+  //   Both actions result in an update to the task, and both handlers call this function!
+  getTotalTimeRan() {
+    console.log('this.totalTimeRan:', this.totalTimeRan);
+    const totalTimeRan = this.totalTimeRan;
+    this.totalTimeRan = 0;
+    return totalTimeRan;
   }
 
   render() {
@@ -69,7 +80,7 @@ class Timer extends React.Component {
 
 Timer.propTypes = {
   shouldRun: PropTypes.bool,
-  submitTimerStatus: PropTypes.func,
+  submitGetTotalTimeRan: PropTypes.func,
   handleTimerExpiration: PropTypes.func
 }
 

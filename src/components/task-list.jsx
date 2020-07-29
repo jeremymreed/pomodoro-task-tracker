@@ -34,6 +34,28 @@ class TaskList extends React.Component {
     ipcRenderer.send('removeTask', taskId);
   }
 
+  getMinutes(timeInSeconds) {
+    const minutes = Math.floor(timeInSeconds / 60);
+    if (minutes < 10 ) {
+      return `0${minutes}`;
+    } else {
+      return `${minutes}`;
+    }
+  }
+
+  getSeconds(timeInSeconds) {
+    const seconds = Math.floor(timeInSeconds % 60);
+    if (seconds < 10 ) {
+      return `0${seconds}`;
+    } else {
+      return `${seconds}`;
+    }
+  }
+
+  getTimeString(timeInSeconds) {
+    return `${this.getMinutes(timeInSeconds)} : ${this.getSeconds(timeInSeconds)}`;
+  }
+
   getTaskList() {
     const listTasks = this.props.data.map((task) => {
       return (
@@ -41,6 +63,7 @@ class TaskList extends React.Component {
           <td>{ task.id }</td>
           <td>{ task.name }</td>
           <td>{ task.description }</td>
+          <td>{ this.getTimeString(task.timeSpent) }</td>
           <td><button onClick={(e) => this.startTask(e, task.id)}>Start</button></td>
           <td><button onClick={(e) => this.editTask(e, task.id)}>Edit</button></td>
           <td><button onClick={(e) => this.removeTask(e, task.id)}>Remove</button></td>
@@ -55,6 +78,7 @@ class TaskList extends React.Component {
             <th>Id</th>
             <th>Name</th>
             <th>Description</th>
+            <th>Time</th>
           </tr>
         </thead>
         <tbody>
