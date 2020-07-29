@@ -34,8 +34,9 @@ class TaskList extends React.Component {
     ipcRenderer.send('removeTask', taskId);
   }
 
+  // NOTE: If we ever want to target the browser, we may want to look at Math.trunc again, since IE has no support for it.
   getMinutes(timeInSeconds) {
-    const minutes = Math.floor(timeInSeconds / 60);
+    const minutes = Math.trunc(timeInSeconds / 60);
     if (minutes < 10 ) {
       return `0${minutes}`;
     } else {
@@ -43,8 +44,9 @@ class TaskList extends React.Component {
     }
   }
 
+  // NOTE: If we ever want to target the browser, we may want to look at Math.trunc again, since IE has no support for it.
   getSeconds(timeInSeconds) {
-    const seconds = Math.floor(timeInSeconds % 60);
+    const seconds = Math.trunc(timeInSeconds % 60);
     if (seconds < 10 ) {
       return `0${seconds}`;
     } else {
