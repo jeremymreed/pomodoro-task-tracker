@@ -5,18 +5,21 @@
       "id": 0,
       "name": "Foo",
       "description": "Foo Bar",
+      "timeSpent": 0,
       "done": false
     },
     {
       "id": 1,
       "name": "Bar",
       "description": "Bar Foo",
+      "timeSpent": 0,
       "done": false
     },
     {
       "id": 2,
       "name": "Test",
       "description": "A Test Task",
+      "timeSpent": 0,
       "done": false
     }
   ]
