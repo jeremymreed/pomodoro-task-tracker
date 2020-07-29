@@ -7,6 +7,7 @@ class TaskRunningView extends React.Component {
     super(props);
 
     this.handleTimerExpiration = this.handleTimerExpiration.bind(this);
+    this.submitGetTotalTimeRan = this.submitGetTotalTimeRan.bind(this);
 
     this.state = {
       shouldRun: true,
@@ -21,9 +22,15 @@ class TaskRunningView extends React.Component {
     this.setState({shouldRun: false});
   }
 
+  // Called by Timer, to pass in its getTotalTimeRan function, so we can call it here.
+  submitGetTotalTimeRan(getTotalTimeRan) {
+    this.getTotalTimeRan = getTotalTimeRan;
+  }
+
   // Timer tells us it has expired.
   handleTimerExpiration() {
     this._stopTimer();
+    this.props.updateTask(this.getTotalTimeRan(), false);
   }
 
   // User wants to pause the timer.
@@ -31,6 +38,7 @@ class TaskRunningView extends React.Component {
     event.preventDefault();
 
     this._stopTimer();
+    this.props.updateTask(this.getTotalTimeRan(), false);
   }
 
   // User wants to resume the timer.
@@ -46,6 +54,7 @@ class TaskRunningView extends React.Component {
     event.preventDefault();
 
     this._stopTimer();
+    this.props.updateTask(this.getTotalTimeRan(), false);
     this.props.stopTask();
   }
 
@@ -53,7 +62,8 @@ class TaskRunningView extends React.Component {
     event.preventDefault();
 
     this._stopTimer();
-    this.props.taskDone();
+    this.props.updateTask(this.getTotalTimeRan(), false);
+    this.props.stopTask();
   }
 
   render() {
@@ -66,7 +76,7 @@ class TaskRunningView extends React.Component {
     return (
       <div>
         <p>This task is running hot!</p>
-        <Timer shouldRun={ this.state.shouldRun } handleTimerExpiration={ this.handleTimerExpiration }/>
+        <Timer shouldRun={ this.state.shouldRun } handleTimerExpiration={ this.handleTimerExpiration } submitGetTotalTimeRan={ this.submitGetTotalTimeRan }/>
         <p>Task Name: { this.props.task._name }</p>
         <p>Task Description: { this.props.task._description }</p>
         <p>{ pauseResumeButton }</p>
@@ -78,8 +88,8 @@ class TaskRunningView extends React.Component {
 
 TaskRunningView.propTypes = {
   task: PropTypes.object,
-  stopTask: PropTypes.func,
-  taskDone: PropTypes.func
+  updateTask: PropTypes.func,
+  stopTask: PropTypes.func
 }
 
 export default TaskRunningView;

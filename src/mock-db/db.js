@@ -54,6 +54,7 @@ class DB {
         jsonData.data[i].id,
         jsonData.data[i].name,
         jsonData.data[i].description,
+        jsonData.data[i].timeSpent,
         jsonData.data[i].done)
       );
     }

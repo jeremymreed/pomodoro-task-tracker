@@ -17,10 +17,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 class Task {
-  constructor(id = 0, name = '', description = '', done = false) {
+  constructor(id = 0, name = '', description = '', timeSpent = 0, done = false) {
     this.id = id;
     this.name = name;
     this.description = description;
+    this.timeSpent = timeSpent;  // In seconds.
     this.done = done;
   }
 }
