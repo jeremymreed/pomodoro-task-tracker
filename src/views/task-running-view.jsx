@@ -7,7 +7,7 @@ class TaskRunningView extends React.Component {
     super(props);
 
     this.handleTimerExpiration = this.handleTimerExpiration.bind(this);
-    this.submitTimerStatus = this.submitTimerStatus.bind(this);
+    this.submitGetTotalTimeRan = this.submitGetTotalTimeRan.bind(this);
 
     this.state = {
       shouldRun: true,
@@ -20,13 +20,14 @@ class TaskRunningView extends React.Component {
 
   _stopTimer() {
     this.setState({shouldRun: false});
-    let seconds = this.timerStatus();
+    let seconds = this.getTotalTimeRan();
     console.log('TaskRunningView: _stopTimer: seconds:', seconds);
+    return (seconds);
   }
 
-  // Called by Timer, to pass in its timerStatus function, so we can call it here.
-  submitTimerStatus(timerStatus) {
-    this.timerStatus = timerStatus;
+  // Called by Timer, to pass in its getTotalTimeRan function, so we can call it here.
+  submitGetTotalTimeRan(getTotalTimeRan) {
+    this.getTotalTimeRan = getTotalTimeRan;
   }
 
   // Timer tells us it has expired.
@@ -53,15 +54,13 @@ class TaskRunningView extends React.Component {
   stopTask(event) {
     event.preventDefault();
 
-    this._stopTimer();
-    this.props.stopTask();
+    this.props.stopTask(this._stopTimer());
   }
 
   taskDone(event) {
     event.preventDefault();
 
-    this._stopTimer();
-    this.props.taskDone();
+    this.props.taskDone(this._stopTimer());
   }
 
   render() {
@@ -74,7 +73,7 @@ class TaskRunningView extends React.Component {
     return (
       <div>
         <p>This task is running hot!</p>
-        <Timer shouldRun={ this.state.shouldRun } handleTimerExpiration={ this.handleTimerExpiration } submitTimerStatus={ this.submitTimerStatus }/>
+        <Timer shouldRun={ this.state.shouldRun } handleTimerExpiration={ this.handleTimerExpiration } submitGetTotalTimeRan={ this.submitGetTotalTimeRan }/>
         <p>Task Name: { this.props.task._name }</p>
         <p>Task Description: { this.props.task._description }</p>
         <p>{ pauseResumeButton }</p>
