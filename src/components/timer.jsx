@@ -1,15 +1,19 @@
 import React from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+import Pomodoro from '../utils/pomodoro';
 
 class Timer extends React.Component {
   constructor(props) {
     super(props);
 
+    this.pomodoro = new Pomodoro();
+
     this.updateDate = this.updateDate.bind(this);
+    this.timerStatus = this.timerStatus.bind(this);
 
     this.state = {
-      time: moment.duration(25, 'minutes')
+      time: moment.duration(this.pomodoro.getNextTimerSetting(), 'seconds')
     }
   }
 
@@ -20,10 +24,12 @@ class Timer extends React.Component {
 
     if (this.props.shouldRun && this.state.time.minutes() === 0 && this.state.time.seconds() === 0) {
       this.props.handleTimerExpiration();
+      this.setState({time: moment.duration(this.pomodoro.getNextTimerSetting(), 'seconds')});
     }
   }
 
   componentDidMount() {
+    this.props.submitTimerStatus(this.timerStatus);
     this.interval = setInterval(() => this.updateDate(), 1000);
   }
 
@@ -47,6 +53,11 @@ class Timer extends React.Component {
     }
   }
 
+  // How many seconds did the timer run?
+  timerStatus() {
+    return (this.pomodoro.getCurrentTimerSetting() - this.state.time.asSeconds());
+  }
+
   render() {
     return (
       <div>
@@ -58,6 +69,7 @@ class Timer extends React.Component {
 
 Timer.propTypes = {
   shouldRun: PropTypes.bool,
+  submitTimerStatus: PropTypes.func,
   handleTimerExpiration: PropTypes.func
 }
 
