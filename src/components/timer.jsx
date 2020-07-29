@@ -23,8 +23,8 @@ class Timer extends React.Component {
     }
 
     if (this.props.shouldRun && this.state.time.minutes() === 0 && this.state.time.seconds() === 0) {
-      this.setState({time: moment.duration(this.pomodoro.getNextTimerSetting(), 'seconds')});
       this.props.handleTimerExpiration();
+      this.setState({time: moment.duration(this.pomodoro.getNextTimerSetting(), 'seconds')});
     }
   }
 
@@ -53,6 +53,7 @@ class Timer extends React.Component {
     }
   }
 
+  // How many seconds did the timer run?
   timerStatus() {
     return (this.pomodoro.getCurrentTimerSetting() - this.state.time.asSeconds());
   }
