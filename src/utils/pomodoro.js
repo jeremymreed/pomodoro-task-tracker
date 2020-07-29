@@ -11,9 +11,9 @@ class Pomodoro {
     // These are in seconds.
     this.currentPhase = 0;
     // TODO: These should be in a settings file.  Something like settings.json.
-    this.pomodoro = 25;
-    this.shortRest = 5;
-    this.longRest = 15;
+    this.pomodoro = 5;
+    this.shortRest = 2;
+    this.longRest = 4;
 
     this.intervalsInSet = 4;
     this.interval = 0;
