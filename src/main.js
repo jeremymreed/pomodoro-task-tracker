@@ -20,9 +20,28 @@ import { BrowserWindow, app, ipcMain } from 'electron';
 import path from 'path';
 import DB from './mock-db/db';
 import FilePersistence from './mock-db/file-persistence';
+// TODO: electron-settings is using the remote module, and this is going to be deprecated.
+// TODO: We may want to consider using a different system for settings management.
+import electronSettings from 'electron-settings';
 
 const db = new DB();
+
 let mainWindow = null;
+
+// TODO: This should live in a config module.
+// If there are no settings, set our initial setting state.
+function initialSetup() {
+  const settings = electronSettings.getSync();
+
+  if (Object.keys(settings).length === 0 && settings.constructor === Object){
+    electronSettings.setSync({
+      'pomodoro': 25 * 60,
+      'shortRest': 5 * 60,
+      'longRest': 15 * 60,
+      'intervalsInSet': 4
+    });
+  }
+}
 
 // Creates the browser window.
 function createWindow() {
@@ -43,6 +62,8 @@ function createWindow() {
 
   // Opens the DevTools.
   mainWindow.webContents.openDevTools();
+
+  initialSetup();
 }
 
 app.whenReady().then(createWindow);
