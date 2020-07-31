@@ -12,11 +12,19 @@ class EditSettingsView extends React.Component {
     this.handleIntervalsInSetChange = this.handleIntervalsInSetChange.bind(this);
    
     this.state = {
-      pomodoro: electronSettings.getSync('pomodoro'),
-      shortRest: electronSettings.getSync('shortRest'),
-      longRest: electronSettings.getSync('longRest'),
+      pomodoro: this.secondsToMinutes(electronSettings.getSync('pomodoro')),
+      shortRest: this.secondsToMinutes(electronSettings.getSync('shortRest')),
+      longRest: this.secondsToMinutes(electronSettings.getSync('longRest')),
       intervalsInSet: electronSettings.getSync('intervalsInSet')
     }
+  }
+
+  secondsToMinutes(amount) {
+    return Math.trunc(amount / 60);
+  }
+
+  minutesToSeconds(amount) {
+    return amount * 60;
   }
 
   handlePomodoroChange(event) {
@@ -43,9 +51,9 @@ class EditSettingsView extends React.Component {
     event.preventDefault();
 
     electronSettings.setSync({
-      pomodoro: this.state.pomodoro,
-      shortRest: this.state.shortRest,
-      longRest: this.state.longRest,
+      pomodoro: this.minutesToSeconds(this.state.pomodoro),
+      shortRest: this.minutesToSeconds(this.state.shortRest),
+      longRest: this.minutesToSeconds(this.state.longRest),
       intervalsInSet: this.state.intervalsInSet
     });
 
