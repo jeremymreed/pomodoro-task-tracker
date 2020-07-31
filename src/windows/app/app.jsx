@@ -20,6 +20,7 @@ import React from 'react';
 import { ipcRenderer } from 'electron';
 import MainView from '../../views/main-view';
 import EditTaskView from '../../views/edit-task-view';
+import EditSettingsView from '../../views/edit-settings-view';
 import TaskRunningView from '../../views/task-running-view';
 import Task from '../../data-models/task';
 
@@ -32,6 +33,9 @@ class App extends React.Component {
     this.openEditTaskView = this.openEditTaskView.bind(this);
     this.closeEditTaskView = this.closeEditTaskView.bind(this);
     this.cancelEdit = this.cancelEdit.bind(this);
+    this.openEditSettingsView = this.openEditSettingsView.bind(this);
+    this.closeEditSettingsView = this.closeEditSettingsView.bind(this);
+    this.cancelEditSettings = this.cancelEditSettings.bind(this);
     this.updateTask = this.updateTask.bind(this);
     this.startTask = this.startTask.bind(this);
     this.stopTask = this.stopTask.bind(this);
@@ -45,6 +49,7 @@ class App extends React.Component {
     this.MainViewState = 0;
     this.EditTaskState = 1;
     this.TaskRunningState = 2;
+    this.EditSettingsState = 3;
 
     this.state = {
       dataMap: new Map(),
@@ -117,6 +122,30 @@ class App extends React.Component {
     }
   }
 
+  openEditSettingsView() {
+    if (this.validateState()) {
+      this.setState({stateVar: this.EditSettingsState});
+    } else {
+      throw new Error('invalid state detected!');
+    }
+  }
+
+  closeEditSettingsView() {
+    if (this.validateState()) {
+      this.setState({currentTask: -1, stateVar: this.MainViewState});
+    } else {
+      throw new Error('invalid state detected!');
+    }
+  }
+
+  cancelEditSettings() {
+    if (this.validateState()) {
+      this.setState({currentTask: -1, stateVar: this.MainViewState});
+    } else {
+      throw new Error('invalid state detected!');
+    }
+  }
+
   startTask(taskId) {
     if (this.validateState()) {
       this.setState({currentTask: taskId, stateVar: this.TaskRunningState});
@@ -152,6 +181,12 @@ class App extends React.Component {
           <TaskRunningView task={ this.getCurrentTask() } updateTask={ this.updateTask } stopTask={ this.stopTask }/>
         </div>
       );
+    } else if (this.state.stateVar === this.EditSettingsState) {
+      return (
+          <div>
+          <EditSettingsView closeEditSettingsView={ this.closeEditSettingsView } cancelEditSettings={ this.cancelEditSettings }/>
+        </div>
+      );
     } else if (this.state.stateVar === this.EditTaskState) {
       return (
           <div>
@@ -161,7 +196,7 @@ class App extends React.Component {
     } else if (this.state.stateVar === this.MainViewState) {
       return (
         <div>
-          <MainView data={ this.state.data } startTask={ this.startTask } openEditTaskView={ this.openEditTaskView }/>
+          <MainView data={ this.state.data } startTask={ this.startTask } openEditTaskView={ this.openEditTaskView } openEditSettingsView={ this.openEditSettingsView }/>
         </div>
       );
     }
