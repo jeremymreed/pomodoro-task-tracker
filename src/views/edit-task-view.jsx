@@ -11,9 +11,9 @@ class EditTaskView extends React.Component {
     this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
 
     this.state = {
-      id: this.props.task._id,
-      name: this.props.task._name,
-      description: this.props.task._description
+      id: this.props.task.id,
+      name: this.props.task.name,
+      description: this.props.task.description
     }
   }
 
@@ -30,14 +30,14 @@ class EditTaskView extends React.Component {
   formSubmit(event) {
     event.preventDefault();
 
-    ipcRenderer.send('submitTaskData', new Task(this.state.id, this.state.name, this.state.description, this.props.task._done));
+    ipcRenderer.send('submitTaskData', new Task(this.state.id, this.state.name, this.state.description, this.props.task.done));
     this.props.closeEditTaskView();
   }
 
   cancelEdit(event) {
     event.preventDefault();
 
-    this.props.cancelEdit();
+    this.props.closeEditTaskView();
   }
 
   render() {
@@ -71,7 +71,6 @@ class EditTaskView extends React.Component {
 
 EditTaskView.propTypes = {
   task: PropTypes.object,
-  cancelEdit: PropTypes.func,
   closeEditTaskView: PropTypes.func
 }
 

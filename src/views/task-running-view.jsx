@@ -62,7 +62,7 @@ class TaskRunningView extends React.Component {
     event.preventDefault();
 
     this._stopTimer();
-    this.props.updateTask(this.getTotalTimeRan(), false);
+    this.props.updateTask(this.getTotalTimeRan(), true);
     this.props.stopTask();
   }
 

@@ -55,7 +55,7 @@ class EditSettingsView extends React.Component {
   cancelEdit(event) {
     event.preventDefault();
 
-    this.props.cancelEditSettings();
+    this.props.closeEditSettingsView();
   }
 
   render() {
@@ -102,7 +102,6 @@ class EditSettingsView extends React.Component {
 }
 
 EditSettingsView.propTypes = {
-  cancelEditSettings: PropTypes.func,
   closeEditSettingsView: PropTypes.func
 }
 

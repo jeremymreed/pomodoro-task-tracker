@@ -32,10 +32,8 @@ class App extends React.Component {
     this.handleDataReady = this.handleDataReady.bind(this);
     this.openEditTaskView = this.openEditTaskView.bind(this);
     this.closeEditTaskView = this.closeEditTaskView.bind(this);
-    this.cancelEdit = this.cancelEdit.bind(this);
     this.openEditSettingsView = this.openEditSettingsView.bind(this);
     this.closeEditSettingsView = this.closeEditSettingsView.bind(this);
-    this.cancelEditSettings = this.cancelEditSettings.bind(this);
     this.updateTask = this.updateTask.bind(this);
     this.startTask = this.startTask.bind(this);
     this.stopTask = this.stopTask.bind(this);
@@ -114,14 +112,6 @@ class App extends React.Component {
     }
   }
 
-  cancelEdit() {
-    if (this.validateState()) {
-      this.setState({currentTask: -1, stateVar: this.MainViewState});
-    } else {
-      throw new Error('invalid state detected!');
-    }
-  }
-
   openEditSettingsView() {
     if (this.validateState()) {
       this.setState({stateVar: this.EditSettingsState});
@@ -131,14 +121,6 @@ class App extends React.Component {
   }
 
   closeEditSettingsView() {
-    if (this.validateState()) {
-      this.setState({currentTask: -1, stateVar: this.MainViewState});
-    } else {
-      throw new Error('invalid state detected!');
-    }
-  }
-
-  cancelEditSettings() {
     if (this.validateState()) {
       this.setState({currentTask: -1, stateVar: this.MainViewState});
     } else {
@@ -184,13 +166,13 @@ class App extends React.Component {
     } else if (this.state.stateVar === this.EditSettingsState) {
       return (
           <div>
-          <EditSettingsView closeEditSettingsView={ this.closeEditSettingsView } cancelEditSettings={ this.cancelEditSettings }/>
+          <EditSettingsView closeEditSettingsView={ this.closeEditSettingsView }/>
         </div>
       );
     } else if (this.state.stateVar === this.EditTaskState) {
       return (
           <div>
-          <EditTaskView task={ this.getCurrentTask() } closeEditTaskView={ this.closeEditTaskView } cancelEdit={ this.cancelEdit }/>
+          <EditTaskView task={ this.getCurrentTask() } closeEditTaskView={ this.closeEditTaskView }/>
         </div>
       );
     } else if (this.state.stateVar === this.MainViewState) {
