@@ -37,10 +37,20 @@ class App extends React.Component {
     this.stopTask = this.stopTask.bind(this);
 
     // Place all App state variables here.
+    // stateVar:
+    //    0: MainView
+    //    1: EditTaskView
+    //    2: TaskRunningView
+    // Putting state var names here, we should use an enum here.
+    this.MainViewState = 0;
+    this.EditTaskState = 1;
+    this.TaskRunningState = 2;
+
     this.state = {
       dataMap: new Map(),
       data: [],
       currentTask: -1,
+      stateVar: this.MainViewState,
       showEditTask: false,  // Show EditTaskDialog.
       taskRunning: false    // Show TaskRunningView.
     }
@@ -80,13 +90,12 @@ class App extends React.Component {
   }
 
   validateState() {
-    // showEditTask and taskRunning cannot both be true.
-    return !(this.showEditTask && this.taskRunning);
+    return this.state.stateVar >= 0 && this.state.stateVar <= 3;
   }
 
   openEditTaskView(taskId) {
     if (this.validateState()) {
-      this.setState({currentTask: taskId, showEditTask: true});
+      this.setState({currentTask: taskId, stateVar: this.EditTaskState});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -94,7 +103,7 @@ class App extends React.Component {
 
   closeEditTaskView() {
     if (this.validateState()) {
-      this.setState({currentTask: -1, showEditTask: false});
+      this.setState({currentTask: -1, stateVar: this.MainViewState});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -102,7 +111,7 @@ class App extends React.Component {
 
   cancelEdit() {
     if (this.validateState()) {
-      this.setState({currentTask: -1, showEditTask: false});
+      this.setState({currentTask: -1, stateVar: this.MainViewState});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -110,7 +119,7 @@ class App extends React.Component {
 
   startTask(taskId) {
     if (this.validateState()) {
-      this.setState({currentTask: taskId, taskRunning: true});
+      this.setState({currentTask: taskId, stateVar: this.TaskRunningState});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -130,26 +139,26 @@ class App extends React.Component {
 
   stopTask() {
     if (this.validateState()) {
-      this.setState({currentTask: -1, taskRunning: false});
+      this.setState({currentTask: -1, stateVar: this.MainViewState});
     } else {
       throw new Error('invalid state detected!');
     }
   }
 
   render() {
-    if (this.state.taskRunning && !this.state.showEditTask) {
+    if (this.state.stateVar === this.TaskRunningState) {
       return (
         <div>
           <TaskRunningView task={ this.getCurrentTask() } updateTask={ this.updateTask } stopTask={ this.stopTask }/>
         </div>
       );
-    } else if (!this.state.taskRunning && this.state.showEditTask) {
+    } else if (this.state.stateVar === this.EditTaskState) {
       return (
           <div>
           <EditTaskView task={ this.getCurrentTask() } closeEditTaskView={ this.closeEditTaskView } cancelEdit={ this.cancelEdit }/>
         </div>
       );
-    } else if (!this.state.taskRunning && !this.state.showEditTask) {
+    } else if (this.state.stateVar === this.MainViewState) {
       return (
         <div>
           <MainView data={ this.state.data } startTask={ this.startTask } openEditTaskView={ this.openEditTaskView }/>
