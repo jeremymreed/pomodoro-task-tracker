@@ -95,8 +95,8 @@ ipcMain.on('getData', (event) => {
 ipcMain.on('submitTaskData', (event, taskData) => {
   console.log('Got taskData: ', taskData);
 
-  if (taskData._id === -1) {
-    taskData._id = db.getNextId();
+  if (taskData.id === -1) {
+    taskData.id = db.getNextId();
   }
 
   db.addTask(taskData);

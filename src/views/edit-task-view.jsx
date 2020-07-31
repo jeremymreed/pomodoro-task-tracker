@@ -11,9 +11,9 @@ class EditTaskView extends React.Component {
     this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
 
     this.state = {
-      id: this.props.task._id,
-      name: this.props.task._name,
-      description: this.props.task._description
+      id: this.props.task.id,
+      name: this.props.task.name,
+      description: this.props.task.description
     }
   }
 
