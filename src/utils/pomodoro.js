@@ -1,3 +1,5 @@
+import electronSettings from 'electron-settings';
+
 // This class will execute the Pomodoro technique.
 // The timer will ask this class for the 'next setting for the timer'.
 // This class determines what that should be.
@@ -11,11 +13,11 @@ class Pomodoro {
     // These are in seconds.
     this.currentPhase = 0;
     // TODO: These should be in a settings file.  Something like settings.json.
-    this.pomodoro = 5;
-    this.shortRest = 2;
-    this.longRest = 4;
+    this.pomodoro = electronSettings.getSync('pomodoro');
+    this.shortRest = electronSettings.getSync('shortRest');
+    this.longRest = electronSettings.getSync('longRest');
 
-    this.intervalsInSet = 4;
+    this.intervalsInSet = electronSettings.getSync('intervalsInSet');
     this.interval = 0;
     this.intervalArray = [];
 

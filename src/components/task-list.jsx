@@ -34,8 +34,9 @@ class TaskList extends React.Component {
     ipcRenderer.send('removeTask', taskId);
   }
 
+  // NOTE: If we ever want to target the browser, we may want to look at Math.trunc again, since IE has no support for it.
   getMinutes(timeInSeconds) {
-    const minutes = Math.floor(timeInSeconds / 60);
+    const minutes = Math.trunc(timeInSeconds / 60);
     if (minutes < 10 ) {
       return `0${minutes}`;
     } else {
@@ -43,12 +44,21 @@ class TaskList extends React.Component {
     }
   }
 
+  // NOTE: If we ever want to target the browser, we may want to look at Math.trunc again, since IE has no support for it.
   getSeconds(timeInSeconds) {
-    const seconds = Math.floor(timeInSeconds % 60);
+    const seconds = Math.trunc(timeInSeconds % 60);
     if (seconds < 10 ) {
       return `0${seconds}`;
     } else {
       return `${seconds}`;
+    }
+  }
+
+  getDone(done) {
+    if (done) {
+      return '✓';
+    } else {
+      return '';
     }
   }
 
@@ -64,6 +74,7 @@ class TaskList extends React.Component {
           <td>{ task.name }</td>
           <td>{ task.description }</td>
           <td>{ this.getTimeString(task.timeSpent) }</td>
+          <td>{ this.getDone(task.done) }</td>
           <td><button onClick={(e) => this.startTask(e, task.id)}>Start</button></td>
           <td><button onClick={(e) => this.editTask(e, task.id)}>Edit</button></td>
           <td><button onClick={(e) => this.removeTask(e, task.id)}>Remove</button></td>
@@ -79,6 +90,7 @@ class TaskList extends React.Component {
             <th>Name</th>
             <th>Description</th>
             <th>Time</th>
+            <th>Done</th>
           </tr>
         </thead>
         <tbody>

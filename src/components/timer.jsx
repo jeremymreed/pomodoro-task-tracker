@@ -43,10 +43,10 @@ class Timer extends React.Component {
   }
 
   getMinutes() {
-    if (this.state.time.minutes() < 10 ) {
-      return `0${this.state.time.minutes()}`;
+    if (Math.trunc(this.state.time.asMinutes()) < 10 ) {
+      return `0${Math.trunc(this.state.time.asMinutes())}`;
     } else {
-      return `${this.state.time.minutes()}`;
+      return `${Math.trunc(this.state.time.asMinutes())}`;
     }
   }
 

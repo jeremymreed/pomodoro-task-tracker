@@ -62,7 +62,7 @@ class TaskRunningView extends React.Component {
     event.preventDefault();
 
     this._stopTimer();
-    this.props.updateTask(this.getTotalTimeRan(), false);
+    this.props.updateTask(this.getTotalTimeRan(), true);
     this.props.stopTask();
   }
 
@@ -75,10 +75,9 @@ class TaskRunningView extends React.Component {
     }
     return (
       <div>
-        <p>This task is running hot!</p>
         <Timer shouldRun={ this.state.shouldRun } handleTimerExpiration={ this.handleTimerExpiration } submitGetTotalTimeRan={ this.submitGetTotalTimeRan }/>
-        <p>Task Name: { this.props.task._name }</p>
-        <p>Task Description: { this.props.task._description }</p>
+        <p>Task Name: { this.props.task.name }</p>
+        <p>Task Description: { this.props.task.description }</p>
         <p>{ pauseResumeButton }</p>
         <p><button onClick={(e) => this.stopTask(e)}>Stop</button><button onClick={(e) => this.taskDone(e)}>Done</button></p>
       </div>

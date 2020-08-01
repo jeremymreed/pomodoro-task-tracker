@@ -1,6 +1,6 @@
 {
   "name": "pomodoro-task-tracker",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Task Tracking using the Pomodoro technique",
   "private": true,
   "repository": {
@@ -39,6 +39,7 @@
     "mocha": "^8.0.1"
   },
   "dependencies": {
+    "electron-settings": "^4.0.2",
     "electron-squirrel-startup": "^1.0.0",
     "moment": "^2.27.0",
     "prop-types": "^15.7.2",
