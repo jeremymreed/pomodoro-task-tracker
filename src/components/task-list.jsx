@@ -54,6 +54,14 @@ class TaskList extends React.Component {
     }
   }
 
+  getDone(done) {
+    if (done) {
+      return '✓';
+    } else {
+      return '';
+    }
+  }
+
   getTimeString(timeInSeconds) {
     return `${this.getMinutes(timeInSeconds)} : ${this.getSeconds(timeInSeconds)}`;
   }
@@ -66,6 +74,7 @@ class TaskList extends React.Component {
           <td>{ task.name }</td>
           <td>{ task.description }</td>
           <td>{ this.getTimeString(task.timeSpent) }</td>
+          <td>{ this.getDone(task.done) }</td>
           <td><button onClick={(e) => this.startTask(e, task.id)}>Start</button></td>
           <td><button onClick={(e) => this.editTask(e, task.id)}>Edit</button></td>
           <td><button onClick={(e) => this.removeTask(e, task.id)}>Remove</button></td>
@@ -81,6 +90,7 @@ class TaskList extends React.Component {
             <th>Name</th>
             <th>Description</th>
             <th>Time</th>
+            <th>Done</th>
           </tr>
         </thead>
         <tbody>
