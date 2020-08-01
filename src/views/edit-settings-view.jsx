@@ -69,7 +69,7 @@ class EditSettingsView extends React.Component {
   render() {
     return (
       <div>
-        <h1>Task Editor</h1>
+        <h1>Settings</h1>
         <form onSubmit={(event) => this.formSubmit(event)}>
           <p>
             <label>
