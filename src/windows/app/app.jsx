@@ -153,7 +153,7 @@ class App extends React.Component {
       ipcRenderer.send('showNotification', {
         title: 'Stopped Task',
         body: 'The task has been stopped',
-        urgency: 'critical'
+        urgency: 'normal'
       });
 
       this.setState({currentTask: -1, stateVar: this.MainViewState});
