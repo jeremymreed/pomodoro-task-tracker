@@ -16,7 +16,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import { BrowserWindow, app, ipcMain } from 'electron';
+import { BrowserWindow, app, ipcMain, Notification } from 'electron';
 import path from 'path';
 import DB from './mock-db/db';
 import FilePersistence from './mock-db/file-persistence';
@@ -113,3 +113,11 @@ ipcMain.on('removeTask', (event, taskId) => {
 
   mainWindow.webContents.send('dataReady', db.data);
 })
+
+ipcMain.on('showNotification', (event, options) => {
+  if (Notification.isSupported()) {
+    const notification = new Notification(options);
+
+    notification.show();
+  }
+});
