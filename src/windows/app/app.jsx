@@ -159,11 +159,12 @@ class App extends React.Component {
     }
   }
 
-  editTask(name, description) {
+  editTask(name, description, done) {
     if (this.validateState()) {
       let task = this.getCurrentTask();
       task.name = name;
       task.description = description;
+      task.done = done;
       ipcRenderer.send('submitTaskData', task);
     } else {
       throw new Error('invalid state detected!');
