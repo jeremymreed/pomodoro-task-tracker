@@ -1,7 +1,6 @@
 import React from 'react';
 import { ipcRenderer } from 'electron';
 import PropTypes from 'prop-types';
-import Task from '../data-models/task';
 
 class EditTaskView extends React.Component {
   constructor(props) {
@@ -11,7 +10,6 @@ class EditTaskView extends React.Component {
     this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
 
     this.state = {
-      id: this.props.task.id,
       name: this.props.task.name,
       description: this.props.task.description
     }
@@ -30,7 +28,7 @@ class EditTaskView extends React.Component {
   formSubmit(event) {
     event.preventDefault();
 
-    ipcRenderer.send('submitTaskData', new Task(this.state.id, this.state.name, this.state.description, this.props.task.done));
+    this.props.editTask(this.state.name, this.state.description);
     ipcRenderer.send('showNotification', 'taskUpdated');
     this.props.closeEditTaskView();
   }
@@ -72,6 +70,7 @@ class EditTaskView extends React.Component {
 
 EditTaskView.propTypes = {
   task: PropTypes.object,
+  editTask: PropTypes.func,
   closeEditTaskView: PropTypes.func
 }
 
