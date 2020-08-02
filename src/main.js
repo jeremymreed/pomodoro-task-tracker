@@ -19,12 +19,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import { BrowserWindow, app, ipcMain, Notification } from 'electron';
 import path from 'path';
 import DB from './mock-db/db';
+import NotificationOptions from './utils/notification-options';
 import FilePersistence from './mock-db/file-persistence';
 // TODO: electron-settings is using the remote module, and this is going to be deprecated.
 // TODO: We may want to consider using a different system for settings management.
 import electronSettings from 'electron-settings';
 
 const db = new DB();
+const notificationOptions = new NotificationOptions();
 
 let mainWindow = null;
 
@@ -114,8 +116,9 @@ ipcMain.on('removeTask', (event, taskId) => {
   mainWindow.webContents.send('dataReady', db.data);
 })
 
-ipcMain.on('showNotification', (event, options) => {
+ipcMain.on('showNotification', (event, notificationName) => {
   if (Notification.isSupported()) {
+    const options = notificationOptions.getNotification(notificationName);
     const notification = new Notification(options);
 
     notification.show();
