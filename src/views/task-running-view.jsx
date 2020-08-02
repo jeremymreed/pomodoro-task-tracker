@@ -31,7 +31,7 @@ class TaskRunningView extends React.Component {
   // Timer tells us it has expired.
   handleTimerExpiration() {
     this._stopTimer();
-    this.props.updateTask(this.getTotalTimeRan(), false);
+    this.props.updateTaskTimeSpentOnTask(this.getTotalTimeRan());
   }
 
   // User wants to pause the timer.
@@ -39,7 +39,7 @@ class TaskRunningView extends React.Component {
     event.preventDefault();
 
     this._stopTimer();
-    this.props.updateTask(this.getTotalTimeRan(), false);
+    this.props.updateTaskTimeSpentOnTask(this.getTotalTimeRan());
   }
 
   // User wants to resume the timer.
@@ -55,7 +55,7 @@ class TaskRunningView extends React.Component {
     event.preventDefault();
 
     this._stopTimer();
-    this.props.updateTask(this.getTotalTimeRan(), false);
+    this.props.updateTaskTimeSpentOnTask(this.getTotalTimeRan());
     this.props.stopTask();
 
     ipcRenderer.send('showNotification', 'taskStopped');
@@ -65,7 +65,8 @@ class TaskRunningView extends React.Component {
     event.preventDefault();
 
     this._stopTimer();
-    this.props.updateTask(this.getTotalTimeRan(), true);
+    this.props.updateTaskTimeSpentOnTask(this.getTotalTimeRan());
+    this.props.taskDone();
     this.props.stopTask();
 
     ipcRenderer.send('showNotification', 'taskDone');
@@ -93,7 +94,8 @@ class TaskRunningView extends React.Component {
 
 TaskRunningView.propTypes = {
   task: PropTypes.object,
-  updateTask: PropTypes.func,
+  updateTaskTimeSpentOnTask: PropTypes.func,
+  taskDone: PropTypes.func,
   stopTask: PropTypes.func
 }
 
