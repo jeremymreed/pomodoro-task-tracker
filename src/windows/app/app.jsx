@@ -36,6 +36,7 @@ class App extends React.Component {
     this.closeEditSettingsView = this.closeEditSettingsView.bind(this);
     this.updateTaskTimeSpentOnTask = this.updateTaskTimeSpentOnTask.bind(this);
     this.taskDone = this.taskDone.bind(this);
+    this.taskDoneById = this.taskDoneById.bind(this);
     this.editTask = this.editTask.bind(this);
     this.startTask = this.startTask.bind(this);
     this.stopTask = this.stopTask.bind(this);
@@ -159,6 +160,18 @@ class App extends React.Component {
     }
   }
 
+  taskDoneById(taskId) {
+    if (this.validateState()) {
+      if (this.state.dataMap.has(taskId)) {
+        let task = this.state.dataMap.get(taskId);
+        task.done = true;
+        ipcRenderer.send('submitTaskData', task);
+      }
+    } else {
+      throw new Error('invalid state detected!');
+    }
+  }
+
   editTask(name, description, done) {
     if (this.validateState()) {
       let task = this.getCurrentTask();
@@ -201,7 +214,7 @@ class App extends React.Component {
     } else if (this.state.stateVar === this.MainViewState) {
       return (
         <div>
-          <MainView data={ this.state.data } startTask={ this.startTask } openEditTaskView={ this.openEditTaskView } openEditSettingsView={ this.openEditSettingsView }/>
+          <MainView data={ this.state.data } startTask={ this.startTask } taskDoneById={ this.taskDoneById } openEditTaskView={ this.openEditTaskView } openEditSettingsView={ this.openEditSettingsView }/>
         </div>
       );
     }

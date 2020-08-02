@@ -28,6 +28,12 @@ class TaskList extends React.Component {
     this.props.openEditTaskView(taskId)
   }
 
+  taskDoneById(event, taskId) {
+    event.preventDefault();
+
+    this.props.taskDoneById(taskId);
+  }
+
   removeTask(event, taskId) {
     event.preventDefault();
 
@@ -76,6 +82,7 @@ class TaskList extends React.Component {
           <td>{ this.getTimeString(task.timeSpent) }</td>
           <td>{ this.getDone(task.done) }</td>
           <td><button onClick={(e) => this.startTask(e, task.id)}>Start</button></td>
+          <td><button onClick={(e) => this.taskDoneById(e, task.id)}>Done</button></td>
           <td><button onClick={(e) => this.editTask(e, task.id)}>Edit</button></td>
           <td><button onClick={(e) => this.removeTask(e, task.id)}>Remove</button></td>
         </tr>
@@ -114,7 +121,8 @@ class TaskList extends React.Component {
 TaskList.propTypes = {
   data: PropTypes.array,
   openEditTaskView: PropTypes.func,
-  startTask: PropTypes.func
+  startTask: PropTypes.func,
+  taskDoneById: PropTypes.func
 };
 
 export default TaskList;
