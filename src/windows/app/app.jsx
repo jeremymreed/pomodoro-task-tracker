@@ -150,12 +150,6 @@ class App extends React.Component {
 
   stopTask() {
     if (this.validateState()) {
-      ipcRenderer.send('showNotification', {
-        title: 'Stopped Task',
-        body: 'The task has been stopped',
-        urgency: 'normal'
-      });
-
       this.setState({currentTask: -1, stateVar: this.MainViewState});
     } else {
       throw new Error('invalid state detected!');

@@ -1,6 +1,7 @@
 import React from 'react';
 import electronSettings from 'electron-settings';
 import PropTypes from 'prop-types';
+import { ipcRenderer } from 'electron';
 
 class EditSettingsView extends React.Component {
   constructor(props) {
@@ -56,6 +57,8 @@ class EditSettingsView extends React.Component {
       longRest: this.minutesToSeconds(this.state.longRest),
       intervalsInSet: this.state.intervalsInSet
     });
+
+    ipcRenderer.send('showNotification', 'settingsUpdated');
 
     this.props.closeEditSettingsView();
   }

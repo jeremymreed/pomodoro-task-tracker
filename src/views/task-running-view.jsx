@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { ipcRenderer } from 'electron';
 import Timer from '../components/timer';
 
 class TaskRunningView extends React.Component {
@@ -56,6 +57,8 @@ class TaskRunningView extends React.Component {
     this._stopTimer();
     this.props.updateTask(this.getTotalTimeRan(), false);
     this.props.stopTask();
+
+    ipcRenderer.send('showNotification', 'taskStopped');
   }
 
   taskDone(event) {
@@ -64,6 +67,8 @@ class TaskRunningView extends React.Component {
     this._stopTimer();
     this.props.updateTask(this.getTotalTimeRan(), true);
     this.props.stopTask();
+
+    ipcRenderer.send('showNotification', 'taskDone');
   }
 
   render() {

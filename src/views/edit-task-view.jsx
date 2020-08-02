@@ -31,6 +31,7 @@ class EditTaskView extends React.Component {
     event.preventDefault();
 
     ipcRenderer.send('submitTaskData', new Task(this.state.id, this.state.name, this.state.description, this.props.task.done));
+    ipcRenderer.send('showNotification', 'taskUpdated');
     this.props.closeEditTaskView();
   }
 
