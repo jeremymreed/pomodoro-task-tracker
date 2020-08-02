@@ -75,9 +75,10 @@ class TaskRunningView extends React.Component {
     }
     return (
       <div>
+        <h1>Task Active</h1>
+        <p>Current Task: { this.props.task.name }</p>
+        <p>Description: { this.props.task.description }</p>
         <Timer shouldRun={ this.state.shouldRun } handleTimerExpiration={ this.handleTimerExpiration } submitGetTotalTimeRan={ this.submitGetTotalTimeRan }/>
-        <p>Task Name: { this.props.task.name }</p>
-        <p>Task Description: { this.props.task.description }</p>
         <p>{ pauseResumeButton }</p>
         <p><button onClick={(e) => this.stopTask(e)}>Stop</button><button onClick={(e) => this.taskDone(e)}>Done</button></p>
       </div>
