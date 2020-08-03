@@ -84,13 +84,13 @@ class TaskList extends React.Component {
           <td><button onClick={(e) => this.startTask(e, task.id)}>Start</button></td>
           <td><button onClick={(e) => this.taskDoneById(e, task.id)}>Done</button></td>
           <td><button onClick={(e) => this.editTask(e, task.id)}>Edit</button></td>
-          <td><button onClick={(e) => this.removeTask(e, task.id)}>Remove</button></td>
+          <td><button className="remove-button" onClick={(e) => this.removeTask(e, task.id)}>Remove</button></td>
         </tr>
       );
     });
 
     return (
-      <table>
+      <table className="task-list-table">
         <thead>
           <tr>
             <th>Id</th>
