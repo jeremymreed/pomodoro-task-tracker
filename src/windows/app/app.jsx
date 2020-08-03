@@ -57,8 +57,6 @@ class App extends React.Component {
       data: [],
       currentTask: -1,
       stateVar: this.MainViewState,
-      showEditTask: false,  // Show EditTaskDialog.
-      taskRunning: false    // Show TaskRunningView.
     }
   }
 
