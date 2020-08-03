@@ -63,7 +63,7 @@ function createWindow() {
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
   // Opens the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   initialSetup();
 }
