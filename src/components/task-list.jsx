@@ -110,7 +110,6 @@ class TaskList extends React.Component {
   render () {
     return (
       <div>
-        <p>Testing Main View</p>
         { this.getTaskList() }
         <p><button onClick={(e) => this.addTask(e)}>Add new task</button></p>
       </div>
