@@ -141,7 +141,6 @@ class App extends React.Component {
   }
 
   updateTaskTimeSpentOnTask(timeSpentOnTask) {
-    console.log('App: updateTask: timeSpentOnTask:', timeSpentOnTask);
     if (this.validateState()) {
       let task = this.getCurrentTask();
       task.timeSpent = task.timeSpent + timeSpentOnTask;
