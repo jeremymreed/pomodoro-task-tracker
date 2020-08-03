@@ -34,7 +34,10 @@ class App extends React.Component {
     this.closeEditTaskView = this.closeEditTaskView.bind(this);
     this.openEditSettingsView = this.openEditSettingsView.bind(this);
     this.closeEditSettingsView = this.closeEditSettingsView.bind(this);
-    this.updateTask = this.updateTask.bind(this);
+    this.updateTaskTimeSpentOnTask = this.updateTaskTimeSpentOnTask.bind(this);
+    this.taskDone = this.taskDone.bind(this);
+    this.taskDoneById = this.taskDoneById.bind(this);
+    this.editTask = this.editTask.bind(this);
     this.startTask = this.startTask.bind(this);
     this.stopTask = this.stopTask.bind(this);
 
@@ -49,13 +52,12 @@ class App extends React.Component {
     this.TaskRunningState = 2;
     this.EditSettingsState = 3;
 
+    // TODO: Consider using only dataMap, and generate data array on the fly when needed.
     this.state = {
-      dataMap: new Map(),
-      data: [],
+      dataMap: new Map(),             // Task Data in map, makes lookup easier.
+      data: [],                       // Task Data in array, easy to display in TaskList.
       currentTask: -1,
       stateVar: this.MainViewState,
-      showEditTask: false,  // Show EditTaskDialog.
-      taskRunning: false    // Show TaskRunningView.
     }
   }
 
@@ -69,6 +71,7 @@ class App extends React.Component {
     this._isMounted = false;
   }
 
+  // This is a call back, and it is called when the main process has gotten the data we need.
   handleDataReady(event, dataMap) {
     let data = [];
     const iter = dataMap.values();
@@ -92,6 +95,7 @@ class App extends React.Component {
     }
   }
 
+  // TODO: Magic numbers, yay!  Will be obsolete when we convert code to TypeScript.
   validateState() {
     return this.state.stateVar >= 0 && this.state.stateVar <= 3;
   }
@@ -136,11 +140,50 @@ class App extends React.Component {
     }
   }
 
-  updateTask(timeSpentOnTask, done) {
+  updateTaskTimeSpentOnTask(timeSpentOnTask) {
     console.log('App: updateTask: timeSpentOnTask:', timeSpentOnTask);
     if (this.validateState()) {
       let task = this.getCurrentTask();
       task.timeSpent = task.timeSpent + timeSpentOnTask;
+      ipcRenderer.send('submitTaskData', task);
+    } else {
+      throw new Error('invalid state detected!');
+    }
+  }
+
+  // TODO: There is some duplicated code in these two methods, consider extracting the common code.
+
+  // Called by TaskRunningView: Assumes that there is a current task.
+  taskDone() {
+    if (this.validateState()) {
+      let task = this.getCurrentTask();
+      task.done = true;
+      ipcRenderer.send('submitTaskData', task)
+      ipcRenderer.send('showNotification', 'taskDone');
+    } else {
+      throw new Error('invalid state detected!');
+    }
+  }
+
+  // Called by EditTaskView: Must get task from dataMap, as there is no current task.
+  taskDoneById(taskId) {
+    if (this.validateState()) {
+      if (this.state.dataMap.has(taskId)) {
+        let task = this.state.dataMap.get(taskId);
+        task.done = true;
+        ipcRenderer.send('submitTaskData', task);
+        ipcRenderer.send('showNotification', 'taskDone');
+      }
+    } else {
+      throw new Error('invalid state detected!');
+    }
+  }
+
+  editTask(name, description, done) {
+    if (this.validateState()) {
+      let task = this.getCurrentTask();
+      task.name = name;
+      task.description = description;
       task.done = done;
       ipcRenderer.send('submitTaskData', task);
     } else {
@@ -160,7 +203,7 @@ class App extends React.Component {
     if (this.state.stateVar === this.TaskRunningState) {
       return (
         <div>
-          <TaskRunningView task={ this.getCurrentTask() } updateTask={ this.updateTask } stopTask={ this.stopTask }/>
+          <TaskRunningView task={ this.getCurrentTask() } updateTaskTimeSpentOnTask={ this.updateTaskTimeSpentOnTask } taskDone={ this.taskDone } stopTask={ this.stopTask }/>
         </div>
       );
     } else if (this.state.stateVar === this.EditSettingsState) {
@@ -172,13 +215,13 @@ class App extends React.Component {
     } else if (this.state.stateVar === this.EditTaskState) {
       return (
           <div>
-          <EditTaskView task={ this.getCurrentTask() } closeEditTaskView={ this.closeEditTaskView }/>
+          <EditTaskView task={ this.getCurrentTask() } editTask={ this.editTask } closeEditTaskView={ this.closeEditTaskView }/>
         </div>
       );
     } else if (this.state.stateVar === this.MainViewState) {
       return (
         <div>
-          <MainView data={ this.state.data } startTask={ this.startTask } openEditTaskView={ this.openEditTaskView } openEditSettingsView={ this.openEditSettingsView }/>
+          <MainView data={ this.state.data } startTask={ this.startTask } taskDoneById={ this.taskDoneById } openEditTaskView={ this.openEditTaskView } openEditSettingsView={ this.openEditSettingsView }/>
         </div>
       );
     }

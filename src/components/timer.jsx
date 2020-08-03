@@ -1,3 +1,21 @@
+/*
+Copyright © 2020 Jeremy M. Reed
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
 import React from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -22,10 +40,12 @@ class Timer extends React.Component {
     if (this.props.shouldRun) {
       this.totalTimeRan += 1;
 
+      // Timer should run, and has not expired.
       if (this.props.shouldRun && !(this.state.time.minutes() === 0 && this.state.time.seconds() === 0)) {
         this.setState({time: this.state.time.subtract(1, 'second')});
       }
 
+      // TImer should run, and has expired.
       if (this.props.shouldRun && this.state.time.minutes() === 0 && this.state.time.seconds() === 0) {
         this.props.handleTimerExpiration();
         this.setState({time: moment.duration(this.pomodoro.getNextTimerSetting(), 'seconds')});
@@ -42,6 +62,7 @@ class Timer extends React.Component {
     clearInterval(this.interval);
   }
 
+  // Formatting helper functions.
   getMinutes() {
     if (Math.trunc(this.state.time.asMinutes()) < 10 ) {
       return `0${Math.trunc(this.state.time.asMinutes())}`;
@@ -72,7 +93,7 @@ class Timer extends React.Component {
   render() {
     return (
       <div>
-        Time remaning { this.getMinutes() } : { this.getSeconds() }
+        Time remaining { this.getMinutes() } : { this.getSeconds() }
       </div>
     );
   }

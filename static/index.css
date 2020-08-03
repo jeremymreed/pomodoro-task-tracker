@@ -22,3 +22,17 @@ body {
   max-width: 38rem;
   padding: 2rem;
 }
+
+.description-textarea {
+  height: 10em;
+  width: 50em;
+}
+
+.task-list-table {
+  border: 2px solid #000;
+}
+
+.remove-button {
+  background-color: #F00;
+  color: #FFF;
+}

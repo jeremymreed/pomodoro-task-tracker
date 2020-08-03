@@ -1,3 +1,21 @@
+/*
+Copyright © 2020 Jeremy M. Reed
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
@@ -10,10 +28,14 @@ class TaskList extends React.Component {
     this.editTask = this.editTask.bind(this);
   }
 
-  startTask(event, taskId) {
+  startTask(event, taskId, done) {
     event.preventDefault();
 
-    this.props.startTask(taskId);
+    if (!done) {
+      this.props.startTask(taskId);
+    } else {
+      ipcRenderer.send('showNotification', 'disallow-start-task-when-done')
+    }
   }
 
   addTask(event) {
@@ -26,6 +48,12 @@ class TaskList extends React.Component {
     event.preventDefault();
 
     this.props.openEditTaskView(taskId)
+  }
+
+  taskDoneById(event, taskId) {
+    event.preventDefault();
+
+    this.props.taskDoneById(taskId);
   }
 
   removeTask(event, taskId) {
@@ -75,15 +103,16 @@ class TaskList extends React.Component {
           <td>{ task.description }</td>
           <td>{ this.getTimeString(task.timeSpent) }</td>
           <td>{ this.getDone(task.done) }</td>
-          <td><button onClick={(e) => this.startTask(e, task.id)}>Start</button></td>
+          <td><button onClick={(e) => this.startTask(e, task.id, task.done)}>Start</button></td>
+          <td><button onClick={(e) => this.taskDoneById(e, task.id)}>Done</button></td>
           <td><button onClick={(e) => this.editTask(e, task.id)}>Edit</button></td>
-          <td><button onClick={(e) => this.removeTask(e, task.id)}>Remove</button></td>
+          <td><button className="remove-button" onClick={(e) => this.removeTask(e, task.id)}>Remove</button></td>
         </tr>
       );
     });
 
     return (
-      <table>
+      <table className="task-list-table">
         <thead>
           <tr>
             <th>Id</th>
@@ -103,7 +132,6 @@ class TaskList extends React.Component {
   render () {
     return (
       <div>
-        <p>Testing Main View</p>
         { this.getTaskList() }
         <p><button onClick={(e) => this.addTask(e)}>Add new task</button></p>
       </div>
@@ -114,7 +142,8 @@ class TaskList extends React.Component {
 TaskList.propTypes = {
   data: PropTypes.array,
   openEditTaskView: PropTypes.func,
-  startTask: PropTypes.func
+  startTask: PropTypes.func,
+  taskDoneById: PropTypes.func
 };
 
 export default TaskList;

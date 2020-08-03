@@ -1,5 +1,24 @@
+/*
+Copyright © 2020 Jeremy M. Reed
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
 import React from 'react';
 import PropTypes from 'prop-types';
+import { ipcRenderer } from 'electron';
 import Timer from '../components/timer';
 
 class TaskRunningView extends React.Component {
@@ -30,7 +49,7 @@ class TaskRunningView extends React.Component {
   // Timer tells us it has expired.
   handleTimerExpiration() {
     this._stopTimer();
-    this.props.updateTask(this.getTotalTimeRan(), false);
+    this.props.updateTaskTimeSpentOnTask(this.getTotalTimeRan());
   }
 
   // User wants to pause the timer.
@@ -38,7 +57,7 @@ class TaskRunningView extends React.Component {
     event.preventDefault();
 
     this._stopTimer();
-    this.props.updateTask(this.getTotalTimeRan(), false);
+    this.props.updateTaskTimeSpentOnTask(this.getTotalTimeRan());
   }
 
   // User wants to resume the timer.
@@ -54,15 +73,19 @@ class TaskRunningView extends React.Component {
     event.preventDefault();
 
     this._stopTimer();
-    this.props.updateTask(this.getTotalTimeRan(), false);
+    this.props.updateTaskTimeSpentOnTask(this.getTotalTimeRan());
     this.props.stopTask();
+
+    ipcRenderer.send('showNotification', 'taskStopped');
   }
 
+  // User is done with this task.
   taskDone(event) {
     event.preventDefault();
 
     this._stopTimer();
-    this.props.updateTask(this.getTotalTimeRan(), true);
+    this.props.updateTaskTimeSpentOnTask(this.getTotalTimeRan());
+    this.props.taskDone();
     this.props.stopTask();
   }
 
@@ -75,9 +98,10 @@ class TaskRunningView extends React.Component {
     }
     return (
       <div>
+        <h1>Task Active</h1>
+        <p>Current Task: { this.props.task.name }</p>
+        <p>Description: { this.props.task.description }</p>
         <Timer shouldRun={ this.state.shouldRun } handleTimerExpiration={ this.handleTimerExpiration } submitGetTotalTimeRan={ this.submitGetTotalTimeRan }/>
-        <p>Task Name: { this.props.task.name }</p>
-        <p>Task Description: { this.props.task.description }</p>
         <p>{ pauseResumeButton }</p>
         <p><button onClick={(e) => this.stopTask(e)}>Stop</button><button onClick={(e) => this.taskDone(e)}>Done</button></p>
       </div>
@@ -87,7 +111,8 @@ class TaskRunningView extends React.Component {
 
 TaskRunningView.propTypes = {
   task: PropTypes.object,
-  updateTask: PropTypes.func,
+  updateTaskTimeSpentOnTask: PropTypes.func,
+  taskDone: PropTypes.func,
   stopTask: PropTypes.func
 }
 
