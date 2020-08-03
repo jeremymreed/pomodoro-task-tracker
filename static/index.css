@@ -22,3 +22,8 @@ body {
   max-width: 38rem;
   padding: 2rem;
 }
+
+.description-textarea {
+  height: 10em;
+  width: 50em;
+}
