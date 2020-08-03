@@ -34,6 +34,7 @@ class MainView extends React.Component {
   render() {
     return (
       <div>
+        <h1>Pomodoro Task Tracker</h1>
         <TaskList data={this.props.data} startTask={ this.props.startTask } taskDoneById={ this.props.taskDoneById } openEditTaskView={ this.props.openEditTaskView }/>
         <p><button onClick={(e) => this.editSettings(e)}>Edit Settings</button></p>
       </div>
