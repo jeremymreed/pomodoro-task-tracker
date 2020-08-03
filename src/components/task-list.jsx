@@ -98,9 +98,7 @@ class TaskList extends React.Component {
     const listTasks = this.props.data.map((task) => {
       return (
         <tr key={ task.id }>
-          <td>{ task.id }</td>
           <td>{ task.name }</td>
-          <td>{ task.description }</td>
           <td>{ this.getTimeString(task.timeSpent) }</td>
           <td>{ this.getDone(task.done) }</td>
           <td><button onClick={(e) => this.startTask(e, task.id, task.done)}>Start</button></td>
@@ -115,9 +113,7 @@ class TaskList extends React.Component {
       <table className="task-list-table">
         <thead>
           <tr>
-            <th>Id</th>
             <th>Name</th>
-            <th>Description</th>
             <th>Time</th>
             <th>Done</th>
           </tr>
