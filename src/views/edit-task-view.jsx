@@ -52,31 +52,31 @@ class EditTaskView extends React.Component {
       <div>
         <h1>Task Editor</h1>
         <form onSubmit={(event) => this.formSubmit(event)}>
-          <p>
+          <div>
             <label>
               Name:
               <input type="text" value={this.state.name} onChange={(event) => this.handleNameChange(event)} />
             </label>
-          </p>
+          </div>
 
-          <p>
+          <div>
             <label>
-              Description:
-              <input type="text" value={this.state.description} onChange={(event) => this.handleDescriptionChange(event)} />
+              <p>Description:</p>
+              <textarea className="description-textarea" value={this.state.description} onChange={(event) => this.handleDescriptionChange(event)} />
             </label>
-          </p>
+          </div>
 
-          <p>
+          <div>
             <label>
               Done:
               <input type="checkbox" value={ this.state.done } checked={ this.state.done } onChange={() => this.handleDoneChange()}/>
             </label>
-          </p>
+          </div>
 
-          <p>
+          <div>
             <input type="submit" value="Submit"></input>
             <button onClick={(e) => this.cancelEdit(e)}>Cancel</button>
-          </p>
+          </div>
         </form>
       </div>
     );
