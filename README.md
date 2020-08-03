@@ -17,7 +17,7 @@ I have only tested this software on Linux.  (I use Manjaro KDE)
 
 # Usage:
 
-You will need to have [nodejs / npm](https://nodejs.org/en/) installed on your machine to use this software.
+You will need to have [nodejs and npm](https://nodejs.org/en/) installed on your machine to use this software.
 
 Clone this repository. Go into the pomodoro-task-tracker directory.
 
