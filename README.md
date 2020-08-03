@@ -1,4 +1,4 @@
-pomodoro-task-tracker
+Pomodoro Task Tracker
 ======================================
 
 ### Table of Contents
