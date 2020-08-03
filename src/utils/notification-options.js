@@ -35,6 +35,13 @@ class NotificationOptions {
         body: 'You completed the task!  Great job!  Keep going!',
         urgency: 'normal'
       });
+
+    this.notificationOptions.set(
+      'disallow-start-task-when-done', {
+        title: 'Cannot start',
+        body: 'You cannot start a task that is done!',
+        urgency: 'critical'
+      });
   }
 
   getNotification(notificationName) {

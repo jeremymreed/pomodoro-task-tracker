@@ -10,10 +10,14 @@ class TaskList extends React.Component {
     this.editTask = this.editTask.bind(this);
   }
 
-  startTask(event, taskId) {
+  startTask(event, taskId, done) {
     event.preventDefault();
 
-    this.props.startTask(taskId);
+    if (!done) {
+      this.props.startTask(taskId);
+    } else {
+      ipcRenderer.send('showNotification', 'disallow-start-task-when-done')
+    }
   }
 
   addTask(event) {
@@ -81,7 +85,7 @@ class TaskList extends React.Component {
           <td>{ task.description }</td>
           <td>{ this.getTimeString(task.timeSpent) }</td>
           <td>{ this.getDone(task.done) }</td>
-          <td><button onClick={(e) => this.startTask(e, task.id)}>Start</button></td>
+          <td><button onClick={(e) => this.startTask(e, task.id, task.done)}>Start</button></td>
           <td><button onClick={(e) => this.taskDoneById(e, task.id)}>Done</button></td>
           <td><button onClick={(e) => this.editTask(e, task.id)}>Edit</button></td>
           <td><button className="remove-button" onClick={(e) => this.removeTask(e, task.id)}>Remove</button></td>
