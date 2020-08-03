@@ -154,7 +154,8 @@ class App extends React.Component {
     if (this.validateState()) {
       let task = this.getCurrentTask();
       task.done = true;
-      ipcRenderer.send('submitTaskData', task);
+      ipcRenderer.send('submitTaskData', task)
+      ipcRenderer.send('showNotification', 'taskDone');
     } else {
       throw new Error('invalid state detected!');
     }
@@ -166,6 +167,7 @@ class App extends React.Component {
         let task = this.state.dataMap.get(taskId);
         task.done = true;
         ipcRenderer.send('submitTaskData', task);
+        ipcRenderer.send('showNotification', 'taskDone');
       }
     } else {
       throw new Error('invalid state detected!');

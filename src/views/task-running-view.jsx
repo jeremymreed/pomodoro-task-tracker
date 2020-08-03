@@ -68,8 +68,6 @@ class TaskRunningView extends React.Component {
     this.props.updateTaskTimeSpentOnTask(this.getTotalTimeRan());
     this.props.taskDone();
     this.props.stopTask();
-
-    ipcRenderer.send('showNotification', 'taskDone');
   }
 
   render() {
