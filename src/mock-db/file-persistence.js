@@ -20,9 +20,11 @@ import fs from 'fs';
 import process from 'process';
 import path from 'path';
 
+// TODO: This class is kind of ugly.
 class FilePersistence {
   // Load raw data from file.
   static loadFromFile() {
+    // TODO: This path is hardcoded.
     const rawData = fs.readFileSync(path.join(process.cwd(), '/data/mock-data.json'), 'utf8');
     const jsonData = JSON.parse(rawData);
 

@@ -16,6 +16,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+// TODO: Should we consider adding getters/setters, and avoid directly accessing these data members directly from code?
 class Task {
   constructor(id = 0, name = '', description = '', timeSpent = 0, done = false) {
     this.id = id;

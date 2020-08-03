@@ -52,9 +52,10 @@ class App extends React.Component {
     this.TaskRunningState = 2;
     this.EditSettingsState = 3;
 
+    // TODO: Consider using only dataMap, and generate data array on the fly when needed.
     this.state = {
-      dataMap: new Map(),
-      data: [],
+      dataMap: new Map(),             // Task Data in map, makes lookup easier.
+      data: [],                       // Task Data in array, easy to display in TaskList.
       currentTask: -1,
       stateVar: this.MainViewState,
     }
@@ -70,6 +71,7 @@ class App extends React.Component {
     this._isMounted = false;
   }
 
+  // This is a call back, and it is called when the main process has gotten the data we need.
   handleDataReady(event, dataMap) {
     let data = [];
     const iter = dataMap.values();
@@ -93,6 +95,7 @@ class App extends React.Component {
     }
   }
 
+  // TODO: Magic numbers, yay!  Will be obsolete when we convert code to TypeScript.
   validateState() {
     return this.state.stateVar >= 0 && this.state.stateVar <= 3;
   }
@@ -148,6 +151,9 @@ class App extends React.Component {
     }
   }
 
+  // TODO: There is some duplicated code in these two methods, consider extracting the common code.
+
+  // Called by TaskRunningView: Assumes that there is a current task.
   taskDone() {
     if (this.validateState()) {
       let task = this.getCurrentTask();
@@ -159,6 +165,7 @@ class App extends React.Component {
     }
   }
 
+  // Called by EditTaskView: Must get task from dataMap, as there is no current task.
   taskDoneById(taskId) {
     if (this.validateState()) {
       if (this.state.dataMap.has(taskId)) {

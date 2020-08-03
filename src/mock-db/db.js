@@ -24,7 +24,8 @@ class DB {
     this.nextId = 0;
   }
 
-  // Caution, this will update an existing record!
+  // Caution, this will update an existing record!  This is ok now, we use this to update records too!
+  // TODO: Consider name change, since this does adds AND updates.
   addTask(task) {
     this.data.set(task.id, task);
   }
@@ -47,6 +48,7 @@ class DB {
     return retval;
   }
 
+  // TODO: Isn't this fragile?  Every time Task changes, this function needs to be modified.  This has bitten us in the ass before!
   restoreData(jsonData) {
     this.nextId = jsonData.nextId;
     for (let i = 0 ; i < jsonData.data.length ; i++ ) {

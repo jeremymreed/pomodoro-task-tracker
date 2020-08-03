@@ -60,21 +60,16 @@ class Pomodoro {
 
   // Goes to next phase, starts that phase.
   getNextTimerSetting() {
-    console.log('Pomodoro: getNextTimerSetting called');
-    console.log('Pomodoro: getNextTimerSetting: this.interval:', this.interval);
-    console.log('Pomodoro: getNextTimerSetting: this.intervalArray', this.intervalArray);
     if (this.intervalArray.length === 0) {
-      if (this.interval === 3) {
+      if (this.interval === this.intervalsInSet - 1) {
         this.interval = 0;
       } else {
-        this.interval = this.interval + 1; // TODO: Bug here?
+        this.interval = this.interval + 1;
       }
       this.setupInterval();
     }
 
     this.currentPhase = this.intervalArray.pop();
-    console.log('Pomodoro: getNextTimerSetting: this.interval:', this.interval);
-    console.log('this.currentPhase: ', this.currentPhase);
     return (this.currentPhase);
   }
 }

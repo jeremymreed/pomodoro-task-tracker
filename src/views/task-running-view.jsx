@@ -79,6 +79,7 @@ class TaskRunningView extends React.Component {
     ipcRenderer.send('showNotification', 'taskStopped');
   }
 
+  // User is done with this task.
   taskDone(event) {
     event.preventDefault();
 

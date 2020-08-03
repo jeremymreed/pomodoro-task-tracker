@@ -40,10 +40,12 @@ class Timer extends React.Component {
     if (this.props.shouldRun) {
       this.totalTimeRan += 1;
 
+      // Timer should run, and has not expired.
       if (this.props.shouldRun && !(this.state.time.minutes() === 0 && this.state.time.seconds() === 0)) {
         this.setState({time: this.state.time.subtract(1, 'second')});
       }
 
+      // TImer should run, and has expired.
       if (this.props.shouldRun && this.state.time.minutes() === 0 && this.state.time.seconds() === 0) {
         this.props.handleTimerExpiration();
         this.setState({time: moment.duration(this.pomodoro.getNextTimerSetting(), 'seconds')});
@@ -60,6 +62,7 @@ class Timer extends React.Component {
     clearInterval(this.interval);
   }
 
+  // Formatting helper functions.
   getMinutes() {
     if (Math.trunc(this.state.time.asMinutes()) < 10 ) {
       return `0${Math.trunc(this.state.time.asMinutes())}`;
