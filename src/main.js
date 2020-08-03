@@ -95,8 +95,6 @@ ipcMain.on('getData', (event) => {
 });
 
 ipcMain.on('submitTaskData', (event, taskData) => {
-  console.log('Got taskData: ', taskData);
-
   if (taskData.id === -1) {
     taskData.id = db.getNextId();
   }
@@ -108,8 +106,6 @@ ipcMain.on('submitTaskData', (event, taskData) => {
 });
 
 ipcMain.on('removeTask', (event, taskId) => {
-  console.log('removeTask: got taskId:', taskId);
-
   db.removeTask(taskId);
   FilePersistence.saveToFile(FilePersistence.mapData(db.nextId, db.data));
 

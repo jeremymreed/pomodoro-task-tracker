@@ -84,7 +84,6 @@ class Timer extends React.Component {
   // This behavior is also seen when letting the timer expire, and the user clicks stop.
   //   Both actions result in an update to the task, and both handlers call this function!
   getTotalTimeRan() {
-    console.log('this.totalTimeRan:', this.totalTimeRan);
     const totalTimeRan = this.totalTimeRan;
     this.totalTimeRan = 0;
     return totalTimeRan;
