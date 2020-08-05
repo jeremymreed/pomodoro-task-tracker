@@ -19,6 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
+import electronSettings from 'electron-settings';
 import moment from 'moment';
 import TimeConverter from '../utils/time-converter';
 
@@ -64,6 +65,14 @@ class TaskList extends React.Component {
     ipcRenderer.send('removeTask', taskId);
   }
 
+  getSeconds(durationInSeconds) {
+    if (electronSettings.getSync('shouldDisplaySeconds')) {
+      return `: ${TimeConverter.getSeconds(durationInSeconds)}`;
+    } else {
+      return '';
+    }
+  }
+
   getDone(done) {
     if (done) {
       return '✓';
@@ -74,7 +83,7 @@ class TaskList extends React.Component {
 
   getTimeString(timeInSeconds) {
     const durationInSeconds = moment.duration(timeInSeconds, 'seconds');
-    return `${TimeConverter.getAsDays(durationInSeconds)} : ${TimeConverter.getHours(durationInSeconds)} : ${TimeConverter.getMinutes(durationInSeconds)} : ${TimeConverter.getSeconds(durationInSeconds)}`;
+    return `${TimeConverter.getAsDays(durationInSeconds)} : ${TimeConverter.getHours(durationInSeconds)} : ${TimeConverter.getMinutes(durationInSeconds)} ${this.getSeconds(durationInSeconds)}`;
   }
 
   getTaskList() {
