@@ -19,6 +19,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
+import moment from 'moment';
+import TimeConverter from '../utils/time-converter';
 
 class TaskList extends React.Component {
   constructor(props) {
@@ -62,26 +64,6 @@ class TaskList extends React.Component {
     ipcRenderer.send('removeTask', taskId);
   }
 
-  // NOTE: If we ever want to target the browser, we may want to look at Math.trunc again, since IE has no support for it.
-  getMinutes(timeInSeconds) {
-    const minutes = Math.trunc(timeInSeconds / 60);
-    if (minutes < 10 ) {
-      return `0${minutes}`;
-    } else {
-      return `${minutes}`;
-    }
-  }
-
-  // NOTE: If we ever want to target the browser, we may want to look at Math.trunc again, since IE has no support for it.
-  getSeconds(timeInSeconds) {
-    const seconds = Math.trunc(timeInSeconds % 60);
-    if (seconds < 10 ) {
-      return `0${seconds}`;
-    } else {
-      return `${seconds}`;
-    }
-  }
-
   getDone(done) {
     if (done) {
       return '✓';
@@ -91,7 +73,8 @@ class TaskList extends React.Component {
   }
 
   getTimeString(timeInSeconds) {
-    return `${this.getMinutes(timeInSeconds)} : ${this.getSeconds(timeInSeconds)}`;
+    const durationInSeconds = moment.duration(timeInSeconds, 'seconds');
+    return `${TimeConverter.getAsDays(durationInSeconds)} : ${TimeConverter.getHours(durationInSeconds)} : ${TimeConverter.getMinutes(durationInSeconds)} : ${TimeConverter.getSeconds(durationInSeconds)}`;
   }
 
   getTaskList() {
