@@ -34,7 +34,8 @@ class EditSettingsView extends React.Component {
       pomodoro: this.secondsToMinutes(electronSettings.getSync('pomodoro')),
       shortRest: this.secondsToMinutes(electronSettings.getSync('shortRest')),
       longRest: this.secondsToMinutes(electronSettings.getSync('longRest')),
-      intervalsInSet: electronSettings.getSync('intervalsInSet')
+      intervalsInSet: electronSettings.getSync('intervalsInSet'),
+      shouldDisplaySeconds: electronSettings.getSync('shouldDisplaySeconds')
     }
   }
 
@@ -66,6 +67,10 @@ class EditSettingsView extends React.Component {
     this.setState({intervalsInSet: newIntervalsInSet});
   }
 
+  handleShouldDisplaySecondsChange() {
+    this.setState({shouldDisplaySeconds: !this.state.shouldDisplaySeconds});
+  }
+
   formSubmit(event) {
     event.preventDefault();
 
@@ -73,7 +78,8 @@ class EditSettingsView extends React.Component {
       pomodoro: this.minutesToSeconds(this.state.pomodoro),
       shortRest: this.minutesToSeconds(this.state.shortRest),
       longRest: this.minutesToSeconds(this.state.longRest),
-      intervalsInSet: this.state.intervalsInSet
+      intervalsInSet: this.state.intervalsInSet,
+      shouldDisplaySeconds: this.state.shouldDisplaySeconds
     });
 
     ipcRenderer.send('showNotification', 'settingsUpdated');
@@ -119,6 +125,13 @@ class EditSettingsView extends React.Component {
               <input type="text" value={this.state.intervalsInSet} onChange={(event) => this.handleIntervalsInSetChange(event)} />
             </label>
           </p>
+
+          <div>
+            <label>
+              Display Seconds?
+              <input type="checkbox" value={ this.state.done } checked={ this.state.shouldDisplaySeconds } onChange={() => this.  handleShouldDisplaySecondsChange() }/>
+            </label>
+          </div>
 
           <p>
             <input type="submit" value="Submit"></input>
