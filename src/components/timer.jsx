@@ -92,7 +92,7 @@ class Timer extends React.Component {
   render() {
     return (
       <div>
-        Time remaining { this.getMinutes() } : { this.getSeconds() }
+        Time remaining: { this.getMinutes() } : { this.getSeconds() }
       </div>
     );
   }
