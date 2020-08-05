@@ -23,7 +23,7 @@ body {
   padding: 2rem;
 }
 
-.description-textarea {
+.description-size {
   height: 10em;
   width: 50em;
 }
@@ -35,4 +35,12 @@ body {
 .remove-button {
   background-color: #F00;
   color: #FFF;
+}
+
+.active-task-style {
+  font-weight: bold;
+}
+
+.description-style {
+  font-style: italic;
 }

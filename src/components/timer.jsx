@@ -20,6 +20,7 @@ import React from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import Pomodoro from '../utils/pomodoro';
+import TimeConverter from '../utils/time-converter';
 
 class Timer extends React.Component {
   constructor(props) {
@@ -62,23 +63,6 @@ class Timer extends React.Component {
     clearInterval(this.interval);
   }
 
-  // Formatting helper functions.
-  getMinutes() {
-    if (Math.trunc(this.state.time.asMinutes()) < 10 ) {
-      return `0${Math.trunc(this.state.time.asMinutes())}`;
-    } else {
-      return `${Math.trunc(this.state.time.asMinutes())}`;
-    }
-  }
-
-  getSeconds() {
-    if (this.state.time.seconds() < 10 ) {
-      return `0${this.state.time.seconds()}`;
-    } else {
-      return `${this.state.time.seconds()}`;
-    }
-  }
-
   // Reset to zero when consumed.  We may continue running this timer.
   // Resetting eliminates a bug where an incorrect time will be reported when the user clicks pause, then stop.
   // This behavior is also seen when letting the timer expire, and the user clicks stop.
@@ -91,9 +75,9 @@ class Timer extends React.Component {
 
   render() {
     return (
-      <div>
-        Time remaining { this.getMinutes() } : { this.getSeconds() }
-      </div>
+      <span>
+        { TimeConverter.getAsMinutes(this.state.time) } : { TimeConverter.getSeconds(this.state.time) }
+      </span>
     );
   }
 }

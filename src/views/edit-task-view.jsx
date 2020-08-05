@@ -78,7 +78,7 @@ class EditTaskView extends React.Component {
           <div>
             <label>
               <p>Description:</p>
-              <textarea className="description-textarea" value={this.state.description} onChange={(event) => this.handleDescriptionChange(event)} />
+              <textarea className="description-size" value={this.state.description} onChange={(event) => this.handleDescriptionChange(event)} />
             </label>
           </div>
 
