@@ -40,7 +40,8 @@ function initialSetup() {
       'pomodoro': 25 * 60,
       'shortRest': 5 * 60,
       'longRest': 15 * 60,
-      'intervalsInSet': 4
+      'intervalsInSet': 4,
+      'shouldDisplaySeconds': false
     });
   }
 }
