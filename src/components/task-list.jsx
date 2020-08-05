@@ -21,7 +21,7 @@ import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
 import electronSettings from 'electron-settings';
 import moment from 'moment';
-import TimeConverter from '../utils/time-converter';
+import humanizeDuration from 'humanize-duration';
 
 class TaskList extends React.Component {
   constructor(props) {
@@ -65,14 +65,6 @@ class TaskList extends React.Component {
     ipcRenderer.send('removeTask', taskId);
   }
 
-  getSeconds(durationInSeconds) {
-    if (electronSettings.getSync('shouldDisplaySeconds')) {
-      return `: ${TimeConverter.getSeconds(durationInSeconds)}`;
-    } else {
-      return '';
-    }
-  }
-
   getDone(done) {
     if (done) {
       return '✓';
@@ -83,7 +75,11 @@ class TaskList extends React.Component {
 
   getTimeString(timeInSeconds) {
     const durationInSeconds = moment.duration(timeInSeconds, 'seconds');
-    return `${TimeConverter.getAsDays(durationInSeconds)} : ${TimeConverter.getHours(durationInSeconds)} : ${TimeConverter.getMinutes(durationInSeconds)} ${this.getSeconds(durationInSeconds)}`;
+    if (electronSettings.getSync('shouldDisplaySeconds')) {
+      return humanizeDuration(durationInSeconds, {round: false, maxDecimalPoints: 2, units: ['d', 'h', 'm', 's']});
+    } else {
+      return humanizeDuration(durationInSeconds, {round: false, maxDecimalPoints: 2, units: ['d', 'h', 'm']});
+    }
   }
 
   getTaskList() {
