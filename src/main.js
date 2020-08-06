@@ -18,6 +18,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 import { BrowserWindow, app, ipcMain, Notification } from 'electron';
 import path from 'path';
+import MenuGenerator from './menu-generator';
 import DB from './mock-db/db';
 import NotificationOptions from './utils/notification-options';
 import FilePersistence from './mock-db/file-persistence';
@@ -73,7 +74,7 @@ app.whenReady().then(createWindow);
 
 // Get rid of default menu on startup.
 app.on('browser-window-created', (event, window) => {
-  window.setMenu(null);
+  window.setMenu(MenuGenerator.getMenu());
 });
 
 // Quit when all the windows are closed, except on macOS.
