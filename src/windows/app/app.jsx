@@ -64,6 +64,7 @@ class App extends React.Component {
   componentDidMount() {
     this._isMounted = true;
     ipcRenderer.on('dataReady', this.handleDataReady);
+    ipcRenderer.on('showEditSettingsView', this.openEditSettingsView);
     ipcRenderer.send('getData');
   }
 
