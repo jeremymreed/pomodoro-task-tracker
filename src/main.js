@@ -71,6 +71,11 @@ function createWindow() {
 
 app.whenReady().then(createWindow);
 
+// Get rid of default menu on startup.
+app.on('browser-window-created', (event, window) => {
+  window.setMenu(null);
+});
+
 // Quit when all the windows are closed, except on macOS.
 // There, it's common for applications and their menu bar to stay active until the user quits
 // explictly with Cmd + Q.
