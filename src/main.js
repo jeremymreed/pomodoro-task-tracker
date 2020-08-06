@@ -64,9 +64,6 @@ function createWindow() {
   // And load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
-  // Opens the DevTools.
-  // mainWindow.webContents.openDevTools();
-
   initialSetup();
 }
 
@@ -74,7 +71,8 @@ app.whenReady().then(createWindow);
 
 // Get rid of default menu on startup.
 app.on('browser-window-created', (event, window) => {
-  window.setMenu(MenuGenerator.getMenu());
+  // TODO: Isn't this a little weird?
+  window.setMenu(MenuGenerator.getMenu(window));
 });
 
 // Quit when all the windows are closed, except on macOS.
