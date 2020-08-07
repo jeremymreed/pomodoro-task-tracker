@@ -20,16 +20,17 @@ import React from 'react';
 import electronSettings from 'electron-settings';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
+import Slider from '@material-ui/core/Slider';
 
 class EditSettingsView extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handlePomodoroChange = this.handlePomodoroChange.bind(this);
-    this.handleShortRestChange = this.handleShortRestChange.bind(this);
-    this.handleLongRestChange = this.handleLongRestChange.bind(this);
-    this.handleIntervalsInSetChange = this.handleIntervalsInSetChange.bind(this);
-   
+    this.handlePomodoroSliderChange = this.handlePomodoroSliderChange.bind(this);
+    this.handleShortRestSliderChange = this.handleShortRestSliderChange.bind(this);
+    this.handleLongRestSliderChange = this.handleLongRestSliderChange.bind(this);
+    this.handleIntervalsInSetSliderChange = this.handleIntervalsInSetSliderChange.bind(this);
+
     this.state = {
       pomodoro: this.secondsToMinutes(electronSettings.getSync('pomodoro')),
       shortRest: this.secondsToMinutes(electronSettings.getSync('shortRest')),
@@ -45,16 +46,6 @@ class EditSettingsView extends React.Component {
 
   minutesToSeconds(amount) {
     return amount * 60;
-  }
-
-  handlePomodoroChange(event) {
-    const newPomodoro = event.target.value;
-    this.setState({pomodoro: newPomodoro});
-  }
-
-  handleShortRestChange(event) {
-    const newShortRest = event.target.value;
-    this.setState({shortRest: newShortRest});
   }
 
   handleLongRestChange(event) {
@@ -93,6 +84,34 @@ class EditSettingsView extends React.Component {
     this.props.closeEditSettingsView();
   }
 
+  handlePomodoroSliderChange(event, value) {
+    event.preventDefault();
+
+    this.setState({pomodoro: value});
+  }
+
+  handleShortRestSliderChange(event, value) {
+    event.preventDefault();
+
+    this.setState({shortRest: value});
+  }
+
+  handleLongRestSliderChange(event, value) {
+    event.preventDefault();
+
+    this.setState({longRest: value});
+  }
+
+  handleIntervalsInSetSliderChange(event, value) {
+    event.preventDefault();
+
+    this.setState({intervalsInSet: value});
+  }
+
+  valueText(value) {
+    return `${value}`
+  }
+
   render() {
     return (
       <div>
@@ -100,29 +119,65 @@ class EditSettingsView extends React.Component {
         <form onSubmit={(event) => this.formSubmit(event)}>
           <p>
             <label>
-              Pomodoro Length (in minutes):
-              <input type="text" value={this.state.pomodoro} onChange={(event) => this.handlePomodoroChange(event)} />
+              Pomodoro Length (in minutes): {this.state.pomodoro}
+              <Slider defaultValue={this.state.pomodoro}
+                getAriaValueText={this.valueText}
+                aria-labelledby="discrete-slider-small-steps"
+                step={1}
+                marks
+                min={1}
+                max={60}
+                valueLabelDisplay="auto"
+                onChangeCommitted={this.handlePomodoroSliderChange}
+              />
             </label>
           </p>
 
           <p>
             <label>
-              Short Rest Length (in minutes):
-              <input type="text" value={this.state.shortRest} onChange={(event) => this.handleShortRestChange(event)} />
+              Short Rest Length (in minutes): {this.state.shortRest}
+              <Slider defaultValue={this.state.shortRest}
+                getAriaValueText={this.valueText}
+                aria-labelledby="discrete-slider-small-steps"
+                step={1}
+                marks
+                min={1}
+                max={60}
+                valueLabelDisplay="auto"
+                onChangeCommitted={this.handleShortRestSliderChange}
+              />
             </label>
           </p>
 
           <p>
             <label>
-              Long Rest Length (in minutes):
-              <input type="text" value={this.state.longRest} onChange={(event) => this.handleLongRestChange(event)} />
+              Long Rest Length (in minutes): {this.state.longRest}
+              <Slider defaultValue={this.state.longRest}
+                getAriaValueText={this.valueText}
+                aria-labelledby="discrete-slider-small-steps"
+                step={1}
+                marks
+                min={1}
+                max={60}
+                valueLabelDisplay="auto"
+                onChangeCommitted={this.handleLongRestSliderChange}
+              />
             </label>
           </p>
 
           <p>
             <label>
-              How many Pomodoros before a long rest?
-              <input type="text" value={this.state.intervalsInSet} onChange={(event) => this.handleIntervalsInSetChange(event)} />
+              How many Pomodoros before a long rest? {this.state.intervalsInSet}
+              <Slider defaultValue={this.state.intervalsInSet}
+                getAriaValueText={this.valueText}
+                aria-labelledby="discrete-slider-small-steps"
+                step={1}
+                marks
+                min={1}
+                max={10}
+                valueLabelDisplay="auto"
+                onChangeCommitted={this.handleIntervalsInSetSliderChange}
+              />
             </label>
           </p>
 
