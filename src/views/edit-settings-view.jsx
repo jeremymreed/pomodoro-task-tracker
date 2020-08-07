@@ -36,7 +36,11 @@ class EditSettingsView extends React.Component {
       shortRest: this.secondsToMinutes(electronSettings.getSync('shortRest')),
       longRest: this.secondsToMinutes(electronSettings.getSync('longRest')),
       intervalsInSet: electronSettings.getSync('intervalsInSet'),
-      shouldDisplaySeconds: electronSettings.getSync('shouldDisplaySeconds')
+      shouldDisplaySeconds: electronSettings.getSync('shouldDisplaySeconds'),
+      timeLengthMin: 1,
+      timeLengthMax: 60,
+      intervalsInSetMin: 1,
+      intervalsInSetMax: 10
     }
   }
 
@@ -124,9 +128,9 @@ class EditSettingsView extends React.Component {
                 getAriaValueText={this.valueText}
                 aria-labelledby="discrete-slider-small-steps"
                 step={1}
-                marks
-                min={1}
-                max={60}
+                marks={[{value: this.state.timeLengthMin, label: `${this.state.timeLengthMin}`}, {value: this.state.timeLengthMax, label: `${this.state.timeLengthMax}`}]}
+                min={this.state.timeLengthMin}
+                max={this.state.timeLengthMax}
                 valueLabelDisplay="auto"
                 onChangeCommitted={this.handlePomodoroSliderChange}
               />
@@ -140,9 +144,9 @@ class EditSettingsView extends React.Component {
                 getAriaValueText={this.valueText}
                 aria-labelledby="discrete-slider-small-steps"
                 step={1}
-                marks
-                min={1}
-                max={60}
+                marks={[{value: this.state.timeLengthMin, label: `${this.state.timeLengthMin}`}, {value: this.state.timeLengthMax, label: `${this.state.timeLengthMax}`}]}
+                min={this.state.timeLengthMin}
+                max={this.state.timeLengthMax}
                 valueLabelDisplay="auto"
                 onChangeCommitted={this.handleShortRestSliderChange}
               />
@@ -156,9 +160,9 @@ class EditSettingsView extends React.Component {
                 getAriaValueText={this.valueText}
                 aria-labelledby="discrete-slider-small-steps"
                 step={1}
-                marks
-                min={1}
-                max={60}
+                marks={[{value: this.state.timeLengthMin, label: `${this.state.timeLengthMin}`}, {value: this.state.timeLengthMax, label: `${this.state.timeLengthMax}`}]}
+                min={this.state.timeLengthMin}
+                max={this.state.timeLengthMax}
                 valueLabelDisplay="auto"
                 onChangeCommitted={this.handleLongRestSliderChange}
               />
@@ -172,9 +176,9 @@ class EditSettingsView extends React.Component {
                 getAriaValueText={this.valueText}
                 aria-labelledby="discrete-slider-small-steps"
                 step={1}
-                marks
-                min={1}
-                max={10}
+                marks={[{value: this.state.intervalsInSetMin, label: `${this.state.intervalsInSetMin}`}, {value: this.state.intervalsInSetMax, label: `${this.state.intervalsInSetMax}`}]}
+                min={this.state.intervalsInSetMin}
+                max={this.state.intervalsInSetMax}
                 valueLabelDisplay="auto"
                 onChangeCommitted={this.handleIntervalsInSetSliderChange}
               />
