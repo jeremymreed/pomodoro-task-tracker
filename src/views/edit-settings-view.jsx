@@ -189,7 +189,7 @@ class EditSettingsView extends React.Component {
           </div>
 
           <p>
-            <input type="submit" value="Submit"></input>
+            <input type="Save" value="Submit"></input>
             <button onClick={(e) => this.cancelEdit(e)}>Cancel</button>
           </p>
         </form>
