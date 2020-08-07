@@ -30,7 +30,7 @@ npm install
 
 Then run:
 ```
-npm run project:start
+npm start
 ```
 
 To run tests: (test coverage sucks a bit.)
