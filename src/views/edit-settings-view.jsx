@@ -199,10 +199,10 @@ class EditSettingsView extends React.Component {
             </label>
           </div>
 
-          <p>
+          <span>
             <Button variant="contained" color="primary" onClick={(e) => this.formSubmit(e)}>Save</Button>
             <Button variant="contained" color="primary" onClick={(e) => this.cancelEdit(e)}>Cancel</Button>
-          </p>
+          </span>
         </FormGroup>
       </div>
     );
