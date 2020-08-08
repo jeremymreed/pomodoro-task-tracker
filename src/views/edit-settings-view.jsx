@@ -21,6 +21,7 @@ import electronSettings from 'electron-settings';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
 import Slider from '@material-ui/core/Slider';
+import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
@@ -121,71 +122,65 @@ class EditSettingsView extends React.Component {
   render() {
     return (
       <div>
-        <h1>Settings</h1>
+        <Typography variant="h1">
+          Settings
+        </Typography>
         <form onSubmit={(event) => this.formSubmit(event)}>
-          <p>
-            <label>
-              Pomodoro Length (in minutes): {this.state.pomodoro}
-              <Slider defaultValue={this.state.pomodoro}
-                getAriaValueText={this.valueText}
-                aria-labelledby="discrete-slider-small-steps"
-                step={1}
-                marks={[{value: this.state.timeLengthMin, label: `${this.state.timeLengthMin}`}, {value: this.state.timeLengthMax, label: `${this.state.timeLengthMax}`}]}
-                min={this.state.timeLengthMin}
-                max={this.state.timeLengthMax}
-                valueLabelDisplay="auto"
-                onChangeCommitted={this.handlePomodoroSliderChange}
-              />
-            </label>
-          </p>
+          <Typography>
+            Pomodoro Length (in minutes): {this.state.pomodoro}
+          </Typography>
+          <Slider defaultValue={this.state.pomodoro}
+            getAriaValueText={this.valueText}
+            aria-labelledby="discrete-slider-small-steps"
+            step={1}
+            marks={[{value: this.state.timeLengthMin, label: `${this.state.timeLengthMin}`}, {value: this.state.timeLengthMax, label: `${this.state.timeLengthMax}`}]}
+            min={this.state.timeLengthMin}
+            max={this.state.timeLengthMax}
+            valueLabelDisplay="auto"
+            onChangeCommitted={this.handlePomodoroSliderChange}
+          />
 
-          <p>
-            <label>
-              Short Rest Length (in minutes): {this.state.shortRest}
-              <Slider defaultValue={this.state.shortRest}
-                getAriaValueText={this.valueText}
-                aria-labelledby="discrete-slider-small-steps"
-                step={1}
-                marks={[{value: this.state.timeLengthMin, label: `${this.state.timeLengthMin}`}, {value: this.state.timeLengthMax, label: `${this.state.timeLengthMax}`}]}
-                min={this.state.timeLengthMin}
-                max={this.state.timeLengthMax}
-                valueLabelDisplay="auto"
-                onChangeCommitted={this.handleShortRestSliderChange}
-              />
-            </label>
-          </p>
+          <Typography>
+            Short Rest Length (in minutes): {this.state.shortRest}
+          </Typography>
+          <Slider defaultValue={this.state.shortRest}
+            getAriaValueText={this.valueText}
+            aria-labelledby="discrete-slider-small-steps"
+            step={1}
+            marks={[{value: this.state.timeLengthMin, label: `${this.state.timeLengthMin}`}, {value: this.state.timeLengthMax, label: `${this.state.timeLengthMax}`}]}
+            min={this.state.timeLengthMin}
+            max={this.state.timeLengthMax}
+            valueLabelDisplay="auto"
+            onChangeCommitted={this.handleShortRestSliderChange}
+          />
 
-          <p>
-            <label>
-              Long Rest Length (in minutes): {this.state.longRest}
-              <Slider defaultValue={this.state.longRest}
-                getAriaValueText={this.valueText}
-                aria-labelledby="discrete-slider-small-steps"
-                step={1}
-                marks={[{value: this.state.timeLengthMin, label: `${this.state.timeLengthMin}`}, {value: this.state.timeLengthMax, label: `${this.state.timeLengthMax}`}]}
-                min={this.state.timeLengthMin}
-                max={this.state.timeLengthMax}
-                valueLabelDisplay="auto"
-                onChangeCommitted={this.handleLongRestSliderChange}
-              />
-            </label>
-          </p>
+          <Typography>
+            Long Rest Length (in minutes): {this.state.longRest}
+          </Typography>
+          <Slider defaultValue={this.state.longRest}
+            getAriaValueText={this.valueText}
+            aria-labelledby="discrete-slider-small-steps"
+            step={1}
+            marks={[{value: this.state.timeLengthMin, label: `${this.state.timeLengthMin}`}, {value: this.state.timeLengthMax, label: `${this.state.timeLengthMax}`}]}
+            min={this.state.timeLengthMin}
+            max={this.state.timeLengthMax}
+            valueLabelDisplay="auto"
+            onChangeCommitted={this.handleLongRestSliderChange}
+          />
 
-          <p>
-            <label>
-              How many Pomodoros before a long rest? {this.state.intervalsInSet}
-              <Slider defaultValue={this.state.intervalsInSet}
-                getAriaValueText={this.valueText}
-                aria-labelledby="discrete-slider-small-steps"
-                step={1}
-                marks={[{value: this.state.intervalsInSetMin, label: `${this.state.intervalsInSetMin}`}, {value: this.state.intervalsInSetMax, label: `${this.state.intervalsInSetMax}`}]}
-                min={this.state.intervalsInSetMin}
-                max={this.state.intervalsInSetMax}
-                valueLabelDisplay="auto"
-                onChangeCommitted={this.handleIntervalsInSetSliderChange}
-              />
-            </label>
-          </p>
+          <Typography>
+            How many Pomodoros before a long rest? {this.state.intervalsInSet}
+          </Typography>
+          <Slider defaultValue={this.state.intervalsInSet}
+            getAriaValueText={this.valueText}
+            aria-labelledby="discrete-slider-small-steps"
+            step={1}
+            marks={[{value: this.state.intervalsInSetMin, label: `${this.state.intervalsInSetMin}`}, {value: this.state.intervalsInSetMax, label: `${this.state.intervalsInSetMax}`}]}
+            min={this.state.intervalsInSetMin}
+            max={this.state.intervalsInSetMax}
+            valueLabelDisplay="auto"
+            onChangeCommitted={this.handleIntervalsInSetSliderChange}
+          />
 
           <div>
             <label>
