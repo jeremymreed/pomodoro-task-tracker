@@ -126,82 +126,81 @@ class EditSettingsView extends React.Component {
         <Typography variant="h1">
           Settings
         </Typography>
-        <form onSubmit={(event) => this.formSubmit(event)}>
-          <Typography>
-            Pomodoro Length (in minutes): {this.state.pomodoro}
-          </Typography>
-          <Slider defaultValue={this.state.pomodoro}
-            getAriaValueText={this.valueText}
-            aria-labelledby="discrete-slider-small-steps"
-            step={1}
-            marks={[{value: this.state.timeLengthMin, label: `${this.state.timeLengthMin}`}, {value: this.state.timeLengthMax, label: `${this.state.timeLengthMax}`}]}
-            min={this.state.timeLengthMin}
-            max={this.state.timeLengthMax}
-            valueLabelDisplay="auto"
-            onChangeCommitted={this.handlePomodoroSliderChange}
-          />
 
-          <Typography>
-            Short Rest Length (in minutes): {this.state.shortRest}
-          </Typography>
-          <Slider defaultValue={this.state.shortRest}
-            getAriaValueText={this.valueText}
-            aria-labelledby="discrete-slider-small-steps"
-            step={1}
-            marks={[{value: this.state.timeLengthMin, label: `${this.state.timeLengthMin}`}, {value: this.state.timeLengthMax, label: `${this.state.timeLengthMax}`}]}
-            min={this.state.timeLengthMin}
-            max={this.state.timeLengthMax}
-            valueLabelDisplay="auto"
-            onChangeCommitted={this.handleShortRestSliderChange}
-          />
+        <Typography>
+          Pomodoro Length (in minutes): {this.state.pomodoro}
+        </Typography>
+        <Slider defaultValue={this.state.pomodoro}
+          getAriaValueText={this.valueText}
+          aria-labelledby="discrete-slider-small-steps"
+          step={1}
+          marks={[{value: this.state.timeLengthMin, label: `${this.state.timeLengthMin}`}, {value: this.state.timeLengthMax, label: `${this.state.timeLengthMax}`}]}
+          min={this.state.timeLengthMin}
+          max={this.state.timeLengthMax}
+          valueLabelDisplay="auto"
+          onChangeCommitted={this.handlePomodoroSliderChange}
+        />
 
-          <Typography>
-            Long Rest Length (in minutes): {this.state.longRest}
-          </Typography>
-          <Slider defaultValue={this.state.longRest}
-            getAriaValueText={this.valueText}
-            aria-labelledby="discrete-slider-small-steps"
-            step={1}
-            marks={[{value: this.state.timeLengthMin, label: `${this.state.timeLengthMin}`}, {value: this.state.timeLengthMax, label: `${this.state.timeLengthMax}`}]}
-            min={this.state.timeLengthMin}
-            max={this.state.timeLengthMax}
-            valueLabelDisplay="auto"
-            onChangeCommitted={this.handleLongRestSliderChange}
-          />
+        <Typography>
+          Short Rest Length (in minutes): {this.state.shortRest}
+        </Typography>
+        <Slider defaultValue={this.state.shortRest}
+          getAriaValueText={this.valueText}
+          aria-labelledby="discrete-slider-small-steps"
+          step={1}
+          marks={[{value: this.state.timeLengthMin, label: `${this.state.timeLengthMin}`}, {value: this.state.timeLengthMax, label: `${this.state.timeLengthMax}`}]}
+          min={this.state.timeLengthMin}
+          max={this.state.timeLengthMax}
+          valueLabelDisplay="auto"
+          onChangeCommitted={this.handleShortRestSliderChange}
+        />
 
-          <Typography>
-            How many Pomodoros before a long rest? {this.state.intervalsInSet}
-          </Typography>
-          <Slider defaultValue={this.state.intervalsInSet}
-            getAriaValueText={this.valueText}
-            aria-labelledby="discrete-slider-small-steps"
-            step={1}
-            marks={[{value: this.state.intervalsInSetMin, label: `${this.state.intervalsInSetMin}`}, {value: this.state.intervalsInSetMax, label: `${this.state.intervalsInSetMax}`}]}
-            min={this.state.intervalsInSetMin}
-            max={this.state.intervalsInSetMax}
-            valueLabelDisplay="auto"
-            onChangeCommitted={this.handleIntervalsInSetSliderChange}
-          />
+        <Typography>
+          Long Rest Length (in minutes): {this.state.longRest}
+        </Typography>
+        <Slider defaultValue={this.state.longRest}
+          getAriaValueText={this.valueText}
+          aria-labelledby="discrete-slider-small-steps"
+          step={1}
+          marks={[{value: this.state.timeLengthMin, label: `${this.state.timeLengthMin}`}, {value: this.state.timeLengthMax, label: `${this.state.timeLengthMax}`}]}
+          min={this.state.timeLengthMin}
+          max={this.state.timeLengthMax}
+          valueLabelDisplay="auto"
+          onChangeCommitted={this.handleLongRestSliderChange}
+        />
 
-          <div>
-            <label>
-              <FormControlLabel
-                control= {<Checkbox
-                  checked={ this.state.shouldDisplaySeconds }
-                  onChange={() => this.handleShouldDisplaySecondsChange()}
-                  color="primary"
-                  inputProps={{ 'aria-label': 'should display seconds checkbox' }}
-                />}
-                label="Display Seconds?"
-              />
-            </label>
-          </div>
+        <Typography>
+          How many Pomodoros before a long rest? {this.state.intervalsInSet}
+        </Typography>
+        <Slider defaultValue={this.state.intervalsInSet}
+          getAriaValueText={this.valueText}
+          aria-labelledby="discrete-slider-small-steps"
+          step={1}
+          marks={[{value: this.state.intervalsInSetMin, label: `${this.state.intervalsInSetMin}`}, {value: this.state.intervalsInSetMax, label: `${this.state.intervalsInSetMax}`}]}
+          min={this.state.intervalsInSetMin}
+          max={this.state.intervalsInSetMax}
+          valueLabelDisplay="auto"
+          onChangeCommitted={this.handleIntervalsInSetSliderChange}
+        />
 
-          <p>
-            <input type="submit" value="Save"></input>
-            <Button variant="contained" color="primary" onClick={(e) => this.cancelEdit(e)}>Cancel</Button>
-          </p>
-        </form>
+        <div>
+          <label>
+            <FormControlLabel
+              control= {<Checkbox
+                checked={ this.state.shouldDisplaySeconds }
+                onChange={() => this.handleShouldDisplaySecondsChange()}
+                color="primary"
+                inputProps={{ 'aria-label': 'should display seconds checkbox' }}
+              />}
+              label="Display Seconds?"
+            />
+          </label>
+        </div>
+
+        <p>
+          <Button variant="contained" color="primary" onClick={(e) => this.formSubmit(e)}>Save</Button>
+          <Button variant="contained" color="primary" onClick={(e) => this.cancelEdit(e)}>Cancel</Button>
+        </p>
       </div>
     );
   }
