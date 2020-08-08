@@ -185,19 +185,15 @@ class EditSettingsView extends React.Component {
             onChangeCommitted={this.handleIntervalsInSetSliderChange}
           />
 
-          <div>
-            <label>
-              <FormControlLabel
-                control= {<Checkbox
-                  checked={ this.state.shouldDisplaySeconds }
-                  onChange={() => this.handleShouldDisplaySecondsChange()}
-                  color="primary"
-                  inputProps={{ 'aria-label': 'should display seconds checkbox' }}
-                />}
-                label="Display Seconds?"
-              />
-            </label>
-          </div>
+          <FormControlLabel
+            control= {<Checkbox
+              checked={ this.state.shouldDisplaySeconds }
+              onChange={() => this.handleShouldDisplaySecondsChange()}
+              color="primary"
+              inputProps={{ 'aria-label': 'should display seconds checkbox' }}
+            />}
+            label="Display Seconds?"
+          />
 
           <span>
             <Button variant="contained" color="primary" onClick={(e) => this.formSubmit(e)}>Save</Button>
