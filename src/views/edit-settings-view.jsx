@@ -21,6 +21,7 @@ import electronSettings from 'electron-settings';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
 import Slider from '@material-ui/core/Slider';
+import Checkbox from '@material-ui/core/Checkbox';
 
 class EditSettingsView extends React.Component {
   constructor(props) {
@@ -188,7 +189,12 @@ class EditSettingsView extends React.Component {
           <div>
             <label>
               Display Seconds?
-              <input type="checkbox" value={ this.state.done } checked={ this.state.shouldDisplaySeconds } onChange={() => this.  handleShouldDisplaySecondsChange() }/>
+              <Checkbox
+                checked={ this.state.shouldDisplaySeconds }
+                onChange={() => this.handleShouldDisplaySecondsChange()}
+                color="primary"
+                inputProps={{ 'aria-label': 'should display seconds checkbox' }}
+              />
             </label>
           </div>
 
