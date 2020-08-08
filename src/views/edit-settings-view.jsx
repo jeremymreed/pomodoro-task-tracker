@@ -22,6 +22,7 @@ import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
 import Slider from '@material-ui/core/Slider';
 import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 class EditSettingsView extends React.Component {
   constructor(props) {
@@ -188,12 +189,14 @@ class EditSettingsView extends React.Component {
 
           <div>
             <label>
-              Display Seconds?
-              <Checkbox
-                checked={ this.state.shouldDisplaySeconds }
-                onChange={() => this.handleShouldDisplaySecondsChange()}
-                color="primary"
-                inputProps={{ 'aria-label': 'should display seconds checkbox' }}
+              <FormControlLabel
+                control= {<Checkbox
+                  checked={ this.state.shouldDisplaySeconds }
+                  onChange={() => this.handleShouldDisplaySecondsChange()}
+                  color="primary"
+                  inputProps={{ 'aria-label': 'should display seconds checkbox' }}
+                />}
+                label="Display Seconds?"
               />
             </label>
           </div>
