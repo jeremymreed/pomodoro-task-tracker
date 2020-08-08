@@ -23,6 +23,7 @@ import { ipcRenderer } from 'electron';
 import Slider from '@material-ui/core/Slider';
 import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
+import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 class EditSettingsView extends React.Component {
@@ -198,7 +199,7 @@ class EditSettingsView extends React.Component {
 
           <p>
             <input type="submit" value="Save"></input>
-            <button onClick={(e) => this.cancelEdit(e)}>Cancel</button>
+            <Button variant="contained" color="primary" onClick={(e) => this.cancelEdit(e)}>Cancel</Button>
           </p>
         </form>
       </div>
