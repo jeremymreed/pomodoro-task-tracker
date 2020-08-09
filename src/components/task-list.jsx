@@ -35,6 +35,9 @@ import humanizeDuration from 'humanize-duration';
 const styles = () => ({
   table: {
     minWidth: 500,
+  },
+  button: {
+    marginTop: '15px',
   }
 });
 
@@ -139,7 +142,7 @@ class TaskList extends React.Component {
     return (
       <div>
         { this.getTaskList(classes) }
-        <Button variant="outlined" color="primary" onClick={(e) => this.addTask(e)}>Add new task</Button>
+        <Button className={classes.button} variant="outlined" color="primary" onClick={(e) => this.addTask(e)}>Add new task</Button>
       </div>
     );
   }
