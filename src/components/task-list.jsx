@@ -20,6 +20,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
 import { withStyles } from '@material-ui/styles';
+import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -138,7 +139,7 @@ class TaskList extends React.Component {
     return (
       <div>
         { this.getTaskList(classes) }
-        <p><button onClick={(e) => this.addTask(e)}>Add new task</button></p>
+        <Button variant="outlined" color="primary" onClick={(e) => this.addTask(e)}>Add new task</Button>
       </div>
     );
   }
