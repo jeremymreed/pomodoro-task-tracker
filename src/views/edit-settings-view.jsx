@@ -20,12 +20,19 @@ import React from 'react';
 import electronSettings from 'electron-settings';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
+import { withStyles } from '@material-ui/styles';
 import Slider from '@material-ui/core/Slider';
 import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+
+const styles = () => ({
+  root: {
+    margin: '5px'
+  }
+});
 
 class EditSettingsView extends React.Component {
   constructor(props) {
@@ -122,6 +129,7 @@ class EditSettingsView extends React.Component {
   }
 
   render() {
+    const { classes } = this.props;
     return (
       <div>
         <Typography variant="h1" align="center">
@@ -196,8 +204,8 @@ class EditSettingsView extends React.Component {
           />
 
           <span>
-            <Button variant="outlined" color="primary" onClick={(e) => this.formSubmit(e)}>Save</Button>
-            <Button variant="outlined" color="primary" onClick={(e) => this.cancelEdit(e)}>Cancel</Button>
+            <Button className={classes.root} variant="outlined" color="primary" onClick={(e) => this.formSubmit(e)}>Save</Button>
+            <Button className={classes.root} variant="outlined" color="primary" onClick={(e) => this.cancelEdit(e)}>Cancel</Button>
           </span>
         </FormGroup>
       </div>
@@ -206,7 +214,8 @@ class EditSettingsView extends React.Component {
 }
 
 EditSettingsView.propTypes = {
+  classes: PropTypes.object,
   closeEditSettingsView: PropTypes.func
 }
 
-export default EditSettingsView;
+export default withStyles(styles)(EditSettingsView);
