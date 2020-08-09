@@ -19,9 +19,23 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
+import { withStyles } from '@material-ui/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
 import electronSettings from 'electron-settings';
 import moment from 'moment';
 import humanizeDuration from 'humanize-duration';
+
+const styles = () => ({
+  table: {
+    minWidth: 500,
+  }
+});
 
 class TaskList extends React.Component {
   constructor(props) {
@@ -82,41 +96,48 @@ class TaskList extends React.Component {
     }
   }
 
-  getTaskList() {
+  getTaskList(classes) {
     const listTasks = this.props.data.map((task) => {
       return (
-        <tr key={ task.id }>
-          <td>{ task.name }</td>
-          <td>{ this.getTimeString(task.timeSpent) }</td>
-          <td>{ this.getDone(task.done) }</td>
-          <td><button onClick={(e) => this.startTask(e, task.id, task.done)}>Start</button></td>
-          <td><button onClick={(e) => this.taskDoneById(e, task.id)}>Done</button></td>
-          <td><button onClick={(e) => this.editTask(e, task.id)}>Edit</button></td>
-          <td><button className="remove-button" onClick={(e) => this.removeTask(e, task.id)}>Remove</button></td>
-        </tr>
+        <TableRow key={ task.id }>
+          <TableCell>{ task.name }</TableCell>
+          <TableCell>{ this.getTimeString(task.timeSpent) }</TableCell>
+          <TableCell>{ this.getDone(task.done) }</TableCell>
+          <TableCell><button onClick={(e) => this.startTask(e, task.id, task.done)}>Start</button></TableCell>
+          <TableCell><button onClick={(e) => this.taskDoneById(e, task.id)}>Done</button></TableCell>
+          <TableCell><button onClick={(e) => this.editTask(e, task.id)}>Edit</button></TableCell>
+          <TableCell><button className="remove-button" onClick={(e) => this.removeTask(e, task.id)}>Remove</button></TableCell>
+        </TableRow>
       );
     });
 
     return (
-      <table className="task-list-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Time</th>
-            <th>Done</th>
-          </tr>
-        </thead>
-        <tbody>
-          { listTasks }
-        </tbody>
-      </table>
+      <TableContainer component={Paper}>
+        <Table className={classes.table}>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Time</TableCell>
+              <TableCell>Done</TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            { listTasks }
+          </TableBody>
+        </Table>
+      </TableContainer>
     );
   }
 
   render () {
+    const { classes } = this.props;
     return (
       <div>
-        { this.getTaskList() }
+        { this.getTaskList(classes) }
         <p><button onClick={(e) => this.addTask(e)}>Add new task</button></p>
       </div>
     );
@@ -124,10 +145,11 @@ class TaskList extends React.Component {
 }
 
 TaskList.propTypes = {
+  classes: PropTypes.object,
   data: PropTypes.array,
   openEditTaskView: PropTypes.func,
   startTask: PropTypes.func,
   taskDoneById: PropTypes.func
 };
 
-export default TaskList;
+export default withStyles(styles)(TaskList);
