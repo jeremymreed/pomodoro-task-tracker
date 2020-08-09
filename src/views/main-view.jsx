@@ -19,6 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import React from 'react';
 import TaskList from '../components/task-list';
 import PropTypes from 'prop-types';
+import Typography from '@material-ui/core/Typography';
 
 class MainView extends React.Component {
   constructor (props) {
@@ -34,7 +35,7 @@ class MainView extends React.Component {
   render() {
     return (
       <div>
-        <h1>Pomodoro Task Tracker</h1>
+        <Typography variant="h3" align="center">Pomodoro Task Tracker</Typography>
         <TaskList data={this.props.data} startTask={ this.props.startTask } taskDoneById={ this.props.taskDoneById } openEditTaskView={ this.props.openEditTaskView }/>
       </div>
     );
