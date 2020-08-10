@@ -30,6 +30,9 @@ const styles = () => ({
   activeTask: {
     display: 'inline-block'
   },
+  description: {
+    textColor: '#fff'
+  },
   pauseResumeButton: {
     marginTop: '5px',
     marginRight: '5px'
@@ -128,22 +131,28 @@ class TaskRunningView extends React.Component {
           <Typography className={classes.activeTask} variant="h6">Active Task:</Typography> <Typography className={classes.activeTask}>{ this.props.task.name }</Typography>
         </Container>
 
-        <Timer shouldRun={ this.state.shouldRun } handleTimerExpiration={ this.handleTimerExpiration } submitGetTotalTimeRan={ this.submitGetTotalTimeRan }/>
+        <Container align="center">
+          <Timer shouldRun={ this.state.shouldRun } handleTimerExpiration={ this.handleTimerExpiration } submitGetTotalTimeRan={ this.submitGetTotalTimeRan }/>
+        </Container>
 
-        <TextField
-          label="Description"
-          disabled="true"
-          multiline
-          rows={4}
-          defaultValue={ this.props.task.description }
-          variant="outlined"
-        />
+        <Container align="center">
+          <TextField
+            label="Description"
+            disabled="true"
+            multiline
+            rows={4}
+            defaultValue={ this.props.task.description }
+            variant="filled"
+          />
+        </Container>
 
-        <p>
-          { pauseResumeButton }
-          <Button className={classes.stopButton} variant="outlined" color="primary" onClick={(e) => this.stopTask(e)}>Stop</Button>
-          <Button className={classes.doneButton} variant="outlined" color="primary" onClick={(e) => this.taskDone(e)}>Done</Button>
-        </p>
+        <Container align="center">
+          <p>
+            { pauseResumeButton }
+            <Button className={classes.stopButton} variant="outlined" color="primary" onClick={(e) => this.stopTask(e)}>Stop</Button>
+            <Button className={classes.doneButton} variant="outlined" color="primary" onClick={(e) => this.taskDone(e)}>Done</Button>
+          </p>
+        </Container>
       </div>
     );
   }
