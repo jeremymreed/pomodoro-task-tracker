@@ -36,7 +36,13 @@ class MainView extends React.Component {
     return (
       <div>
         <Typography variant="h3" align="center">Pomodoro Task Tracker</Typography>
-        <TaskList data={this.props.data} startTask={ this.props.startTask } taskDoneById={ this.props.taskDoneById } openEditTaskView={ this.props.openEditTaskView }/>
+        <TaskList
+          data={this.props.data}
+          startTask={ this.props.startTask }
+          taskDoneById={ this.props.taskDoneById }
+          openEditTaskView={ this.props.openEditTaskView }
+          openViewTaskView={ this.props.openViewTaskView }
+        />
       </div>
     );
   }
@@ -46,6 +52,7 @@ MainView.propTypes = {
   data: PropTypes.array,
   openEditTaskView: PropTypes.func,
   openEditSettingsView: PropTypes.func,
+  openViewTaskView: PropTypes.func,
   startTask: PropTypes.func,
   taskDoneById: PropTypes.func
 };

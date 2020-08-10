@@ -69,6 +69,12 @@ class TaskList extends React.Component {
     this.props.openEditTaskView(-1);
   }
 
+  viewTask(event, taskId) {
+    event.preventDefault();
+
+    this.props.openViewTaskView(taskId);
+  }
+
   editTask(event, taskId) {
     event.preventDefault();
 
@@ -113,6 +119,7 @@ class TaskList extends React.Component {
           <TableCell>{ this.getDone(task.done) }</TableCell>
           <TableCell><Button className={classes.taskActionButton} size="small" variant="outlined" color="primary" onClick={(e) => this.startTask(e, task.id, task.done)}>Start</Button></TableCell>
           <TableCell><Button className={classes.taskActionButton} size="small" variant="outlined" color="primary" onClick={(e) => this.taskDoneById(e, task.id)}>Done</Button></TableCell>
+          <TableCell><Button className={classes.taskActionButton} size="small" variant="outlined" color="primary" onClick={(e) => this.viewTask(e, task.id)}>View</Button></TableCell>
           <TableCell><Button className={classes.taskActionButton} size="small" variant="outlined" color="primary" onClick={(e) => this.editTask(e, task.id)}>Edit</Button></TableCell>
           <TableCell><Button className={classes.taskActionButton} size="small" variant="outlined" color="secondary" onClick={(e) => this.removeTask(e, task.id)}>Remove</Button></TableCell>
         </TableRow>
@@ -156,6 +163,7 @@ TaskList.propTypes = {
   classes: PropTypes.object,
   data: PropTypes.array,
   openEditTaskView: PropTypes.func,
+  openViewTaskView: PropTypes.func,
   startTask: PropTypes.func,
   taskDoneById: PropTypes.func
 };
