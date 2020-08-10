@@ -20,6 +20,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
 import { withStyles } from '@material-ui/styles';
+import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Timer from '../components/timer';
 
@@ -121,8 +122,16 @@ class TaskRunningView extends React.Component {
           <span><span className="active-task-style">Active Task:</span> { this.props.task.name }</span>
         </div>
         <Timer shouldRun={ this.state.shouldRun } handleTimerExpiration={ this.handleTimerExpiration } submitGetTotalTimeRan={ this.submitGetTotalTimeRan }/>
-        <p>Description:</p>
-        <textarea className="description-size description-style" value={ this.props.task.description } readOnly={ true } />
+
+        <TextField
+          label="Description"
+          disabled="true"
+          multiline
+          rows={4}
+          defaultValue={ this.props.task.description }
+          variant="outlined"
+        />
+
         <p>
           { pauseResumeButton }
           <Button className={classes.stopButton} variant="outlined" color="primary" onClick={(e) => this.stopTask(e)}>Stop</Button>
