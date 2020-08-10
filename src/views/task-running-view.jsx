@@ -20,11 +20,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
 import { withStyles } from '@material-ui/styles';
+import Container from '@material-ui/core/Container';
+import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Timer from '../components/timer';
 
 const styles = () => ({
+  activeTask: {
+    display: 'inline-block'
+  },
   pauseResumeButton: {
     marginTop: '5px',
     marginRight: '5px'
@@ -118,9 +123,11 @@ class TaskRunningView extends React.Component {
     }
     return (
       <div>
-        <div>
-          <span><span className="active-task-style">Active Task:</span> { this.props.task.name }</span>
-        </div>
+        {/* NOTE: Docs don't say anthing about Container taking this prop, but seems to work. */}
+        <Container align="center">
+          <Typography className={classes.activeTask} variant="h6">Active Task:</Typography> <Typography className={classes.activeTask}>{ this.props.task.name }</Typography>
+        </Container>
+
         <Timer shouldRun={ this.state.shouldRun } handleTimerExpiration={ this.handleTimerExpiration } submitGetTotalTimeRan={ this.submitGetTotalTimeRan }/>
 
         <TextField
