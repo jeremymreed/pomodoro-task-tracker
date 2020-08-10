@@ -29,9 +29,6 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const styles = () => ({
-  root: {
-    margin: '5px'
-  },
   saveButton: {
     marginTop: '5px',
     marginRight: '5px'
