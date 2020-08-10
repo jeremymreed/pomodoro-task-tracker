@@ -26,12 +26,33 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Timer from '../components/timer';
 
+/*
+  We create custom TextField component with 'disabled' text styling overridden.
+  Want to study this technique.
+  See: https://stackoverflow.com/questions/62909413/how-to-change-font-color-of-disabled-textfield-material-ui-react-js
+*/
+const DescriptionTextField = withStyles({
+  root: {
+    "& .MuiInputBase-root.Mui-disabled": {
+      color: '#000'
+    },
+    "& .MuiFormLabel-root.Mui-disabled": {
+      color: '#000'
+    },
+}
+})(TextField);
+
 const styles = () => ({
   activeTask: {
     display: 'inline-block'
   },
   description: {
-    textColor: '#fff'
+    "& .MuiInputBase-root.Mui-disabled": {
+      color: '#000'
+    },
+    "& .MuiFormLabel-root.Mui-disabled": {
+        color: '#000'
+    }
   },
   pauseResumeButton: {
     marginTop: '5px',
@@ -136,13 +157,12 @@ class TaskRunningView extends React.Component {
         </Container>
 
         <Container align="center">
-          <TextField
+          <DescriptionTextField
             label="Description"
             disabled="true"
             multiline
             rows={4}
             defaultValue={ this.props.task.description }
-            variant="filled"
           />
         </Container>
 
