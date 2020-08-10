@@ -19,6 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
+import Button from '@material-ui/core/Button';
 import Timer from '../components/timer';
 
 class TaskRunningView extends React.Component {
@@ -92,9 +93,9 @@ class TaskRunningView extends React.Component {
   render() {
     let pauseResumeButton = '';
     if (this.state.shouldRun) {
-      pauseResumeButton = <button onClick={(e) => this.handlePause(e)}>Pause</button>;
+      pauseResumeButton = <Button variant="outlined" color="primary" onClick={(e) => this.handlePause(e)}>Pause</Button>;
     } else {
-      pauseResumeButton = <button onClick={(e) => this.handleResume(e)}>Resume</button>;
+      pauseResumeButton = <Button variant="outlined" color="primary" onClick={(e) => this.handleResume(e)}>Resume</Button>;
     }
     return (
       <div>
@@ -104,7 +105,7 @@ class TaskRunningView extends React.Component {
         <Timer shouldRun={ this.state.shouldRun } handleTimerExpiration={ this.handleTimerExpiration } submitGetTotalTimeRan={ this.submitGetTotalTimeRan }/>
         <p>Description:</p>
         <textarea className="description-size description-style" value={ this.props.task.description } readOnly={ true } />
-        <p>{ pauseResumeButton }<button onClick={(e) => this.stopTask(e)}>Stop</button><button onClick={(e) => this.taskDone(e)}>Done</button></p>
+        <p>{ pauseResumeButton }<Button variant="outlined" color="primary" onClick={(e) => this.stopTask(e)}>Stop</Button><Button variant="outlined" color="primary" onClick={(e) => this.taskDone(e)}>Done</Button></p>
       </div>
     );
   }
