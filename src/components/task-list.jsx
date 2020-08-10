@@ -36,7 +36,11 @@ const styles = () => ({
   table: {
     minWidth: 500,
   },
-  button: {
+  taskActionButton: {
+    margin: '0px',
+    padding: '0px'
+  },
+  addTaskButton: {
     marginTop: '15px',
   }
 });
@@ -107,10 +111,10 @@ class TaskList extends React.Component {
           <TableCell>{ task.name }</TableCell>
           <TableCell>{ this.getTimeString(task.timeSpent) }</TableCell>
           <TableCell>{ this.getDone(task.done) }</TableCell>
-          <TableCell><button onClick={(e) => this.startTask(e, task.id, task.done)}>Start</button></TableCell>
-          <TableCell><button onClick={(e) => this.taskDoneById(e, task.id)}>Done</button></TableCell>
-          <TableCell><button onClick={(e) => this.editTask(e, task.id)}>Edit</button></TableCell>
-          <TableCell><button className="remove-button" onClick={(e) => this.removeTask(e, task.id)}>Remove</button></TableCell>
+          <TableCell><Button className={classes.taskActionButton} size="small" variant="outlined" color="primary" onClick={(e) => this.startTask(e, task.id, task.done)}>Start</Button></TableCell>
+          <TableCell><Button className={classes.taskActionButton} size="small" variant="outlined" color="primary" onClick={(e) => this.taskDoneById(e, task.id)}>Done</Button></TableCell>
+          <TableCell><Button className={classes.taskActionButton} size="small" variant="outlined" color="primary" onClick={(e) => this.editTask(e, task.id)}>Edit</Button></TableCell>
+          <TableCell><Button className={classes.taskActionButton} size="small" variant="outlined" color="secondary" onClick={(e) => this.removeTask(e, task.id)}>Remove</Button></TableCell>
         </TableRow>
       );
     });
@@ -142,7 +146,7 @@ class TaskList extends React.Component {
     return (
       <div>
         { this.getTaskList(classes) }
-        <Button className={classes.button} variant="outlined" color="primary" onClick={(e) => this.addTask(e)}>Add new task</Button>
+        <Button className={classes.addTaskButton} variant="outlined" color="primary" onClick={(e) => this.addTask(e)}>Add new task</Button>
       </div>
     );
   }
