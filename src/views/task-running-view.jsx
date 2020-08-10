@@ -19,8 +19,25 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
+import { withStyles } from '@material-ui/styles';
 import Button from '@material-ui/core/Button';
 import Timer from '../components/timer';
+
+const styles = () => ({
+  pauseResumeButton: {
+    marginTop: '5px',
+    marginRight: '5px'
+  },
+  stopButton: {
+    marginTop: '5px',
+    marginLeft: '5px',
+    marginRight: '5px'
+  },
+  doneButton: {
+    marginTop: '5px',
+    marginLeft: '5px'
+  }
+});
 
 class TaskRunningView extends React.Component {
   constructor(props) {
@@ -91,11 +108,12 @@ class TaskRunningView extends React.Component {
   }
 
   render() {
+    const { classes } = this.props;
     let pauseResumeButton = '';
     if (this.state.shouldRun) {
-      pauseResumeButton = <Button variant="outlined" color="primary" onClick={(e) => this.handlePause(e)}>Pause</Button>;
+      pauseResumeButton = <Button className={classes.pauseResumeButton} variant="outlined" color="primary" onClick={(e) => this.handlePause(e)}>Pause</Button>;
     } else {
-      pauseResumeButton = <Button variant="outlined" color="primary" onClick={(e) => this.handleResume(e)}>Resume</Button>;
+      pauseResumeButton = <Button className={classes.pauseResumeButton} variant="outlined" color="primary" onClick={(e) => this.handleResume(e)}>Resume</Button>;
     }
     return (
       <div>
@@ -107,8 +125,8 @@ class TaskRunningView extends React.Component {
         <textarea className="description-size description-style" value={ this.props.task.description } readOnly={ true } />
         <p>
           { pauseResumeButton }
-          <Button variant="outlined" color="primary" onClick={(e) => this.stopTask(e)}>Stop</Button>
-          <Button variant="outlined" color="primary" onClick={(e) => this.taskDone(e)}>Done</Button>
+          <Button className={classes.stopButton} variant="outlined" color="primary" onClick={(e) => this.stopTask(e)}>Stop</Button>
+          <Button className={classes.doneButton} variant="outlined" color="primary" onClick={(e) => this.taskDone(e)}>Done</Button>
         </p>
       </div>
     );
@@ -116,10 +134,11 @@ class TaskRunningView extends React.Component {
 }
 
 TaskRunningView.propTypes = {
+  classes: PropTypes.object,
   task: PropTypes.object,
   updateTaskTimeSpentOnTask: PropTypes.func,
   taskDone: PropTypes.func,
   stopTask: PropTypes.func
 }
 
-export default TaskRunningView;
+export default withStyles(styles)(TaskRunningView);
