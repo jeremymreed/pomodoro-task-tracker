@@ -19,6 +19,35 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import React from 'react';
 import { ipcRenderer } from 'electron';
 import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/styles';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+
+const styles = () => ({
+  name: {
+    marginBottom: '5px'
+  },
+  description: {
+    marginTop: '5px',
+    marginBottom: '5px'
+  },
+  done: {
+    marginTop: '5px',
+    marginBottom: '5px'
+  },
+  saveButton: {
+    marginTop: '5px',
+    marginRight: '5px'
+  },
+  cancelButton: {
+    marginTop: '5px',
+    marginLeft: '5px'
+  }
+});
 
 class EditTaskView extends React.Component {
   constructor(props) {
@@ -64,45 +93,49 @@ class EditTaskView extends React.Component {
   }
 
   render() {
+    const { classes } = this.props;
     return (
       <div>
-        <h1>Task Editor</h1>
-        <form onSubmit={(event) => this.formSubmit(event)}>
-          <div>
-            <label>
-              Name:
-              <input type="text" value={this.state.name} onChange={(event) => this.handleNameChange(event)} />
-            </label>
-          </div>
+        <Typography variant="h1" align="center">Task Editor</Typography>
 
-          <div>
-            <label>
-              <p>Description:</p>
-              <textarea className="description-size" value={this.state.description} onChange={(event) => this.handleDescriptionChange(event)} />
-            </label>
-          </div>
+        <FormGroup>
+          <TextField className="name" label="Name" defaultValue={this.state.name} onChange={(event) => this.handleNameChange(event)} />
 
-          <div>
-            <label>
-              Done:
-              <input type="checkbox" value={ this.state.done } checked={ this.state.done } onChange={() => this.handleDoneChange()}/>
-            </label>
-          </div>
+          <TextField
+            className="description"
+            label="Description"
+            multiline
+            rows={4}
+            defaultValue={ this.state.description }
+            onChange={(event) => this.handleDescriptionChange(event)}
+          />
 
-          <div>
-            <input type="submit" value="Submit"></input>
-            <button onClick={(e) => this.cancelEdit(e)}>Cancel</button>
-          </div>
-        </form>
+          <FormControlLabel
+            className="done"
+            control= {<Checkbox
+              checked={ this.state.done }
+              onChange={() => this.handleDoneChange()}
+              color="primary"
+              inputProps={{ 'aria-label': 'task done checkbox' }}
+            />}
+            label="Done"
+          />
+
+          <span>
+            <Button className={classes.saveButton} variant="outlined" color="primary" onClick={(e) => this.formSubmit(e)}>Save</Button>
+            <Button className={classes.cancelButton} variant="outlined" color="primary" onClick={(e) => this.cancelEdit(e)}>Cancel</Button>
+          </span>
+        </FormGroup>
       </div>
     );
   }
 }
 
 EditTaskView.propTypes = {
+  classes: PropTypes.object,
   task: PropTypes.object,
   editTask: PropTypes.func,
   closeEditTaskView: PropTypes.func
 }
 
-export default EditTaskView;
+export default withStyles(styles)(EditTaskView);
