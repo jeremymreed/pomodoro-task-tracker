@@ -8,7 +8,7 @@ Pomodoro Task Tracker
 4. [License](https://gitlab.com/jeremymreed/pomodoro-task-tracker#license)
 
 Screenshot:
-[![pomdoro-task-tracker-screenshot](images/task-list-with-task-done.png "Completed Task")](https://gitlab.com/jeremymreed/pomodoro-task-tracker/-/blob/develop/images/task-list-with-task-done.png)
+[![pomdoro-task-tracker-screenshot](images/task-list-with-task-done.png "Completed Task")](https://gitlab.com/jeremymreed/pomodoro-task-tracker/-/blob/master/images/task-list-with-task-done.png)
 
 # Purpose:
 This is an electron app to track tasks, using the pomodoro technique.
