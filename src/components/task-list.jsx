@@ -29,6 +29,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import DoneIcon from '@material-ui/icons/Done';
 
 const styles = () => ({
   table: {
@@ -93,7 +94,7 @@ class TaskList extends React.Component {
 
   getDone(done) {
     if (done) {
-      return '✓';
+      return (<DoneIcon />);
     } else {
       return '';
     }
