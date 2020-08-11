@@ -22,6 +22,7 @@ import MainView from '../../views/main-view';
 import EditTaskView from '../../views/edit-task-view';
 import EditSettingsView from '../../views/edit-settings-view';
 import TaskRunningView from '../../views/task-running-view';
+import ViewTaskView from '../../views/view-task-view';
 import Task from '../../data-models/task';
 
 class App extends React.Component {
@@ -34,6 +35,8 @@ class App extends React.Component {
     this.closeEditTaskView = this.closeEditTaskView.bind(this);
     this.openEditSettingsView = this.openEditSettingsView.bind(this);
     this.closeEditSettingsView = this.closeEditSettingsView.bind(this);
+    this.openViewTaskView = this.openViewTaskView.bind(this);
+    this.closeViewTaskView = this.closeViewTaskView.bind(this);
     this.updateTaskTimeSpentOnTask = this.updateTaskTimeSpentOnTask.bind(this);
     this.taskDone = this.taskDone.bind(this);
     this.taskDoneById = this.taskDoneById.bind(this);
@@ -51,6 +54,7 @@ class App extends React.Component {
     this.EditTaskState = 1;
     this.TaskRunningState = 2;
     this.EditSettingsState = 3;
+    this.ViewTaskState = 4;
 
     // TODO: Consider using only dataMap, and generate data array on the fly when needed.
     this.state = {
@@ -59,6 +63,11 @@ class App extends React.Component {
       currentTask: -1,
       stateVar: this.MainViewState,
     }
+  }
+
+  // TODO: Magic numbers, yay!  Will be obsolete when we convert code to TypeScript.
+  validateState() {
+    return this.state.stateVar >= 0 && this.state.stateVar <= 4;
   }
 
   componentDidMount() {
@@ -96,11 +105,6 @@ class App extends React.Component {
     }
   }
 
-  // TODO: Magic numbers, yay!  Will be obsolete when we convert code to TypeScript.
-  validateState() {
-    return this.state.stateVar >= 0 && this.state.stateVar <= 3;
-  }
-
   openEditTaskView(taskId) {
     if (this.validateState()) {
       this.setState({currentTask: taskId, stateVar: this.EditTaskState});
@@ -126,6 +130,22 @@ class App extends React.Component {
   }
 
   closeEditSettingsView() {
+    if (this.validateState()) {
+      this.setState({currentTask: -1, stateVar: this.MainViewState});
+    } else {
+      throw new Error('invalid state detected!');
+    }
+  }
+
+  openViewTaskView(taskId) {
+    if (this.validateState()) {
+      this.setState({currentTask: taskId, stateVar: this.ViewTaskState});
+    } else {
+      throw new Error('invalid state detected!');
+    }
+  }
+
+  closeViewTaskView() {
     if (this.validateState()) {
       this.setState({currentTask: -1, stateVar: this.MainViewState});
     } else {
@@ -221,8 +241,12 @@ class App extends React.Component {
     } else if (this.state.stateVar === this.MainViewState) {
       return (
         <div>
-          <MainView data={ this.state.data } startTask={ this.startTask } taskDoneById={ this.taskDoneById } openEditTaskView={ this.openEditTaskView } openEditSettingsView={ this.openEditSettingsView }/>
+          <MainView data={ this.state.data } startTask={ this.startTask } taskDoneById={ this.taskDoneById } openEditTaskView={ this.openEditTaskView } openViewTaskView={ this.openViewTaskView } openEditSettingsView={ this.openEditSettingsView }/>
         </div>
+      );
+    } else if (this.state.stateVar === this.ViewTaskState) {
+      return (
+        <ViewTaskView task={ this.getCurrentTask() } closeViewTaskView={this.closeViewTaskView} />
       );
     }
   }

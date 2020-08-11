@@ -19,6 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import React from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+import Typography from '@material-ui/core/Typography';
 import Pomodoro from '../utils/pomodoro';
 import TimeConverter from '../utils/time-converter';
 
@@ -75,9 +76,11 @@ class Timer extends React.Component {
 
   render() {
     return (
-      <span>
-        { TimeConverter.getAsMinutes(this.state.time) } : { TimeConverter.getSeconds(this.state.time) }
-      </span>
+      <div>
+        <Typography align="center" variant="h1">
+          { TimeConverter.getAsMinutes(this.state.time) }:{ TimeConverter.getSeconds(this.state.time) }
+        </Typography>
+      </div>
     );
   }
 }

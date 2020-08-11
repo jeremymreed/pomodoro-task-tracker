@@ -20,7 +20,24 @@ import React from 'react';
 import electronSettings from 'electron-settings';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
+import { withStyles } from '@material-ui/styles';
 import Slider from '@material-ui/core/Slider';
+import Typography from '@material-ui/core/Typography';
+import Checkbox from '@material-ui/core/Checkbox';
+import Button from '@material-ui/core/Button';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+
+const styles = () => ({
+  saveButton: {
+    marginTop: '5px',
+    marginRight: '5px'
+  },
+  cancelButton: {
+    marginTop: '5px',
+    marginLeft: '5px'
+  }
+});
 
 class EditSettingsView extends React.Component {
   constructor(props) {
@@ -117,93 +134,93 @@ class EditSettingsView extends React.Component {
   }
 
   render() {
+    const { classes } = this.props;
     return (
       <div>
-        <h1>Settings</h1>
-        <form onSubmit={(event) => this.formSubmit(event)}>
-          <p>
-            <label>
-              Pomodoro Length (in minutes): {this.state.pomodoro}
-              <Slider defaultValue={this.state.pomodoro}
-                getAriaValueText={this.valueText}
-                aria-labelledby="discrete-slider-small-steps"
-                step={1}
-                marks={[{value: this.state.timeLengthMin, label: `${this.state.timeLengthMin}`}, {value: this.state.timeLengthMax, label: `${this.state.timeLengthMax}`}]}
-                min={this.state.timeLengthMin}
-                max={this.state.timeLengthMax}
-                valueLabelDisplay="auto"
-                onChangeCommitted={this.handlePomodoroSliderChange}
-              />
-            </label>
-          </p>
+        <Typography variant="h1" align="center">
+          Settings
+        </Typography>
 
-          <p>
-            <label>
-              Short Rest Length (in minutes): {this.state.shortRest}
-              <Slider defaultValue={this.state.shortRest}
-                getAriaValueText={this.valueText}
-                aria-labelledby="discrete-slider-small-steps"
-                step={1}
-                marks={[{value: this.state.timeLengthMin, label: `${this.state.timeLengthMin}`}, {value: this.state.timeLengthMax, label: `${this.state.timeLengthMax}`}]}
-                min={this.state.timeLengthMin}
-                max={this.state.timeLengthMax}
-                valueLabelDisplay="auto"
-                onChangeCommitted={this.handleShortRestSliderChange}
-              />
-            </label>
-          </p>
+        <FormGroup>
+          <Typography>
+            Pomodoro Length (in minutes): {this.state.pomodoro}
+          </Typography>
+          <Slider defaultValue={this.state.pomodoro}
+            getAriaValueText={this.valueText}
+            aria-labelledby="discrete-slider-small-steps"
+            step={1}
+            marks={[{value: this.state.timeLengthMin, label: `${this.state.timeLengthMin}`}, {value: this.state.timeLengthMax, label: `${this.state.timeLengthMax}`}]}
+            min={this.state.timeLengthMin}
+            max={this.state.timeLengthMax}
+            valueLabelDisplay="auto"
+            onChangeCommitted={this.handlePomodoroSliderChange}
+          />
 
-          <p>
-            <label>
-              Long Rest Length (in minutes): {this.state.longRest}
-              <Slider defaultValue={this.state.longRest}
-                getAriaValueText={this.valueText}
-                aria-labelledby="discrete-slider-small-steps"
-                step={1}
-                marks={[{value: this.state.timeLengthMin, label: `${this.state.timeLengthMin}`}, {value: this.state.timeLengthMax, label: `${this.state.timeLengthMax}`}]}
-                min={this.state.timeLengthMin}
-                max={this.state.timeLengthMax}
-                valueLabelDisplay="auto"
-                onChangeCommitted={this.handleLongRestSliderChange}
-              />
-            </label>
-          </p>
+          <Typography>
+            Short Rest Length (in minutes): {this.state.shortRest}
+          </Typography>
+          <Slider defaultValue={this.state.shortRest}
+            getAriaValueText={this.valueText}
+            aria-labelledby="discrete-slider-small-steps"
+            step={1}
+            marks={[{value: this.state.timeLengthMin, label: `${this.state.timeLengthMin}`}, {value: this.state.timeLengthMax, label: `${this.state.timeLengthMax}`}]}
+            min={this.state.timeLengthMin}
+            max={this.state.timeLengthMax}
+            valueLabelDisplay="auto"
+            onChangeCommitted={this.handleShortRestSliderChange}
+          />
 
-          <p>
-            <label>
-              How many Pomodoros before a long rest? {this.state.intervalsInSet}
-              <Slider defaultValue={this.state.intervalsInSet}
-                getAriaValueText={this.valueText}
-                aria-labelledby="discrete-slider-small-steps"
-                step={1}
-                marks={[{value: this.state.intervalsInSetMin, label: `${this.state.intervalsInSetMin}`}, {value: this.state.intervalsInSetMax, label: `${this.state.intervalsInSetMax}`}]}
-                min={this.state.intervalsInSetMin}
-                max={this.state.intervalsInSetMax}
-                valueLabelDisplay="auto"
-                onChangeCommitted={this.handleIntervalsInSetSliderChange}
-              />
-            </label>
-          </p>
+          <Typography>
+            Long Rest Length (in minutes): {this.state.longRest}
+          </Typography>
+          <Slider defaultValue={this.state.longRest}
+            getAriaValueText={this.valueText}
+            aria-labelledby="discrete-slider-small-steps"
+            step={1}
+            marks={[{value: this.state.timeLengthMin, label: `${this.state.timeLengthMin}`}, {value: this.state.timeLengthMax, label: `${this.state.timeLengthMax}`}]}
+            min={this.state.timeLengthMin}
+            max={this.state.timeLengthMax}
+            valueLabelDisplay="auto"
+            onChangeCommitted={this.handleLongRestSliderChange}
+          />
 
-          <div>
-            <label>
-              Display Seconds?
-              <input type="checkbox" value={ this.state.done } checked={ this.state.shouldDisplaySeconds } onChange={() => this.  handleShouldDisplaySecondsChange() }/>
-            </label>
-          </div>
+          <Typography>
+            How many Pomodoros before a long rest? {this.state.intervalsInSet}
+          </Typography>
+          <Slider defaultValue={this.state.intervalsInSet}
+            getAriaValueText={this.valueText}
+            aria-labelledby="discrete-slider-small-steps"
+            step={1}
+            marks={[{value: this.state.intervalsInSetMin, label: `${this.state.intervalsInSetMin}`}, {value: this.state.intervalsInSetMax, label: `${this.state.intervalsInSetMax}`}]}
+            min={this.state.intervalsInSetMin}
+            max={this.state.intervalsInSetMax}
+            valueLabelDisplay="auto"
+            onChangeCommitted={this.handleIntervalsInSetSliderChange}
+          />
 
-          <p>
-            <input type="submit" value="Save"></input>
-            <button onClick={(e) => this.cancelEdit(e)}>Cancel</button>
-          </p>
-        </form>
+          <FormControlLabel
+            control= {<Checkbox
+              checked={ this.state.shouldDisplaySeconds }
+              onChange={() => this.handleShouldDisplaySecondsChange()}
+              color="primary"
+              inputProps={{ 'aria-label': 'should display seconds checkbox' }}
+            />}
+            label="Display Seconds?"
+          />
+
+          <span>
+            <Button className={classes.saveButton} variant="outlined" color="primary" onClick={(e) => this.formSubmit(e)}>Save</Button>
+            <Button className={classes.cancelButton} variant="outlined" color="primary" onClick={(e) => this.cancelEdit(e)}>Cancel</Button>
+          </span>
+        </FormGroup>
       </div>
     );
   }
 }
 
 EditSettingsView.propTypes = {
+  classes: PropTypes.object,
   closeEditSettingsView: PropTypes.func
 }
 
-export default EditSettingsView;
+export default withStyles(styles)(EditSettingsView);

@@ -19,9 +19,30 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
-import electronSettings from 'electron-settings';
-import moment from 'moment';
-import humanizeDuration from 'humanize-duration';
+import { withStyles } from '@material-ui/styles';
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import DoneIcon from '@material-ui/icons/Done';
+
+const styles = () => ({
+  table: {
+    minWidth: 500,
+  },
+  taskActionButtonGroup: {
+    marginLeft: '5px',
+    marginRight: '5px'
+  },
+  addTaskButton: {
+    marginTop: '15px',
+  }
+});
 
 class TaskList extends React.Component {
   constructor(props) {
@@ -47,6 +68,12 @@ class TaskList extends React.Component {
     this.props.openEditTaskView(-1);
   }
 
+  viewTask(event, taskId) {
+    event.preventDefault();
+
+    this.props.openViewTaskView(taskId);
+  }
+
   editTask(event, taskId) {
     event.preventDefault();
 
@@ -67,67 +94,69 @@ class TaskList extends React.Component {
 
   getDone(done) {
     if (done) {
-      return '✓';
+      return (<DoneIcon />);
     } else {
       return '';
     }
   }
 
-  getTimeString(timeInSeconds) {
-    const durationInSeconds = moment.duration(timeInSeconds, 'seconds');
-    if (electronSettings.getSync('shouldDisplaySeconds')) {
-      return humanizeDuration(durationInSeconds, {round: false, maxDecimalPoints: 2, units: ['d', 'h', 'm', 's']});
-    } else {
-      return humanizeDuration(durationInSeconds, {round: false, maxDecimalPoints: 2, units: ['d', 'h', 'm']});
-    }
-  }
-
-  getTaskList() {
+  getTaskList(classes) {
     const listTasks = this.props.data.map((task) => {
       return (
-        <tr key={ task.id }>
-          <td>{ task.name }</td>
-          <td>{ this.getTimeString(task.timeSpent) }</td>
-          <td>{ this.getDone(task.done) }</td>
-          <td><button onClick={(e) => this.startTask(e, task.id, task.done)}>Start</button></td>
-          <td><button onClick={(e) => this.taskDoneById(e, task.id)}>Done</button></td>
-          <td><button onClick={(e) => this.editTask(e, task.id)}>Edit</button></td>
-          <td><button className="remove-button" onClick={(e) => this.removeTask(e, task.id)}>Remove</button></td>
-        </tr>
+        <TableRow key={ task.id }>
+          <TableCell>{ task.name }</TableCell>
+          <TableCell>{ this.getDone(task.done) }</TableCell>
+          <TableCell>
+            <ButtonGroup className={classes.taskActionButtonGroup}>
+              <Button size="small" variant="outlined" color="primary" onClick={(e) => this.startTask(e, task.id, task.done)}>Start</Button>
+              <Button size="small" variant="outlined" color="primary" onClick={(e) => this.taskDoneById(e, task.id)}>Done</Button>
+            </ButtonGroup>
+            <ButtonGroup className={classes.taskActionButtonGroup}>
+              <Button size="small" variant="outlined" color="primary" onClick={(e) => this.viewTask(e, task.id)}>View</Button>
+              <Button size="small" variant="outlined" color="primary" onClick={(e) => this.editTask(e, task.id)}>Edit</Button>
+              <Button size="small" variant="outlined" color="secondary" onClick={(e) => this.removeTask(e, task.id)}>Remove</Button>
+            </ButtonGroup>
+          </TableCell>
+        </TableRow>
       );
     });
 
     return (
-      <table className="task-list-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Time</th>
-            <th>Done</th>
-          </tr>
-        </thead>
-        <tbody>
-          { listTasks }
-        </tbody>
-      </table>
+      <TableContainer component={Paper}>
+        <Table className={classes.table}>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Done</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            { listTasks }
+          </TableBody>
+        </Table>
+      </TableContainer>
     );
   }
 
   render () {
+    const { classes } = this.props;
     return (
       <div>
-        { this.getTaskList() }
-        <p><button onClick={(e) => this.addTask(e)}>Add new task</button></p>
+        { this.getTaskList(classes) }
+        <Button className={classes.addTaskButton} variant="outlined" color="primary" onClick={(e) => this.addTask(e)}>Add new task</Button>
       </div>
     );
   }
 }
 
 TaskList.propTypes = {
+  classes: PropTypes.object,
   data: PropTypes.array,
   openEditTaskView: PropTypes.func,
+  openViewTaskView: PropTypes.func,
   startTask: PropTypes.func,
   taskDoneById: PropTypes.func
 };
 
-export default TaskList;
+export default withStyles(styles)(TaskList);
