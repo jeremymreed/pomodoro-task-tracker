@@ -77,7 +77,7 @@ class ViewTaskView extends React.Component {
     const { classes } = this.props;
     return (
       <div>
-        <Typography variant="h1" align="center">Task Editor</Typography>
+        <Typography variant="h1" align="center">Task</Typography>
 
         <FormGroup>
           <TextField
