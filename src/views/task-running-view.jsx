@@ -36,14 +36,6 @@ const styles = () => ({
   activeTask: {
     display: 'inline-block'
   },
-  description: {
-    "& .MuiInputBase-root.Mui-disabled": {
-      color: '#000'
-    },
-    "& .MuiFormLabel-root.Mui-disabled": {
-        color: '#000'
-    }
-  },
   pauseResumeButton: {
     marginTop: '5px',
     marginRight: '5px'
