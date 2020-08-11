@@ -31,16 +31,6 @@ import Timer from '../components/timer';
   Want to study this technique.
   See: https://stackoverflow.com/questions/62909413/how-to-change-font-color-of-disabled-textfield-material-ui-react-js
 */
-const DescriptionTextField = withStyles({
-  root: {
-    "& .MuiInputBase-root.Mui-disabled": {
-      color: '#000'
-    },
-    "& .MuiFormLabel-root.Mui-disabled": {
-      color: '#000'
-    },
-}
-})(TextField);
 
 const styles = () => ({
   activeTask: {
@@ -157,12 +147,12 @@ class TaskRunningView extends React.Component {
         </Container>
 
         <Container align="center">
-          <DescriptionTextField
+          <TextField
             label="Description"
-            disabled="true"
             multiline
             rows={4}
             defaultValue={ this.props.task.description }
+            inputProps={{readOnly: true}}
           />
         </Container>
 
