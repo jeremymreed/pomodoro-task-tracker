@@ -17,17 +17,18 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import fs from 'fs';
-import process from 'process';
-import path from 'path';
 
 // TODO: This class is kind of ugly.
 class FilePersistence {
   // Load raw data from file.
-  static loadFromFile() {
-    // TODO: This path is hardcoded.
-    const rawData = fs.readFileSync(path.join(process.cwd(), '/data/mock-data.json'), 'utf8');
-    const jsonData = JSON.parse(rawData);
+  static loadFromFile(dbPath) {
+    console.log('dbPath: ', dbPath);
+    if (!fs.existsSync(dbPath)) {
+      FilePersistence.saveToFile(FilePersistence.mapData(0, new Map()), dbPath);
+    }
 
+    const rawData = fs.readFileSync(dbPath);
+    const jsonData = JSON.parse(rawData);
     return jsonData;
   }
 
@@ -49,9 +50,9 @@ class FilePersistence {
       );
   }
 
-  static saveToFile(dataArray) {
+  static saveToFile(dataArray, dbPath) {
     fs.writeFileSync(
-      path.join(process.cwd(), '/data/mock-data.json'),
+      dbPath,
       JSON.stringify(dataArray),
       {'encoding': 'utf8'}
     );
