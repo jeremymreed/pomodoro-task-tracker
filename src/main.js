@@ -33,7 +33,7 @@ let mainWindow = null;
 
 // TODO: This should live in a config module.
 // If there are no settings, set our initial setting state.
-function initialSetup() {
+function initializeSettings() {
   const settings = electronSettings.getSync();
 
   if (Object.keys(settings).length === 0 && settings.constructor === Object){
@@ -42,9 +42,21 @@ function initialSetup() {
       'shortRest': 5 * 60,
       'longRest': 15 * 60,
       'intervalsInSet': 4,
-      'shouldDisplaySeconds': false
+      'shouldDisplaySeconds': false,
+      'databaseFileName': 'data.json'
     });
   }
+}
+
+function getDatabasePath() {
+  return app.getPath('userData') + '/' + electronSettings.getSync('databaseFileName');
+}
+
+function initializeDatabase() {
+  console.log('app.getPath(userData):', app.getPath('userData'));
+
+  const jsonData = FilePersistence.loadFromFile(getDatabasePath());
+  db.restoreData(jsonData);
 }
 
 // Creates the browser window.
@@ -57,14 +69,11 @@ function createWindow() {
     }
   })
 
-  // Restore database.
-  const jsonData = FilePersistence.loadFromFile();
-  db.restoreData(jsonData);
+  initializeSettings();
 
-  // And load the index.html of the app.
+  initializeDatabase();
+
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
-
-  initialSetup();
 }
 
 app.whenReady().then(createWindow);
@@ -105,14 +114,14 @@ ipcMain.on('submitTaskData', (event, taskData) => {
   }
 
   db.addTask(taskData);
-  FilePersistence.saveToFile(FilePersistence.mapData(db.nextId, db.data));
+  FilePersistence.saveToFile(FilePersistence.mapData(db.nextId, db.data), getDatabasePath());
 
   mainWindow.webContents.send('dataReady', db.data);
 });
 
 ipcMain.on('removeTask', (event, taskId) => {
   db.removeTask(taskId);
-  FilePersistence.saveToFile(FilePersistence.mapData(db.nextId, db.data));
+  FilePersistence.saveToFile(FilePersistence.mapData(db.nextId, db.data), getDatabasePath());
 
   mainWindow.webContents.send('dataReady', db.data);
 })
