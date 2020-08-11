@@ -17,8 +17,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import React from 'react';
-import { ipcRenderer } from 'electron';
 import PropTypes from 'prop-types';
+import electronSettings from 'electron-settings';
 import { withStyles } from '@material-ui/styles';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -26,6 +26,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import moment from 'moment';
+import humanizeDuration from 'humanize-duration';
 
 const styles = () => ({
   name: {
@@ -39,67 +41,58 @@ const styles = () => ({
     marginTop: '5px',
     marginBottom: '5px'
   },
-  saveButton: {
+  exitButton: {
     marginTop: '5px',
-    marginRight: '5px'
-  },
-  cancelButton: {
-    marginTop: '5px',
-    marginLeft: '5px'
   }
 });
 
-class EditTaskView extends React.Component {
+class ViewTaskView extends React.Component {
   constructor(props) {
     super(props);
-
-    this.handleNameChange = this.handleNameChange.bind(this);
-    this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
-    this.handleDoneChange = this.handleDoneChange.bind(this);
 
     this.state = {
       name: this.props.task.name,
       description: this.props.task.description,
+      timeSpent: this.props.task.timeSpent,
       done: this.props.task.done
     }
   }
 
-  handleNameChange(event) {
-    const newName = event.target.value;
-    this.setState({name: newName});
+  getTimeString(timeInSeconds) {
+    const durationInSeconds = moment.duration(timeInSeconds, 'seconds');
+    if (electronSettings.getSync('shouldDisplaySeconds')) {
+      return humanizeDuration(durationInSeconds, {round: false, maxDecimalPoints: 0, units: ['d', 'h', 'm', 's']});
+    } else {
+      return humanizeDuration(durationInSeconds, {round: false, maxDecimalPoints: 0, units: ['d', 'h', 'm']});
+    }
   }
 
-  handleDescriptionChange(event) {
-    const newDescription = event.target.value;
-    this.setState({description: newDescription});
-  }
-
-  handleDoneChange() {
-    this.setState({done: !this.state.done});
-  }
-
-  formSubmit(event) {
+  exit(event) {
     event.preventDefault();
 
-    this.props.editTask(this.state.name, this.state.description, this.state.done);
-    ipcRenderer.send('showNotification', 'taskUpdated');
-    this.props.closeEditTaskView();
-  }
-
-  cancelEdit(event) {
-    event.preventDefault();
-
-    this.props.closeEditTaskView();
+    this.props.closeViewTaskView();
   }
 
   render() {
     const { classes } = this.props;
     return (
       <div>
-        <Typography variant="h1" align="center">Task Editor</Typography>
+        <Typography variant="h1" align="center">Task</Typography>
 
         <FormGroup>
-          <TextField className="name" label="Name" defaultValue={this.state.name} onChange={(event) => this.handleNameChange(event)} />
+          <TextField
+            className="name"
+            label="Name"
+            defaultValue={this.state.name}
+            inputProps={{readOnly: true}}
+          />
+
+          <TextField
+            className="name"
+            label="Time spent on task"
+            defaultValue={this.getTimeString(this.state.timeSpent)}
+            inputProps={{readOnly: true}}
+          />
 
           <TextField
             className="description"
@@ -107,23 +100,21 @@ class EditTaskView extends React.Component {
             multiline
             rows={4}
             defaultValue={ this.state.description }
-            onChange={(event) => this.handleDescriptionChange(event)}
+            inputProps={{readOnly: true}}
           />
 
           <FormControlLabel
             className="done"
             control= {<Checkbox
               checked={ this.state.done }
-              onChange={() => this.handleDoneChange()}
               color="primary"
-              inputProps={{ 'aria-label': 'task done checkbox' }}
+              inputProps={{ readOnly: true, 'aria-label': 'task done checkbox' }}
             />}
             label="Done"
           />
 
           <span>
-            <Button className={classes.saveButton} variant="outlined" color="primary" onClick={(e) => this.formSubmit(e)}>Save</Button>
-            <Button className={classes.cancelButton} variant="outlined" color="primary" onClick={(e) => this.cancelEdit(e)}>Cancel</Button>
+            <Button className={classes.exitButton} variant="outlined" color="primary" onClick={(e) => this.exit(e)}>Exit</Button>
           </span>
         </FormGroup>
       </div>
@@ -131,11 +122,10 @@ class EditTaskView extends React.Component {
   }
 }
 
-EditTaskView.propTypes = {
+ViewTaskView.propTypes = {
   classes: PropTypes.object,
   task: PropTypes.object,
-  editTask: PropTypes.func,
-  closeEditTaskView: PropTypes.func
+  closeViewTaskView: PropTypes.func
 }
 
-export default withStyles(styles)(EditTaskView);
+export default withStyles(styles)(ViewTaskView);

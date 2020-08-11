@@ -19,7 +19,37 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
+import { withStyles } from '@material-ui/styles';
+import Container from '@material-ui/core/Container';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 import Timer from '../components/timer';
+
+/*
+  We create custom TextField component with 'disabled' text styling overridden.
+  Want to study this technique.
+  See: https://stackoverflow.com/questions/62909413/how-to-change-font-color-of-disabled-textfield-material-ui-react-js
+*/
+
+const styles = () => ({
+  activeTask: {
+    display: 'inline-block'
+  },
+  pauseResumeButton: {
+    marginTop: '5px',
+    marginRight: '5px'
+  },
+  stopButton: {
+    marginTop: '5px',
+    marginLeft: '5px',
+    marginRight: '5px'
+  },
+  doneButton: {
+    marginTop: '5px',
+    marginLeft: '5px'
+  }
+});
 
 class TaskRunningView extends React.Component {
   constructor(props) {
@@ -90,30 +120,52 @@ class TaskRunningView extends React.Component {
   }
 
   render() {
+    const { classes } = this.props;
     let pauseResumeButton = '';
     if (this.state.shouldRun) {
-      pauseResumeButton = <button onClick={(e) => this.handlePause(e)}>Pause</button>;
+      pauseResumeButton = <Button className={classes.pauseResumeButton} variant="outlined" color="primary" onClick={(e) => this.handlePause(e)}>Pause</Button>;
     } else {
-      pauseResumeButton = <button onClick={(e) => this.handleResume(e)}>Resume</button>;
+      pauseResumeButton = <Button className={classes.pauseResumeButton} variant="outlined" color="primary" onClick={(e) => this.handleResume(e)}>Resume</Button>;
     }
     return (
       <div>
-        <div>
-          <span><span className="active-task-style">Active Task:</span> { this.props.task.name }  <Timer shouldRun={ this.state.shouldRun } handleTimerExpiration={ this.handleTimerExpiration } submitGetTotalTimeRan={ this.submitGetTotalTimeRan }/>  { pauseResumeButton }</span>
-        </div>
-        <p>Description:</p>
-        <textarea className="description-size description-style" value={ this.props.task.description } readOnly={ true } />
-        <p><button onClick={(e) => this.stopTask(e)}>Stop</button><button onClick={(e) => this.taskDone(e)}>Done</button></p>
+        {/* NOTE: Docs don't say anthing about Container taking this prop, but seems to work. */}
+        <Container align="center">
+          <Typography className={classes.activeTask} variant="h6">Active Task:</Typography> <Typography className={classes.activeTask}>{ this.props.task.name }</Typography>
+        </Container>
+
+        <Container align="center">
+          <Timer shouldRun={ this.state.shouldRun } handleTimerExpiration={ this.handleTimerExpiration } submitGetTotalTimeRan={ this.submitGetTotalTimeRan }/>
+        </Container>
+
+        <Container align="center">
+          <TextField
+            label="Description"
+            multiline
+            rows={4}
+            defaultValue={ this.props.task.description }
+            inputProps={{readOnly: true}}
+          />
+        </Container>
+
+        <Container align="center">
+          <p>
+            { pauseResumeButton }
+            <Button className={classes.stopButton} variant="outlined" color="primary" onClick={(e) => this.stopTask(e)}>Stop</Button>
+            <Button className={classes.doneButton} variant="outlined" color="primary" onClick={(e) => this.taskDone(e)}>Done</Button>
+          </p>
+        </Container>
       </div>
     );
   }
 }
 
 TaskRunningView.propTypes = {
+  classes: PropTypes.object,
   task: PropTypes.object,
   updateTaskTimeSpentOnTask: PropTypes.func,
   taskDone: PropTypes.func,
   stopTask: PropTypes.func
 }
 
-export default TaskRunningView;
+export default withStyles(styles)(TaskRunningView);
