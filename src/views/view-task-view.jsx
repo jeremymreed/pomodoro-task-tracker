@@ -61,9 +61,9 @@ class ViewTaskView extends React.Component {
   getTimeString(timeInSeconds) {
     const durationInSeconds = moment.duration(timeInSeconds, 'seconds');
     if (electronSettings.getSync('shouldDisplaySeconds')) {
-      return humanizeDuration(durationInSeconds, {round: false, maxDecimalPoints: 2, units: ['d', 'h', 'm', 's']});
+      return humanizeDuration(durationInSeconds, {round: false, maxDecimalPoints: 0, units: ['d', 'h', 'm', 's']});
     } else {
-      return humanizeDuration(durationInSeconds, {round: false, maxDecimalPoints: 2, units: ['d', 'h', 'm']});
+      return humanizeDuration(durationInSeconds, {round: false, maxDecimalPoints: 0, units: ['d', 'h', 'm']});
     }
   }
 
