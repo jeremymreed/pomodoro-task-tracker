@@ -34,8 +34,8 @@ const styles = () => ({
     minWidth: 500,
   },
   taskActionButton: {
-    margin: '0px',
-    padding: '0px'
+    marginLeft: '5px',
+    marginRight: '5px'
   },
   addTaskButton: {
     marginTop: '15px',
@@ -104,11 +104,13 @@ class TaskList extends React.Component {
         <TableRow key={ task.id }>
           <TableCell>{ task.name }</TableCell>
           <TableCell>{ this.getDone(task.done) }</TableCell>
-          <TableCell><Button className={classes.taskActionButton} size="small" variant="outlined" color="primary" onClick={(e) => this.startTask(e, task.id, task.done)}>Start</Button></TableCell>
-          <TableCell><Button className={classes.taskActionButton} size="small" variant="outlined" color="primary" onClick={(e) => this.taskDoneById(e, task.id)}>Done</Button></TableCell>
-          <TableCell><Button className={classes.taskActionButton} size="small" variant="outlined" color="primary" onClick={(e) => this.viewTask(e, task.id)}>View</Button></TableCell>
-          <TableCell><Button className={classes.taskActionButton} size="small" variant="outlined" color="primary" onClick={(e) => this.editTask(e, task.id)}>Edit</Button></TableCell>
-          <TableCell><Button className={classes.taskActionButton} size="small" variant="outlined" color="secondary" onClick={(e) => this.removeTask(e, task.id)}>Remove</Button></TableCell>
+          <TableCell>
+            <Button className={classes.taskActionButton} size="small" variant="outlined" color="primary" onClick={(e) => this.startTask(e, task.id, task.done)}>Start</Button>
+            <Button className={classes.taskActionButton} size="small" variant="outlined" color="primary" onClick={(e) => this.taskDoneById(e, task.id)}>Done</Button>
+            <Button className={classes.taskActionButton} size="small" variant="outlined" color="primary" onClick={(e) => this.viewTask(e, task.id)}>View</Button>
+            <Button className={classes.taskActionButton} size="small" variant="outlined" color="primary" onClick={(e) => this.editTask(e, task.id)}>Edit</Button>
+            <Button className={classes.taskActionButton} size="small" variant="outlined" color="secondary" onClick={(e) => this.removeTask(e, task.id)}>Remove</Button>
+          </TableCell>
         </TableRow>
       );
     });
@@ -120,9 +122,6 @@ class TaskList extends React.Component {
             <TableRow>
               <TableCell>Name</TableCell>
               <TableCell>Done</TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
