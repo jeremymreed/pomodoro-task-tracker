@@ -28,9 +28,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import electronSettings from 'electron-settings';
-import moment from 'moment';
-import humanizeDuration from 'humanize-duration';
 
 const styles = () => ({
   table: {
@@ -101,21 +98,11 @@ class TaskList extends React.Component {
     }
   }
 
-  getTimeString(timeInSeconds) {
-    const durationInSeconds = moment.duration(timeInSeconds, 'seconds');
-    if (electronSettings.getSync('shouldDisplaySeconds')) {
-      return humanizeDuration(durationInSeconds, {round: false, maxDecimalPoints: 2, units: ['d', 'h', 'm', 's']});
-    } else {
-      return humanizeDuration(durationInSeconds, {round: false, maxDecimalPoints: 2, units: ['d', 'h', 'm']});
-    }
-  }
-
   getTaskList(classes) {
     const listTasks = this.props.data.map((task) => {
       return (
         <TableRow key={ task.id }>
           <TableCell>{ task.name }</TableCell>
-          <TableCell>{ this.getTimeString(task.timeSpent) }</TableCell>
           <TableCell>{ this.getDone(task.done) }</TableCell>
           <TableCell><Button className={classes.taskActionButton} size="small" variant="outlined" color="primary" onClick={(e) => this.startTask(e, task.id, task.done)}>Start</Button></TableCell>
           <TableCell><Button className={classes.taskActionButton} size="small" variant="outlined" color="primary" onClick={(e) => this.taskDoneById(e, task.id)}>Done</Button></TableCell>
@@ -132,7 +119,6 @@ class TaskList extends React.Component {
           <TableHead>
             <TableRow>
               <TableCell>Name</TableCell>
-              <TableCell>Time</TableCell>
               <TableCell>Done</TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>

@@ -18,6 +18,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import electronSettings from 'electron-settings';
 import { withStyles } from '@material-ui/styles';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -25,6 +26,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import moment from 'moment';
+import humanizeDuration from 'humanize-duration';
 
 const styles = () => ({
   name: {
@@ -50,7 +53,17 @@ class ViewTaskView extends React.Component {
     this.state = {
       name: this.props.task.name,
       description: this.props.task.description,
+      timeSpent: this.props.task.timeSpent,
       done: this.props.task.done
+    }
+  }
+
+  getTimeString(timeInSeconds) {
+    const durationInSeconds = moment.duration(timeInSeconds, 'seconds');
+    if (electronSettings.getSync('shouldDisplaySeconds')) {
+      return humanizeDuration(durationInSeconds, {round: false, maxDecimalPoints: 2, units: ['d', 'h', 'm', 's']});
+    } else {
+      return humanizeDuration(durationInSeconds, {round: false, maxDecimalPoints: 2, units: ['d', 'h', 'm']});
     }
   }
 
@@ -71,6 +84,13 @@ class ViewTaskView extends React.Component {
             className="name"
             label="Name"
             defaultValue={this.state.name}
+            inputProps={{readOnly: true}}
+          />
+
+          <TextField
+            className="name"
+            label="Time spent on task"
+            defaultValue={this.getTimeString(this.state.timeSpent)}
             inputProps={{readOnly: true}}
           />
 
