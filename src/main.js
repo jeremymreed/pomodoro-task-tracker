@@ -79,7 +79,7 @@ app.whenReady().then(createWindow);
 // Get rid of default menu on startup.
 app.on('browser-window-created', (event, window) => {
   // TODO: Isn't this a little weird?
-  window.setMenu(MenuGenerator.getMenu(window));
+  window.setMenu(MenuGenerator.getMenu(window, app.getVersion()));
 });
 
 // Quit when all the windows are closed, except on macOS.
