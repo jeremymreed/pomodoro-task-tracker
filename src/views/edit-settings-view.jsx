@@ -54,6 +54,7 @@ class EditSettingsView extends React.Component {
       longRest: this.secondsToMinutes(electronSettings.getSync('longRest')),
       intervalsInSet: electronSettings.getSync('intervalsInSet'),
       shouldDisplaySeconds: electronSettings.getSync('shouldDisplaySeconds'),
+      databaseFileName: electronSettings.getSync('databaseFileName'),
       timeLengthMin: 1,
       timeLengthMax: 60,
       intervalsInSetMin: 1,
@@ -91,7 +92,8 @@ class EditSettingsView extends React.Component {
       shortRest: this.minutesToSeconds(this.state.shortRest),
       longRest: this.minutesToSeconds(this.state.longRest),
       intervalsInSet: this.state.intervalsInSet,
-      shouldDisplaySeconds: this.state.shouldDisplaySeconds
+      shouldDisplaySeconds: this.state.shouldDisplaySeconds,
+      databaseFileName: this.state.databaseFileName
     });
 
     ipcRenderer.send('showNotification', 'settingsUpdated');
