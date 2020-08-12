@@ -18,9 +18,20 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import App from './windows/app/app';
 
+const theme = createMuiTheme({});
+
+function ThemedApp() {
+  return (
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
+  );
+}
+
 ReactDOM.render(
-  <App />,
+  <ThemedApp />,
   document.getElementById('root')
 );
