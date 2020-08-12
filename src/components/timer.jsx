@@ -37,7 +37,8 @@ class Timer extends React.Component {
 
     this.state = {
       time: moment.duration(initialPhase.length, 'seconds'),
-      type: initialPhase.type
+      type: initialPhase.type,
+      title: initialPhase.title
     }
   }
 
@@ -57,7 +58,8 @@ class Timer extends React.Component {
         this.setState(
           {
             time: moment.duration(nextPhase.length, 'seconds'),
-            type: nextPhase.type
+            type: nextPhase.type,
+            title: nextPhase.title
           });
       }
     }
@@ -86,7 +88,7 @@ class Timer extends React.Component {
     return (
       <div>
         <Typography align="center" variant="h1">
-          {this.state.type}: { TimeConverter.getAsMinutes(this.state.time) }:{ TimeConverter.getSeconds(this.state.time) }
+          {this.state.title}: { TimeConverter.getAsMinutes(this.state.time) }:{ TimeConverter.getSeconds(this.state.time) }
         </Typography>
       </div>
     );
