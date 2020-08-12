@@ -20,6 +20,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
 import { withStyles } from '@material-ui/styles';
+import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Table from '@material-ui/core/Table';
@@ -34,7 +35,10 @@ import { Typography } from '@material-ui/core';
 
 const styles = () => ({
   table: {
-    minWidth: 500,
+    minWidth: 640,
+  },
+  taskNameContainer: {
+    maxWidth: 200,
   },
   taskActionButtonGroup: {
     marginLeft: '5px',
@@ -132,7 +136,11 @@ class TaskList extends React.Component {
     const listTasks = this.props.data.map((task) => {
       return (
         <TableRow key={ task.id }>
-          <TableCell>{ task.name }</TableCell>
+          <TableCell>
+            <Container className={classes.taskNameContainer}>
+              <Typography noWrap={true}>{ task.name }</Typography>
+            </Container>
+          </TableCell>
           <TableCell>{ this.getDone(task.done) }</TableCell>
           <TableCell>
             <ButtonGroup className={classes.taskActionButtonGroup}>
