@@ -86,10 +86,7 @@ class Timer extends React.Component {
     return (
       <div>
         <Typography align="center" variant="h1">
-          { TimeConverter.getAsMinutes(this.state.time) }:{ TimeConverter.getSeconds(this.state.time) }
-        </Typography>
-        <Typography align="center">
-          { this.state.type }
+          {this.state.type}: { TimeConverter.getAsMinutes(this.state.time) }:{ TimeConverter.getSeconds(this.state.time) }
         </Typography>
       </div>
     );
