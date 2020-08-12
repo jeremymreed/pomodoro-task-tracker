@@ -36,6 +36,7 @@ class Timer extends React.Component {
     const initialPhase = this.pomodoro.getNextTimerSetting();
 
     this.state = {
+      numPomodoros: 0,
       time: moment.duration(initialPhase.length, 'seconds'),
       type: initialPhase.type,
       title: initialPhase.title
@@ -54,6 +55,11 @@ class Timer extends React.Component {
       // TImer should run, and has expired.
       if (this.props.shouldRun && this.state.time.minutes() === 0 && this.state.time.seconds() === 0) {
         this.props.handleTimerExpiration(this.state.type);
+        if (this.state.type === 'Work') {
+          this.setState({
+            numPomodoros: this.state.numPomodoros + 1
+          });
+        }
         const nextPhase = this.pomodoro.getNextTimerSetting();
         this.setState(
           {
@@ -89,6 +95,9 @@ class Timer extends React.Component {
       <div>
         <Typography align="center" variant="h1">
           {this.state.title}: { TimeConverter.getAsMinutes(this.state.time) }:{ TimeConverter.getSeconds(this.state.time) }
+        </Typography>
+        <Typography align="center">
+          Number of Pomodoros: {this.state.numPomodoros}
         </Typography>
       </div>
     );
