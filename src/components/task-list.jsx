@@ -20,6 +20,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
 import { withStyles } from '@material-ui/styles';
+import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Table from '@material-ui/core/Table';
@@ -30,10 +31,14 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import DoneIcon from '@material-ui/icons/Done';
+import { Typography } from '@material-ui/core';
 
 const styles = () => ({
   table: {
-    minWidth: 500,
+    minWidth: 640,
+  },
+  taskNameContainer: {
+    maxWidth: 200,
   },
   taskActionButtonGroup: {
     marginLeft: '5px',
@@ -100,11 +105,42 @@ class TaskList extends React.Component {
     }
   }
 
-  getTaskList(classes) {
+  getEmptyTaskList(classes) {
+    // No Tasks.
+    const listTasks= (
+      <TableRow>
+        <TableCell>
+          <Typography variant="h6" align="center">You have no tasks!  Go add some!</Typography>
+        </TableCell>
+      </TableRow>
+    );
+
+    return (
+      <TableContainer component={Paper}>
+        <Table className={classes.table}>
+          <TableHead>
+            <TableRow>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            { listTasks }
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  }
+
+  getFullTaskList(classes) {
+    // We have tasks.
     const listTasks = this.props.data.map((task) => {
       return (
         <TableRow key={ task.id }>
-          <TableCell>{ task.name }</TableCell>
+          <TableCell>
+            <Container className={classes.taskNameContainer}>
+              <Typography noWrap={true}>{ task.name }</Typography>
+            </Container>
+          </TableCell>
           <TableCell>{ this.getDone(task.done) }</TableCell>
           <TableCell>
             <ButtonGroup className={classes.taskActionButtonGroup}>
@@ -137,6 +173,14 @@ class TaskList extends React.Component {
         </Table>
       </TableContainer>
     );
+  }
+
+  getTaskList(classes) {
+    if (this.props.data.length === 0) {
+      return (this.getEmptyTaskList(classes));
+    } else {
+      return (this.getFullTaskList(classes))
+    }
   }
 
   render () {

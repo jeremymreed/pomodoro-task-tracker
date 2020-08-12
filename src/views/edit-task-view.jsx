@@ -99,7 +99,14 @@ class EditTaskView extends React.Component {
         <Typography variant="h1" align="center">Task Editor</Typography>
 
         <FormGroup>
-          <TextField className="name" label="Name" defaultValue={this.state.name} onChange={(event) => this.handleNameChange(event)} />
+          <TextField
+            className="name"
+            label="Name"
+            multiline
+            rows={4}
+            defaultValue={this.state.name}
+            onChange={(event) => this.handleNameChange(event)}
+          />
 
           <TextField
             className="description"

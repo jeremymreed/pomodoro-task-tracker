@@ -1,7 +1,7 @@
 import { Menu, dialog } from 'electron';
 
 class MenuGenerator {
-  static getMenu(window) {
+  static getMenu(window, version) {
     const template = [
       {
         label: 'File',
@@ -29,7 +29,7 @@ class MenuGenerator {
               dialog.showMessageBoxSync(
                 {
                   title: 'About this app',
-                  message: 'This application is a task tracker, using the pomodoro technique to track time spent on tasks. \n See https://en.wikipedia.org/wiki/Pomodoro_Technique',
+                  message: `This application is a task tracker, using the pomodoro technique to track time spent on tasks. \n See https://en.wikipedia.org/wiki/Pomodoro_Technique\n Version: ${version}`,
                   buttons: ['Close'],
                 });
             }
