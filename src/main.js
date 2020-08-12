@@ -53,8 +53,6 @@ function getDatabasePath() {
 }
 
 function initializeDatabase() {
-  console.log('app.getPath(userData):', app.getPath('userData'));
-
   const jsonData = FilePersistence.loadFromFile(getDatabasePath());
   db.restoreData(jsonData);
 }

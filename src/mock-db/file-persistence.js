@@ -22,7 +22,6 @@ import fs from 'fs';
 class FilePersistence {
   // Load raw data from file.
   static loadFromFile(dbPath) {
-    console.log('dbPath: ', dbPath);
     if (!fs.existsSync(dbPath)) {
       FilePersistence.saveToFile(FilePersistence.mapData(0, new Map()), dbPath);
     }
