@@ -34,6 +34,13 @@ class NotificationOptions {
       });
 
     this.notificationOptions.set(
+      'timeToWork', {
+        title: 'Work!',
+        body: 'It\'s time to get back to work!',
+        urgency: 'critical'
+      });
+
+    this.notificationOptions.set(
       'taskUpdated', {
         title: 'Task Updated',
         body: 'The task was updated',

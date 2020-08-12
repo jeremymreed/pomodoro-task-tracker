@@ -77,9 +77,16 @@ class TaskRunningView extends React.Component {
   }
 
   // Timer tells us it has expired.
-  handleTimerExpiration() {
+  handleTimerExpiration(type) {
     this._stopTimer();
     this.props.updateTaskTimeSpentOnTask(this.getTotalTimeRan());
+    if (type === 'Work') {
+      ipcRenderer.send('showNotification', 'timeToRest');
+    } else if (type === 'Rest') {
+      ipcRenderer.send('showNotification', 'timeToWork');
+    } else {
+      throw new Error('Invalid type detected!');
+    }
   }
 
   // User wants to pause the timer.

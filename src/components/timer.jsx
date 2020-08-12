@@ -33,8 +33,11 @@ class Timer extends React.Component {
     this.getTotalTimeRan = this.getTotalTimeRan.bind(this);
     this.totalTimeRan = 0;
 
+    const initialPhase = this.pomodoro.getNextTimerSetting();
+
     this.state = {
-      time: moment.duration(this.pomodoro.getNextTimerSetting(), 'seconds')
+      time: moment.duration(initialPhase.length, 'seconds'),
+      type: initialPhase.type
     }
   }
 
@@ -49,8 +52,13 @@ class Timer extends React.Component {
 
       // TImer should run, and has expired.
       if (this.props.shouldRun && this.state.time.minutes() === 0 && this.state.time.seconds() === 0) {
-        this.props.handleTimerExpiration();
-        this.setState({time: moment.duration(this.pomodoro.getNextTimerSetting(), 'seconds')});
+        this.props.handleTimerExpiration(this.state.type);
+        const nextPhase = this.pomodoro.getNextTimerSetting();
+        this.setState(
+          {
+            time: moment.duration(nextPhase.length, 'seconds'),
+            type: nextPhase.type
+          });
       }
     }
   }
@@ -79,6 +87,9 @@ class Timer extends React.Component {
       <div>
         <Typography align="center" variant="h1">
           { TimeConverter.getAsMinutes(this.state.time) }:{ TimeConverter.getSeconds(this.state.time) }
+        </Typography>
+        <Typography align="center">
+          { this.state.type }
         </Typography>
       </div>
     );
