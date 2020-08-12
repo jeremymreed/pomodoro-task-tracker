@@ -83,6 +83,8 @@ class ViewTaskView extends React.Component {
           <TextField
             className="name"
             label="Name"
+            multiline
+            rows={4}
             defaultValue={this.state.name}
             inputProps={{readOnly: true}}
           />
