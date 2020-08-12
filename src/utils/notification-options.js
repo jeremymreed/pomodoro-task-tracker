@@ -30,14 +30,14 @@ class NotificationOptions {
       'timeToRest', {
         title: 'Rest!',
         body: 'You should take a rest now...',
-        urgency: 'critical'
+        urgency: 'normal'
       });
 
     this.notificationOptions.set(
       'timeToWork', {
         title: 'Work!',
         body: 'It\'s time to get back to work!',
-        urgency: 'critical'
+        urgency: 'normal'
       });
 
     this.notificationOptions.set(
@@ -65,7 +65,7 @@ class NotificationOptions {
       'disallow-start-task-when-done', {
         title: 'Cannot start',
         body: 'You cannot start a task that is done!',
-        urgency: 'critical'
+        urgency: 'normal'
       });
   }
 
