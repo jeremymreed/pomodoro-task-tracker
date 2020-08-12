@@ -44,12 +44,12 @@ class Pomodoro {
 
   setupInterval() {
     if (this.interval !== this.intervalsInSet - 1) {
-      this.intervalArray.push({type: 'Rest', length: this.shortRest});
+      this.intervalArray.push({type: 'Rest', title: 'Short Rest', length: this.shortRest});
     } else {
-      this.intervalArray.push({type: 'Rest', length: this.longRest});
+      this.intervalArray.push({type: 'Rest', title: 'Long Rest', length: this.longRest});
     }
 
-    this.intervalArray.push({type: 'Work', length: this.pomodoro});
+    this.intervalArray.push({type: 'Work', title: 'Work', length: this.pomodoro});
   }
 
   // Returns current phase.

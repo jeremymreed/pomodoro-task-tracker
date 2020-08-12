@@ -62,7 +62,7 @@ function initializeDatabase() {
 // Creates the browser window.
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 800,
+    width: 820,
     height: 600,
     webPreferences: {
       nodeIntegration: true
