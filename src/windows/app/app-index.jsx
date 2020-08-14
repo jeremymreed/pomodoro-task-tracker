@@ -18,16 +18,30 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import App from './windows/app/app';
 
-const theme = createMuiTheme({});
+const lightTheme = createMuiTheme({
+  palette: {
+    type: 'light',
+  }
+});
+
+const darkTheme = createMuiTheme({
+  palette: {
+    type: 'dark',
+  }
+});
 
 function ThemedApp() {
   return (
-    <ThemeProvider theme={theme}>
-      <App />
-    </ThemeProvider>
+    <div>
+      <MuiThemeProvider theme={lightTheme}>
+        <CssBaseline />
+        <App />
+      </MuiThemeProvider>
+    </div>
   );
 }
 
