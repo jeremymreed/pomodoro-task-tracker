@@ -27,8 +27,15 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
 
 const styles = () => ({
+  themeFormControl: {
+    maxWidth: 150,
+  },
   saveButton: {
     marginTop: '5px',
     marginRight: '5px'
@@ -47,6 +54,7 @@ class EditSettingsView extends React.Component {
     this.handleShortRestSliderChange = this.handleShortRestSliderChange.bind(this);
     this.handleLongRestSliderChange = this.handleLongRestSliderChange.bind(this);
     this.handleIntervalsInSetSliderChange = this.handleIntervalsInSetSliderChange.bind(this);
+    this.handleThemeSelectionChange = this.handleThemeSelectionChange.bind(this);
 
     this.state = {
       pomodoro: this.secondsToMinutes(electronSettings.getSync('pomodoro')),
@@ -55,6 +63,7 @@ class EditSettingsView extends React.Component {
       intervalsInSet: electronSettings.getSync('intervalsInSet'),
       shouldDisplaySeconds: electronSettings.getSync('shouldDisplaySeconds'),
       databaseFileName: electronSettings.getSync('databaseFileName'),
+      selectedTheme: electronSettings.getSync('theme'),
       timeLengthMin: 1,
       timeLengthMax: 60,
       intervalsInSetMin: 1,
@@ -93,8 +102,11 @@ class EditSettingsView extends React.Component {
       longRest: this.minutesToSeconds(this.state.longRest),
       intervalsInSet: this.state.intervalsInSet,
       shouldDisplaySeconds: this.state.shouldDisplaySeconds,
-      databaseFileName: this.state.databaseFileName
+      databaseFileName: this.state.databaseFileName,
+      theme: this.state.selectedTheme,
     });
+
+    this.props.changeTheme(this.state.selectedTheme);
 
     ipcRenderer.send('showNotification', 'settingsUpdated');
 
@@ -129,6 +141,12 @@ class EditSettingsView extends React.Component {
     event.preventDefault();
 
     this.setState({intervalsInSet: value});
+  }
+
+  handleThemeSelectionChange(event) {
+    event.preventDefault();
+
+    this.setState({selectedTheme: event.target.value});
   }
 
   valueText(value) {
@@ -210,6 +228,19 @@ class EditSettingsView extends React.Component {
             label="Display Seconds?"
           />
 
+          <FormControl className={classes.themeFormControl} variant="outlined">
+            <InputLabel>Theme</InputLabel>
+            <Select
+              label="Theme"
+              value={this.state.selectedTheme}
+              onChange={this.handleThemeSelectionChange}
+            >
+              <MenuItem value={'light'}>Light</MenuItem>
+              <MenuItem value={'dark'}>Dark</MenuItem>
+            </Select>
+
+          </FormControl>
+
           <span>
             <Button className={classes.saveButton} variant="contained" color="primary" onClick={(e) => this.formSubmit(e)}>Save</Button>
             <Button className={classes.cancelButton} variant="contained" color="primary" onClick={(e) => this.cancelEdit(e)}>Cancel</Button>
@@ -222,6 +253,7 @@ class EditSettingsView extends React.Component {
 
 EditSettingsView.propTypes = {
   classes: PropTypes.object,
+  changeTheme: PropTypes.func,
   closeEditSettingsView: PropTypes.func
 }
 
