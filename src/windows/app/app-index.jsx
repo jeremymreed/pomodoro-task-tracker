@@ -37,7 +37,7 @@ const darkTheme = createMuiTheme({
 function ThemedApp() {
   return (
     <div>
-      <MuiThemeProvider theme={lightTheme}>
+      <MuiThemeProvider theme={darkTheme}>
         <CssBaseline />
         <App />
       </MuiThemeProvider>
