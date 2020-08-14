@@ -116,7 +116,7 @@ class ViewTaskView extends React.Component {
           />
 
           <span>
-            <Button className={classes.exitButton} variant="outlined" color="primary" onClick={(e) => this.exit(e)}>Exit</Button>
+            <Button className={classes.exitButton} variant="contained" color="primary" onClick={(e) => this.exit(e)}>Exit</Button>
           </span>
         </FormGroup>
       </div>

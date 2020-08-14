@@ -70,7 +70,9 @@ class TaskList extends React.Component {
   addTask(event) {
     event.preventDefault();
 
-    this.props.openEditTaskView(-1);
+    console.log('addTask called');
+
+    this.props.openAddTaskView();
   }
 
   viewTask(event, taskId) {
@@ -144,13 +146,13 @@ class TaskList extends React.Component {
           <TableCell>{ this.getDone(task.done) }</TableCell>
           <TableCell>
             <ButtonGroup className={classes.taskActionButtonGroup}>
-              <Button size="small" variant="outlined" color="primary" onClick={(e) => this.startTask(e, task.id, task.done)}>Start</Button>
-              <Button size="small" variant="outlined" color="primary" onClick={(e) => this.taskDoneById(e, task.id)}>Done</Button>
+              <Button size="small" variant="contained" color="primary" onClick={(e) => this.startTask(e, task.id, task.done)}>Start</Button>
+              <Button size="small" variant="contained" color="primary" onClick={(e) => this.taskDoneById(e, task.id)}>Done</Button>
             </ButtonGroup>
             <ButtonGroup className={classes.taskActionButtonGroup}>
-              <Button size="small" variant="outlined" color="primary" onClick={(e) => this.viewTask(e, task.id)}>View</Button>
-              <Button size="small" variant="outlined" color="primary" onClick={(e) => this.editTask(e, task.id)}>Edit</Button>
-              <Button size="small" variant="outlined" color="secondary" onClick={(e) => this.removeTask(e, task.id)}>Remove</Button>
+              <Button size="small" variant="contained" color="primary" onClick={(e) => this.viewTask(e, task.id)}>View</Button>
+              <Button size="small" variant="contained" color="primary" onClick={(e) => this.editTask(e, task.id)}>Edit</Button>
+              <Button size="small" variant="contained" color="secondary" onClick={(e) => this.removeTask(e, task.id)}>Remove</Button>
             </ButtonGroup>
           </TableCell>
         </TableRow>
@@ -188,7 +190,7 @@ class TaskList extends React.Component {
     return (
       <div>
         { this.getTaskList(classes) }
-        <Button className={classes.addTaskButton} variant="outlined" color="primary" onClick={(e) => this.addTask(e)}>Add new task</Button>
+        <Button className={classes.addTaskButton} variant="contained" color="primary" onClick={(e) => this.addTask(e)}>Add new task</Button>
       </div>
     );
   }
@@ -198,6 +200,7 @@ TaskList.propTypes = {
   classes: PropTypes.object,
   data: PropTypes.array,
   openEditTaskView: PropTypes.func,
+  openAddTaskView: PropTypes.func,
   openViewTaskView: PropTypes.func,
   startTask: PropTypes.func,
   taskDoneById: PropTypes.func

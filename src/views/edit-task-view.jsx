@@ -96,7 +96,7 @@ class EditTaskView extends React.Component {
     const { classes } = this.props;
     return (
       <div>
-        <Typography variant="h1" align="center">Task Editor</Typography>
+        <Typography variant="h1" align="center">{this.props.title}</Typography>
 
         <FormGroup>
           <TextField
@@ -129,8 +129,8 @@ class EditTaskView extends React.Component {
           />
 
           <span>
-            <Button className={classes.saveButton} variant="outlined" color="primary" onClick={(e) => this.formSubmit(e)}>Save</Button>
-            <Button className={classes.cancelButton} variant="outlined" color="primary" onClick={(e) => this.cancelEdit(e)}>Cancel</Button>
+            <Button className={classes.saveButton} variant="contained" color="primary" onClick={(e) => this.formSubmit(e)}>Save</Button>
+            <Button className={classes.cancelButton} variant="contained" color="primary" onClick={(e) => this.cancelEdit(e)}>Cancel</Button>
           </span>
         </FormGroup>
       </div>
@@ -140,6 +140,7 @@ class EditTaskView extends React.Component {
 
 EditTaskView.propTypes = {
   classes: PropTypes.object,
+  title: PropTypes.string,
   task: PropTypes.object,
   editTask: PropTypes.func,
   closeEditTaskView: PropTypes.func

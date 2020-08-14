@@ -130,9 +130,9 @@ class TaskRunningView extends React.Component {
     const { classes } = this.props;
     let pauseResumeButton = '';
     if (this.state.shouldRun) {
-      pauseResumeButton = <Button className={classes.pauseResumeButton} variant="outlined" color="primary" onClick={(e) => this.handlePause(e)}>Pause</Button>;
+      pauseResumeButton = <Button className={classes.pauseResumeButton} variant="contained" color="primary" onClick={(e) => this.handlePause(e)}>Pause</Button>;
     } else {
-      pauseResumeButton = <Button className={classes.pauseResumeButton} variant="outlined" color="primary" onClick={(e) => this.handleResume(e)}>Resume</Button>;
+      pauseResumeButton = <Button className={classes.pauseResumeButton} variant="contained" color="primary" onClick={(e) => this.handleResume(e)}>Resume</Button>;
     }
     return (
       <div>
@@ -158,8 +158,8 @@ class TaskRunningView extends React.Component {
         <Container align="center">
           <p>
             { pauseResumeButton }
-            <Button className={classes.stopButton} variant="outlined" color="primary" onClick={(e) => this.stopTask(e)}>Stop</Button>
-            <Button className={classes.doneButton} variant="outlined" color="primary" onClick={(e) => this.taskDone(e)}>Done</Button>
+            <Button className={classes.stopButton} variant="contained" color="primary" onClick={(e) => this.stopTask(e)}>Stop</Button>
+            <Button className={classes.doneButton} variant="contained" color="primary" onClick={(e) => this.taskDone(e)}>Done</Button>
           </p>
         </Container>
       </div>

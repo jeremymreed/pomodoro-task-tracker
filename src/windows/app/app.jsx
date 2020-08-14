@@ -17,6 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
 import MainView from '../../views/main-view';
 import EditTaskView from '../../views/edit-task-view';
@@ -33,6 +34,7 @@ class App extends React.Component {
     this.handleDataReady = this.handleDataReady.bind(this);
     this.openEditTaskView = this.openEditTaskView.bind(this);
     this.closeEditTaskView = this.closeEditTaskView.bind(this);
+    this.openAddTaskView = this.openAddTaskView.bind(this);
     this.openEditSettingsView = this.openEditSettingsView.bind(this);
     this.closeEditSettingsView = this.closeEditSettingsView.bind(this);
     this.openViewTaskView = this.openViewTaskView.bind(this);
@@ -52,9 +54,10 @@ class App extends React.Component {
     // Putting state var names here, we should use an enum here.
     this.MainViewState = 0;
     this.EditTaskState = 1;
-    this.TaskRunningState = 2;
-    this.EditSettingsState = 3;
-    this.ViewTaskState = 4;
+    this.AddNewTaskState = 2
+    this.TaskRunningState = 3;
+    this.EditSettingsState = 4;
+    this.ViewTaskState = 5;
 
     // TODO: Consider using only dataMap, and generate data array on the fly when needed.
     this.state = {
@@ -67,7 +70,7 @@ class App extends React.Component {
 
   // TODO: Magic numbers, yay!  Will be obsolete when we convert code to TypeScript.
   validateState() {
-    return this.state.stateVar >= 0 && this.state.stateVar <= 4;
+    return this.state.stateVar >= 0 && this.state.stateVar <= 5;
   }
 
   componentDidMount() {
@@ -116,6 +119,15 @@ class App extends React.Component {
   closeEditTaskView() {
     if (this.validateState()) {
       this.setState({currentTask: -1, stateVar: this.MainViewState});
+    } else {
+      throw new Error('invalid state detected!');
+    }
+  }
+
+  openAddTaskView() {
+    console.log('openAddTaskView called');
+    if (this.validateState()) {
+      this.setState({currentTask: -1, stateVar: this.AddNewTaskState});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -229,19 +241,25 @@ class App extends React.Component {
     } else if (this.state.stateVar === this.EditSettingsState) {
       return (
           <div>
-          <EditSettingsView closeEditSettingsView={ this.closeEditSettingsView }/>
+          <EditSettingsView closeEditSettingsView={ this.closeEditSettingsView } changeTheme={this.props.changeTheme} />
         </div>
       );
     } else if (this.state.stateVar === this.EditTaskState) {
       return (
           <div>
-          <EditTaskView task={ this.getCurrentTask() } editTask={ this.editTask } closeEditTaskView={ this.closeEditTaskView }/>
+          <EditTaskView title="Task Editor" task={ this.getCurrentTask() } editTask={ this.editTask } closeEditTaskView={ this.closeEditTaskView }/>
+        </div>
+      );
+    } else if (this.state.stateVar === this.AddNewTaskState) {
+      return (
+          <div>
+          <EditTaskView title="Add New Task" task={ this.getCurrentTask() } editTask={ this.editTask } closeEditTaskView={ this.closeEditTaskView }/>
         </div>
       );
     } else if (this.state.stateVar === this.MainViewState) {
       return (
         <div>
-          <MainView data={ this.state.data } startTask={ this.startTask } taskDoneById={ this.taskDoneById } openEditTaskView={ this.openEditTaskView } openViewTaskView={ this.openViewTaskView } openEditSettingsView={ this.openEditSettingsView }/>
+          <MainView data={ this.state.data } startTask={ this.startTask } taskDoneById={ this.taskDoneById } openEditTaskView={ this.openEditTaskView } openAddTaskView={this.openAddTaskView} openViewTaskView={ this.openViewTaskView } openEditSettingsView={ this.openEditSettingsView }/>
         </div>
       );
     } else if (this.state.stateVar === this.ViewTaskState) {
@@ -250,6 +268,10 @@ class App extends React.Component {
       );
     }
   }
+}
+
+App.propTypes = {
+  changeTheme: PropTypes.func
 }
 
 export default App;
