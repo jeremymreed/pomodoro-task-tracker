@@ -41,6 +41,7 @@ class MainView extends React.Component {
           startTask={ this.props.startTask }
           taskDoneById={ this.props.taskDoneById }
           openEditTaskView={ this.props.openEditTaskView }
+          openAddTaskView={ this.props.openAddTaskView }
           openViewTaskView={ this.props.openViewTaskView }
         />
       </div>
@@ -51,6 +52,7 @@ class MainView extends React.Component {
 MainView.propTypes = {
   data: PropTypes.array,
   openEditTaskView: PropTypes.func,
+  openAddTaskView: PropTypes.func,
   openEditSettingsView: PropTypes.func,
   openViewTaskView: PropTypes.func,
   startTask: PropTypes.func,

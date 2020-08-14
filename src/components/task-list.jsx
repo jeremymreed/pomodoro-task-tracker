@@ -70,7 +70,9 @@ class TaskList extends React.Component {
   addTask(event) {
     event.preventDefault();
 
-    this.props.openEditTaskView(-1);
+    console.log('addTask called');
+
+    this.props.openAddTaskView();
   }
 
   viewTask(event, taskId) {
@@ -198,6 +200,7 @@ TaskList.propTypes = {
   classes: PropTypes.object,
   data: PropTypes.array,
   openEditTaskView: PropTypes.func,
+  openAddTaskView: PropTypes.func,
   openViewTaskView: PropTypes.func,
   startTask: PropTypes.func,
   taskDoneById: PropTypes.func

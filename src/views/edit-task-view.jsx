@@ -96,7 +96,7 @@ class EditTaskView extends React.Component {
     const { classes } = this.props;
     return (
       <div>
-        <Typography variant="h1" align="center">Task Editor</Typography>
+        <Typography variant="h1" align="center">{this.props.title}</Typography>
 
         <FormGroup>
           <TextField
@@ -140,6 +140,7 @@ class EditTaskView extends React.Component {
 
 EditTaskView.propTypes = {
   classes: PropTypes.object,
+  title: PropTypes.string,
   task: PropTypes.object,
   editTask: PropTypes.func,
   closeEditTaskView: PropTypes.func
