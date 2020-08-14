@@ -43,7 +43,8 @@ function initializeSettings() {
       'longRest': 15 * 60,
       'intervalsInSet': 4,
       'shouldDisplaySeconds': false,
-      'databaseFileName': 'data.json'
+      'databaseFileName': 'data.json',
+      'theme': 'light'
     });
   }
 }
@@ -61,7 +62,7 @@ function initializeDatabase() {
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 820,
-    height: 600,
+    height: 650,
     webPreferences: {
       nodeIntegration: true
     }

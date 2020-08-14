@@ -17,6 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
 import MainView from '../../views/main-view';
 import EditTaskView from '../../views/edit-task-view';
@@ -229,7 +230,7 @@ class App extends React.Component {
     } else if (this.state.stateVar === this.EditSettingsState) {
       return (
           <div>
-          <EditSettingsView closeEditSettingsView={ this.closeEditSettingsView }/>
+          <EditSettingsView closeEditSettingsView={ this.closeEditSettingsView } changeTheme={this.props.changeTheme} />
         </div>
       );
     } else if (this.state.stateVar === this.EditTaskState) {
@@ -250,6 +251,10 @@ class App extends React.Component {
       );
     }
   }
+}
+
+App.propTypes = {
+  changeTheme: PropTypes.func
 }
 
 export default App;

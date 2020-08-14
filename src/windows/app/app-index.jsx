@@ -18,17 +18,69 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import electronSettings from 'electron-settings';
 import App from './windows/app/app';
 
-const theme = createMuiTheme({});
+const lightTheme = createMuiTheme({
+  palette: {
+    type: 'light',
+  }
+});
 
-function ThemedApp() {
-  return (
-    <ThemeProvider theme={theme}>
-      <App />
-    </ThemeProvider>
-  );
+const darkTheme = createMuiTheme({
+  palette: {
+    type: 'dark',
+  }
+});
+
+const themeMap = new Map([
+  ['light', lightTheme],
+  ['dark', darkTheme]
+]);
+
+class ThemedApp extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.changeTheme = this.changeTheme.bind(this);
+
+    const themeName = this.getThemeName();
+
+    this.state = {
+      currentTheme: themeMap.get(themeName)
+    }
+  }
+
+  getThemeName() {
+    if (!electronSettings.has('theme')) {
+      return 'light';
+    } else {
+      return electronSettings.getSync('theme');
+    }
+  }
+
+  changeTheme(themeName) {
+    if (themeName === 'light') {
+      this.setState({currentTheme: lightTheme});
+    } else if (themeName === 'dark') {
+      this.setState({currentTheme: darkTheme});
+    } else {
+      throw Error('Invalid theme name!')
+    }
+  }
+
+  render() {
+    return (
+      <div>
+        <MuiThemeProvider theme={this.state.currentTheme}>
+          <CssBaseline />
+          <App changeTheme={this.changeTheme} />
+        </MuiThemeProvider>
+      </div>
+    );
+  }
 }
 
 ReactDOM.render(
