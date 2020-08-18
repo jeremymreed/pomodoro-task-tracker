@@ -61,16 +61,30 @@ class EditTaskView extends React.Component {
       name: this.props.task.name,
       nameError: false,
       nameHelperText: '',
-      description: this.props.task.description,
       disableSaveButton: false,
+      description: this.props.task.description,
       done: this.props.task.done
     }
+  }
+
+  componentDidMount() {
+    if (!this.validateFormData()) {
+      this.setState({disableSaveButton: true});
+    }
+  }
+
+  validateFormData() {
+    return (this.validateName(this.state.name));
+  }
+
+  validateName(name) {
+    return name !== '';
   }
 
   handleNameChange(event) {
     const newName = event.target.value;
 
-    if (newName === '') {
+    if (!this.validateName(newName)) {
       this.setState({nameError: true, nameHelperText: 'Name cannot be blank', disableSaveButton: true});
     } else {
       this.setState({name: newName, nameError: false, nameHelperText: '', disableSaveButton: false});
@@ -89,9 +103,11 @@ class EditTaskView extends React.Component {
   formSubmit(event) {
     event.preventDefault();
 
-    this.props.editTask(this.state.name, this.state.description, this.state.done);
-    ipcRenderer.send('showNotification', 'taskUpdated');
-    this.props.closeEditTaskView();
+    if (this.validateFormData()) {
+      this.props.editTask(this.state.name, this.state.description, this.state.done);
+      ipcRenderer.send('showNotification', 'taskUpdated');
+      this.props.closeEditTaskView();
+    }
   }
 
   cancelEdit(event) {
