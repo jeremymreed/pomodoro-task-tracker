@@ -59,6 +59,7 @@ class EditTaskView extends React.Component {
 
     this.state = {
       name: this.props.task.name,
+      nameError: false,
       description: this.props.task.description,
       done: this.props.task.done
     }
@@ -66,6 +67,13 @@ class EditTaskView extends React.Component {
 
   handleNameChange(event) {
     const newName = event.target.value;
+
+    if (newName === '') {
+      this.setState({nameError: true});
+    } else {
+      this.setState({nameError: false});
+    }
+
     this.setState({name: newName});
   }
 
@@ -106,6 +114,7 @@ class EditTaskView extends React.Component {
             rows={4}
             defaultValue={this.state.name}
             onChange={(event) => this.handleNameChange(event)}
+            error={this.state.nameError}
           />
 
           <TextField
