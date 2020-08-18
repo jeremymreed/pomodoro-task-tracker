@@ -19,6 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import React from 'react';
 import { ipcRenderer } from 'electron';
 import PropTypes from 'prop-types';
+import { useFormik } from 'formik';
 import { withStyles } from '@material-ui/styles';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -49,105 +50,82 @@ const styles = () => ({
   }
 });
 
-class EditTaskView extends React.Component {
-  constructor(props) {
-    super(props);
+const validate = (values) => {
+  const errors = {};
 
-    this.handleNameChange = this.handleNameChange.bind(this);
-    this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
-    this.handleDoneChange = this.handleDoneChange.bind(this);
-
-    this.state = {
-      name: this.props.task.name,
-      nameError: false,
-      nameHelperText: '',
-      disableSaveButton: false,
-      description: this.props.task.description,
-      done: this.props.task.done
-    }
+  if (!values.name || values.name === '') {
+    errors.name = 'The name is required';
   }
 
-  componentDidMount() {
-    if (!this.validateFormData()) {
-      this.setState({disableSaveButton: true});
-    }
-  }
+  return errors;
+}
 
-  validateFormData() {
-    return (this.validateName(this.state.name));
-  }
-
-  validateName(name) {
-    return name !== '';
-  }
-
-  handleNameChange(event) {
-    const newName = event.target.value;
-
-    if (!this.validateName(newName)) {
-      this.setState({nameError: true, nameHelperText: 'Name cannot be blank', disableSaveButton: true});
-    } else {
-      this.setState({name: newName, nameError: false, nameHelperText: '', disableSaveButton: false});
-    }
-  }
-
-  handleDescriptionChange(event) {
-    const newDescription = event.target.value;
-    this.setState({description: newDescription});
-  }
-
-  handleDoneChange() {
-    this.setState({done: !this.state.done});
-  }
-
-  formSubmit(event) {
-    event.preventDefault();
-
-    if (this.validateFormData()) {
-      this.props.editTask(this.state.name, this.state.description, this.state.done);
+function EditTaskView(props) {
+    const formik = useFormik({
+    initialValues: {
+      name: props.task.name,
+      description: props.task.description,
+      done: props.task.done
+    },
+    validate,
+    onSubmit: (values) => {
+      props.editTask(values.name, values.description, values.done);
       ipcRenderer.send('showNotification', 'taskUpdated');
-      this.props.closeEditTaskView();
+      props.closeEditTaskView();
     }
+  });
+
+  const cancel = () => {
+    props.closeEditTaskView();
   }
 
-  cancelEdit(event) {
-    event.preventDefault();
-
-    this.props.closeEditTaskView();
+  // TODO: See if there's a better way to do this.  The save button must be disabled while the form is not fully filled out.
+  const disableSaveButton = () => {
+    return Object.keys(formik.errors).length !== 0 || formik.values.name === '';
   }
 
-  render() {
-    const { classes } = this.props;
-    return (
-      <div>
-        <Typography variant="h1" align="center">{this.props.title}</Typography>
+  const { classes } = props;
 
+  return (
+    <div>
+      <Typography variant="h1" align="center">{props.title}</Typography>
+
+      <form onSubmit={formik.handleSubmit}>
         <FormGroup>
           <TextField
+            id="name"
+            name="name"
+            type="text"
             className="name"
             label="Name"
             multiline
             rows={4}
-            defaultValue={this.state.name}
-            onChange={(event) => this.handleNameChange(event)}
-            error={this.state.nameError}
-            helperText={this.state.nameHelperText}
+            value={formik.values.name}
+            onChange={formik.handleChange }
+            error={formik.errors.name ? true : false}
+            helperText={formik.errors.name ? formik.errors.name : ''}
           />
 
           <TextField
+            id="description"
+            name="description"
+            type="text"
             className="description"
             label="Description"
             multiline
             rows={4}
-            defaultValue={ this.state.description }
-            onChange={(event) => this.handleDescriptionChange(event)}
+            value={formik.values.description}
+            onChange={formik.handleChange}
           />
 
           <FormControlLabel
             className="done"
             control= {<Checkbox
-              checked={ this.state.done }
-              onChange={() => this.handleDoneChange()}
+              id="done"
+              name="done"
+              type="checkbox"
+              checked={formik.values.done}
+              onChange={formik.handleChange}
               color="primary"
               inputProps={{ 'aria-label': 'task done checkbox' }}
             />}
@@ -156,20 +134,20 @@ class EditTaskView extends React.Component {
 
           <span>
             <Button
+              type="submit"
               className={classes.saveButton}
               variant="contained"
               color="primary"
-              disabled={this.state.disableSaveButton}
-              onClick={(e) => this.formSubmit(e)}
+              disabled={disableSaveButton()}
             >
               Save
             </Button>
-            <Button className={classes.cancelButton} variant="contained" color="primary" onClick={(e) => this.cancelEdit(e)}>Cancel</Button>
+            <Button className={classes.cancelButton} variant="contained" color="primary" onClick={() => {cancel()}}>Cancel</Button>
           </span>
         </FormGroup>
-      </div>
-    );
-  }
+      </form>
+    </div>
+  );
 }
 
 EditTaskView.propTypes = {
