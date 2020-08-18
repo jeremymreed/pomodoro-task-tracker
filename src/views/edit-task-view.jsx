@@ -79,6 +79,11 @@ function EditTaskView(props) {
     props.closeEditTaskView();
   }
 
+  // TODO: See if there's a better way to do this.  The save button must be disabled while the form is not fully filled out.
+  const disableSaveButton = () => {
+    return Object.keys(formik.errors).length !== 0 || formik.values.name === '';
+  }
+
   const { classes } = props;
 
   return (
@@ -133,7 +138,7 @@ function EditTaskView(props) {
               className={classes.saveButton}
               variant="contained"
               color="primary"
-              disabled={Object.keys(formik.errors).length !== 0}
+              disabled={disableSaveButton()}
             >
               Save
             </Button>
