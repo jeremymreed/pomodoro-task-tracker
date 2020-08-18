@@ -133,6 +133,7 @@ function EditTaskView(props) {
               className={classes.saveButton}
               variant="contained"
               color="primary"
+              disabled={Object.keys(formik.errors).length !== 0}
             >
               Save
             </Button>
