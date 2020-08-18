@@ -115,6 +115,7 @@ class EditTaskView extends React.Component {
             defaultValue={this.state.name}
             onChange={(event) => this.handleNameChange(event)}
             error={this.state.nameError}
+            helperText="Name cannot be blank"
           />
 
           <TextField
