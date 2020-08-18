@@ -60,6 +60,7 @@ class EditTaskView extends React.Component {
     this.state = {
       name: this.props.task.name,
       nameError: false,
+      nameHelperText: '',
       description: this.props.task.description,
       done: this.props.task.done
     }
@@ -69,12 +70,10 @@ class EditTaskView extends React.Component {
     const newName = event.target.value;
 
     if (newName === '') {
-      this.setState({nameError: true});
+      this.setState({nameError: true, nameHelperText: 'Name cannot be blank'});
     } else {
-      this.setState({nameError: false});
+      this.setState({name: newName, nameError: false, nameHelperText: ''});
     }
-
-    this.setState({name: newName});
   }
 
   handleDescriptionChange(event) {
@@ -115,7 +114,7 @@ class EditTaskView extends React.Component {
             defaultValue={this.state.name}
             onChange={(event) => this.handleNameChange(event)}
             error={this.state.nameError}
-            helperText="Name cannot be blank"
+            helperText={this.state.nameHelperText}
           />
 
           <TextField
