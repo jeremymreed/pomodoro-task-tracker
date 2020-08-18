@@ -60,21 +60,35 @@ class EditTaskView extends React.Component {
     this.state = {
       name: this.props.task.name,
       nameError: false,
+      nameHelperText: '',
+      disableSaveButton: false,
       description: this.props.task.description,
       done: this.props.task.done
     }
   }
 
+  componentDidMount() {
+    if (!this.validateFormData()) {
+      this.setState({disableSaveButton: true});
+    }
+  }
+
+  validateFormData() {
+    return (this.validateName(this.state.name));
+  }
+
+  validateName(name) {
+    return name !== '';
+  }
+
   handleNameChange(event) {
     const newName = event.target.value;
 
-    if (newName === '') {
-      this.setState({nameError: true});
+    if (!this.validateName(newName)) {
+      this.setState({nameError: true, nameHelperText: 'Name cannot be blank', disableSaveButton: true});
     } else {
-      this.setState({nameError: false});
+      this.setState({name: newName, nameError: false, nameHelperText: '', disableSaveButton: false});
     }
-
-    this.setState({name: newName});
   }
 
   handleDescriptionChange(event) {
@@ -89,9 +103,11 @@ class EditTaskView extends React.Component {
   formSubmit(event) {
     event.preventDefault();
 
-    this.props.editTask(this.state.name, this.state.description, this.state.done);
-    ipcRenderer.send('showNotification', 'taskUpdated');
-    this.props.closeEditTaskView();
+    if (this.validateFormData()) {
+      this.props.editTask(this.state.name, this.state.description, this.state.done);
+      ipcRenderer.send('showNotification', 'taskUpdated');
+      this.props.closeEditTaskView();
+    }
   }
 
   cancelEdit(event) {
@@ -115,7 +131,7 @@ class EditTaskView extends React.Component {
             defaultValue={this.state.name}
             onChange={(event) => this.handleNameChange(event)}
             error={this.state.nameError}
-            helperText="Name cannot be blank"
+            helperText={this.state.nameHelperText}
           />
 
           <TextField
@@ -139,7 +155,15 @@ class EditTaskView extends React.Component {
           />
 
           <span>
-            <Button className={classes.saveButton} variant="contained" color="primary" onClick={(e) => this.formSubmit(e)}>Save</Button>
+            <Button
+              className={classes.saveButton}
+              variant="contained"
+              color="primary"
+              disabled={this.state.disableSaveButton}
+              onClick={(e) => this.formSubmit(e)}
+            >
+              Save
+            </Button>
             <Button className={classes.cancelButton} variant="contained" color="primary" onClick={(e) => this.cancelEdit(e)}>Cancel</Button>
           </span>
         </FormGroup>
