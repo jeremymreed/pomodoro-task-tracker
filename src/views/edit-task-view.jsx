@@ -64,6 +64,10 @@ function EditTaskView(props) {
     }
   });
 
+  const cancel = () => {
+    props.closeEditTaskView();
+  }
+
   const { classes } = props;
 
   return (
@@ -119,7 +123,7 @@ function EditTaskView(props) {
             >
               Save
             </Button>
-            <Button className={classes.cancelButton} variant="contained" color="primary" onClick={() => {props.closeEditTaskView}}>Cancel</Button>
+            <Button className={classes.cancelButton} variant="contained" color="primary" onClick={() => {cancel()}}>Cancel</Button>
           </span>
         </FormGroup>
       </form>
