@@ -50,6 +50,16 @@ const styles = () => ({
   }
 });
 
+const validate = (values) => {
+  const errors = {};
+
+  if (!values.name || values.name === '') {
+    errors.name = 'The name is required';
+  }
+
+  return errors;
+}
+
 function EditTaskView(props) {
     const formik = useFormik({
     initialValues: {
@@ -57,6 +67,7 @@ function EditTaskView(props) {
       description: props.task.description,
       done: props.task.done
     },
+    validate,
     onSubmit: (values) => {
       props.editTask(values.name, values.description, values.done);
       ipcRenderer.send('showNotification', 'taskUpdated');
@@ -85,7 +96,9 @@ function EditTaskView(props) {
             multiline
             rows={4}
             value={formik.values.name}
-            onChange={formik.handleChange}
+            onChange={formik.handleChange }
+            error={formik.errors.name ? true : false}
+            helperText={formik.errors.name ? formik.errors.name : ''}
           />
 
           <TextField
