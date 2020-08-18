@@ -62,6 +62,7 @@ class EditTaskView extends React.Component {
       nameError: false,
       nameHelperText: '',
       description: this.props.task.description,
+      disableSaveButton: false,
       done: this.props.task.done
     }
   }
@@ -70,9 +71,9 @@ class EditTaskView extends React.Component {
     const newName = event.target.value;
 
     if (newName === '') {
-      this.setState({nameError: true, nameHelperText: 'Name cannot be blank'});
+      this.setState({nameError: true, nameHelperText: 'Name cannot be blank', disableSaveButton: true});
     } else {
-      this.setState({name: newName, nameError: false, nameHelperText: ''});
+      this.setState({name: newName, nameError: false, nameHelperText: '', disableSaveButton: false});
     }
   }
 
@@ -138,7 +139,15 @@ class EditTaskView extends React.Component {
           />
 
           <span>
-            <Button className={classes.saveButton} variant="contained" color="primary" onClick={(e) => this.formSubmit(e)}>Save</Button>
+            <Button
+              className={classes.saveButton}
+              variant="contained"
+              color="primary"
+              disabled={this.state.disableSaveButton}
+              onClick={(e) => this.formSubmit(e)}
+            >
+              Save
+            </Button>
             <Button className={classes.cancelButton} variant="contained" color="primary" onClick={(e) => this.cancelEdit(e)}>Cancel</Button>
           </span>
         </FormGroup>
