@@ -19,6 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
+import PouchDB from 'pouchdb';
 import MainView from '../../views/main-view';
 import EditTaskView from '../../views/edit-task-view';
 import EditSettingsView from '../../views/edit-settings-view';
@@ -30,6 +31,8 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.db = new PouchDB('pomodoro-task-tracker');
 
     this.handleDataReady = this.handleDataReady.bind(this);
     this.openEditTaskView = this.openEditTaskView.bind(this);
@@ -75,9 +78,12 @@ class App extends React.Component {
 
   componentDidMount() {
     this._isMounted = true;
-    ipcRenderer.on('dataReady', this.handleDataReady);
+    //this.db.put(testDoc);
+
+    this.db.info().then((info) => {console.log(info)});
+    this.db.get('Test').then((doc) => {console.log('doc: ', doc)});
+
     ipcRenderer.on('showEditSettingsView', this.openEditSettingsView);
-    ipcRenderer.send('getData');
   }
 
   componentWillUnmount() {
