@@ -1,21 +1,61 @@
+import PouchDB from 'pouchdb';
 import Task from './data-models/task';
-import DB from './mock-db/db';
-import FilePersistence from './mock-db/file-persistence';
 
-const jsonData = FilePersistence.loadFromFile();
+const db = new PouchDB('pomodoro-task-tracker');
 
-console.log('jsonData', jsonData);
+let tasks = [
+  new Task('2085beaf-03eb-4ef8-95af-27193e16845b', null, 'Test0', 'Task 0'),
+  new Task('9304ec0b-8f4f-45b3-a79e-5198a88806cf', null, 'Task1', 'Task 1'),
+  new Task('251d9a36-a0b6-43d3-8bb5-16cc6e825c3c', null, 'Task2', 'Task 2')
+];
 
-const db = new DB();
+const upsert = async (task) => {
+  try {
+    const response = await db.put(task);
+    console.log('response: ', response);
+    if (response.ok) {
+      return response.rev;
+    } else {
+      console.log('response.ok was false!');
+      return null;
+    }
+  } catch (error) {
+    console.log('error:', error);
+  }
+}
 
-db.restoreData(jsonData);
+const seedDB = async () => {
+  for ( let i = 0 ; i < tasks.length ; i++ ) {
+    const rev = await upsert(tasks[i]);
 
-console.log('db.data', db.data);
+    if (rev !== null) {
+      tasks[i]._rev = rev;
+    } else {
+      console.log('Got invalid rev!');
+    }
+  }
 
-db.addTask(new Task(db.getNextId(), 'Last Thing', 'Do that last thing'));
+  console.log('tasks: ', tasks);
+}
 
-const dataArray = FilePersistence.mapData(db.nextId, db.data);
+const testUpsert = async () => {
+  for ( let i = 0 ; i < tasks.length ; i++ ) {
+    tasks[i].name = `TASK 1${i}`;
+    const rev = await upsert(tasks[i]);
 
-console.log('dataArray', dataArray);
+    if (rev !== null) {
+      tasks[i]._rev = rev;
+    } else {
+      console.log('Got invalid rev!');
+    }
+  }
 
-FilePersistence.saveToFile(dataArray);
+  console.log('tasks: ', tasks);
+}
+
+const doItAll = async () => {
+  await seedDB();
+  await testUpsert();
+}
+
+doItAll().then(() => {console.log('seeded database');}).catch((error) => {console.log('Caught error: ', error);});
