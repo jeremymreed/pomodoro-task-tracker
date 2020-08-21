@@ -11,6 +11,7 @@
   "scripts": {
     "start": "npm run clean && npm run lint && npm run babel && npm run move-static && electron-forge start",
     "babel": "babel src/ --out-dir build/ --source-maps",
+    "babel-scripts": "babel scripts/ --out-dir build/ --source-maps",
     "move-static": "cp static/* build/",
     "test": "mocha -r esm tests/**/*.spec.js",
     "lint": "eslint src/**/*.jsx src/**/*.js",
