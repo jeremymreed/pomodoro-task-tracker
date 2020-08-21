@@ -55,26 +55,7 @@ const getById = async (id) => {
   console.log('---------------------------------------------');
 }
 
-/*
-  Initial database seed.
- */
 
-const seedDB = async () => {
-  console.log('--- seedDB() ---------------------------------');
-
-  for ( let i = 0 ; i < tasks.length ; i++ ) {
-    const rev = await upsert(tasks[i]);
-
-    if (rev !== null) {
-      tasks[i]._rev = rev;
-    } else {
-      console.log('Got invalid rev!');
-    }
-  }
-
-  console.log('tasks: ', tasks);
-  console.log('---------------------------------------------');
-}
 
 /*
   Functions to exercise the PouchDB API.
