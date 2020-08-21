@@ -23,6 +23,8 @@ let tasks = [
 
 // Upsert document.
 const upsert = async (task) => {
+  console.log('upsert()');
+
   try {
     const response = await db.put(task);
     console.log('response: ', response);
@@ -35,16 +37,22 @@ const upsert = async (task) => {
   } catch (error) {
     console.log('error:', error);
   }
+
+  console.log();
 }
 
 // Get document by id.
 const getById = async (id) => {
+  console.log('getById()');
+
   try {
     const response = await db.get(id);
     console.log('response: ', response);
   } catch (error) {
     console.log('error: ', error);
   }
+
+  console.log();
 }
 
 /*
@@ -52,6 +60,8 @@ const getById = async (id) => {
  */
 
 const seedDB = async () => {
+  console.log('seedDB()');
+
   for ( let i = 0 ; i < tasks.length ; i++ ) {
     const rev = await upsert(tasks[i]);
 
@@ -63,6 +73,7 @@ const seedDB = async () => {
   }
 
   console.log('tasks: ', tasks);
+  console.log();
 }
 
 /*
@@ -70,6 +81,8 @@ const seedDB = async () => {
  */
 
 const testUpsert = async () => {
+  console.log('testUpsert()');
+
   for ( let i = 0 ; i < tasks.length ; i++ ) {
     tasks[i].name = `TASK 1${i}`;
     const rev = await upsert(tasks[i]);
@@ -82,6 +95,7 @@ const testUpsert = async () => {
   }
 
   console.log('tasks: ', tasks);
+  console.log();
 }
 
 const testGetById = async () => {
