@@ -9,6 +9,19 @@ let tasks = [
   new Task('251d9a36-a0b6-43d3-8bb5-16cc6e825c3c', null, 'Task2', 'Task 2')
 ];
 
+// Restore database from disk.
+
+// Dump database to disk.
+
+// Queries using find()
+
+// Paging via allDocs.  Kind of like skip/take pattern.
+
+// Get all docs via allDocs.
+
+// Remove document.
+
+// Upsert document.
 const upsert = async (task) => {
   try {
     const response = await db.put(task);
@@ -24,6 +37,20 @@ const upsert = async (task) => {
   }
 }
 
+// Get document by id.
+const getById = async (id) => {
+  try {
+  const response = await db.get(id);
+  console.log('response: ', response);
+  } catch (error) {
+    console.log('error: ', error);
+  }
+}
+
+/*
+  Initial database seed.
+ */
+
 const seedDB = async () => {
   for ( let i = 0 ; i < tasks.length ; i++ ) {
     const rev = await upsert(tasks[i]);
@@ -37,6 +64,10 @@ const seedDB = async () => {
 
   console.log('tasks: ', tasks);
 }
+
+/*
+  Functions to exercise the PouchDB API.
+ */
 
 const testUpsert = async () => {
   for ( let i = 0 ; i < tasks.length ; i++ ) {
@@ -53,9 +84,16 @@ const testUpsert = async () => {
   console.log('tasks: ', tasks);
 }
 
+const testGetById = async () => {
+  const testId = '2085beaf-03eb-4ef8-95af-27193e16845b';
+
+  await getById(testId);
+}
+
 const doItAll = async () => {
   await seedDB();
   await testUpsert();
+  await testGetById();
 }
 
 doItAll().then(() => {console.log('seeded database');}).catch((error) => {console.log('Caught error: ', error);});
