@@ -1,13 +1,6 @@
 import PouchDB from 'pouchdb';
-import Task from './data-models/task';
 
 const db = new PouchDB('pomodoro-task-tracker');
-
-let tasks = [
-  new Task('2085beaf-03eb-4ef8-95af-27193e16845b', null, 'Test0', 'Task 0'),
-  new Task('9304ec0b-8f4f-45b3-a79e-5198a88806cf', null, 'Task1', 'Task 1'),
-  new Task('251d9a36-a0b6-43d3-8bb5-16cc6e825c3c', null, 'Task2', 'Task 2')
-];
 
 // Restore database from disk.
 
@@ -18,6 +11,24 @@ let tasks = [
 // Paging via allDocs.  Kind of like skip/take pattern.
 
 // Get all docs via allDocs.
+const getAllDocs = async () => {
+  console.log('--- getAllDocs() ------------------------------');
+
+  let docs = null;
+
+  try {
+    docs = await db.allDocs({ include_docs: true });
+    console.log('docs: ', docs);
+    for ( let i = 0 ; i < docs.rows.length ; i++ ) {
+      console.log(`docs.rows[${i}]: `, docs.rows[i]);
+    }
+
+  } catch (error) {
+    console.log('error: ', error);
+  }
+  console.log('---------------------------------------------');
+  return docs;
+}
 
 // Remove document.
 
@@ -55,8 +66,6 @@ const getById = async (id) => {
   console.log('---------------------------------------------');
 }
 
-
-
 /*
   Functions to exercise the PouchDB API.
  */
@@ -64,18 +73,6 @@ const getById = async (id) => {
 const testUpsert = async () => {
   console.log('--- testUpsert() ---------------------------------');
 
-  for ( let i = 0 ; i < tasks.length ; i++ ) {
-    tasks[i].name = `TASK 1${i}`;
-    const rev = await upsert(tasks[i]);
-
-    if (rev !== null) {
-      tasks[i]._rev = rev;
-    } else {
-      console.log('Got invalid rev!');
-    }
-  }
-
-  console.log('tasks: ', tasks);
   console.log('---------------------------------------------');
 }
 
@@ -90,10 +87,10 @@ const testGetById = async () => {
 
 const doItAll = async () => {
   console.log('--- doItAll() ---------------------------------');
-  await seedDB();
+  await getAllDocs();
   await testUpsert();
   await testGetById();
   console.log('---------------------------------------------');
 }
 
-doItAll().then(() => {console.log('seeded database');}).catch((error) => {console.log('Caught error: ', error);});
+doItAll().then(() => {console.log('Completed tests');}).catch((error) => {console.log('Caught error: ', error);});
