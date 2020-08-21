@@ -23,7 +23,7 @@ let tasks = [
 
 // Upsert document.
 const upsert = async (task) => {
-  console.log('upsert()');
+  console.log('--- upsert() ---------------------------------');
 
   try {
     const response = await db.put(task);
@@ -38,12 +38,12 @@ const upsert = async (task) => {
     console.log('error:', error);
   }
 
-  console.log();
+  console.log('---------------------------------------------');
 }
 
 // Get document by id.
 const getById = async (id) => {
-  console.log('getById()');
+  console.log('--- getById() ---------------------------------');
 
   try {
     const response = await db.get(id);
@@ -52,7 +52,7 @@ const getById = async (id) => {
     console.log('error: ', error);
   }
 
-  console.log();
+  console.log('---------------------------------------------');
 }
 
 /*
@@ -60,7 +60,7 @@ const getById = async (id) => {
  */
 
 const seedDB = async () => {
-  console.log('seedDB()');
+  console.log('--- seedDB() ---------------------------------');
 
   for ( let i = 0 ; i < tasks.length ; i++ ) {
     const rev = await upsert(tasks[i]);
@@ -73,7 +73,7 @@ const seedDB = async () => {
   }
 
   console.log('tasks: ', tasks);
-  console.log();
+  console.log('---------------------------------------------');
 }
 
 /*
@@ -81,7 +81,7 @@ const seedDB = async () => {
  */
 
 const testUpsert = async () => {
-  console.log('testUpsert()');
+  console.log('--- testUpsert() ---------------------------------');
 
   for ( let i = 0 ; i < tasks.length ; i++ ) {
     tasks[i].name = `TASK 1${i}`;
@@ -95,19 +95,24 @@ const testUpsert = async () => {
   }
 
   console.log('tasks: ', tasks);
-  console.log();
+  console.log('---------------------------------------------');
 }
 
 const testGetById = async () => {
+  console.log('--- testGetById() ---------------------------------');
+
   const testId = '2085beaf-03eb-4ef8-95af-27193e16845b';
 
   await getById(testId);
+  console.log('---------------------------------------------');
 }
 
 const doItAll = async () => {
+  console.log('--- doItAll() ---------------------------------');
   await seedDB();
   await testUpsert();
   await testGetById();
+  console.log('---------------------------------------------');
 }
 
 doItAll().then(() => {console.log('seeded database');}).catch((error) => {console.log('Caught error: ', error);});
