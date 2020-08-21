@@ -40,8 +40,8 @@ const upsert = async (task) => {
 // Get document by id.
 const getById = async (id) => {
   try {
-  const response = await db.get(id);
-  console.log('response: ', response);
+    const response = await db.get(id);
+    console.log('response: ', response);
   } catch (error) {
     console.log('error: ', error);
   }
