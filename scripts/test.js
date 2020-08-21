@@ -87,6 +87,13 @@ const testGetAllDocs = async () => {
 const testUpsert = async () => {
   console.log('--- testUpsert() ---------------------------------');
 
+  for ( let i = 0 ; i < tasks.length ; i++ ) {
+    tasks[i].name = `Task 1${i}`;
+    await upsert(tasks[i]);
+  }
+
+  console.log('tasks', tasks);
+
   console.log('---------------------------------------------');
 }
 
