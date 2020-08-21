@@ -2,6 +2,7 @@
 
 #### App Specific Stuff. ####
 build/
+pomdoro-task-tracker/
 
 #### node ####
 # Logs
