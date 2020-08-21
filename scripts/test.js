@@ -1,6 +1,9 @@
 import PouchDB from 'pouchdb';
+import TaskMapper from './mappers/task-mapper';
 
 const db = new PouchDB('pomodoro-task-tracker');
+
+let tasks = [];
 
 // Restore database from disk.
 
@@ -21,13 +24,14 @@ const getAllDocs = async () => {
     console.log('docs: ', docs);
     for ( let i = 0 ; i < docs.rows.length ; i++ ) {
       console.log(`docs.rows[${i}]: `, docs.rows[i]);
+      tasks.push(TaskMapper.mapDataToTask(docs.rows[i].doc));
     }
 
   } catch (error) {
     console.log('error: ', error);
   }
   console.log('---------------------------------------------');
-  return docs;
+  return tasks;
 }
 
 // Remove document.
@@ -70,6 +74,16 @@ const getById = async (id) => {
   Functions to exercise the PouchDB API.
  */
 
+const testGetAllDocs = async () => {
+  console.log('--- testGetAllDocs() ---------------------------------');
+
+  await getAllDocs();
+
+  console.log('tasks: ', tasks);
+
+  console.log('---------------------------------------------');
+}
+
 const testUpsert = async () => {
   console.log('--- testUpsert() ---------------------------------');
 
@@ -87,7 +101,7 @@ const testGetById = async () => {
 
 const doItAll = async () => {
   console.log('--- doItAll() ---------------------------------');
-  await getAllDocs();
+  await testGetAllDocs();
   await testUpsert();
   await testGetById();
   console.log('---------------------------------------------');
