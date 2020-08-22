@@ -1,6 +1,8 @@
 import PouchDB from 'pouchdb';
 import Task from './data-models/task';
 
+PouchDB.plugin(require('pouchdb-find'));
+
 const db = new PouchDB('pomodoro-task-tracker');
 
 let tasks = [
@@ -8,6 +10,26 @@ let tasks = [
   new Task('9304ec0b-8f4f-45b3-a79e-5198a88806cf', null, 'Task1', 'Task 1'),
   new Task('251d9a36-a0b6-43d3-8bb5-16cc6e825c3c', null, 'Task2', 'Task 2')
 ];
+
+// Create required indexes.
+const createIndexes = async () => {
+  console.log('--- createIndexes() ---------------------------------');
+
+  try {
+    let createIndexResult = await db.createIndex({
+      index: {
+        fields: ['name'],
+        ddoc: 'index-by-name'
+      }
+    });
+
+    console.log('createIndexResult: ', createIndexResult);
+  } catch (error) {
+    console.log('Caught error:', error);
+  }
+
+  console.log('---------------------------------------------');
+}
 
 // Upsert document.
 const upsert = async (task) => {
@@ -35,6 +57,8 @@ const upsert = async (task) => {
 
 const seedDB = async () => {
   console.log('--- seedDB() ---------------------------------');
+
+  await createIndexes();
 
   for ( let i = 0 ; i < tasks.length ; i++ ) {
     const rev = await upsert(tasks[i]);
