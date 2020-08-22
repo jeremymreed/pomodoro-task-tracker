@@ -7,6 +7,46 @@ const db = new PouchDB('pomodoro-task-tracker');
 
 let tasks = new Map();
 
+// Create indexes
+const createIndexes = async () => {
+  console.log('--- findByName() ------------------------------');
+
+  let indexes = await db.getIndexes();
+
+  console.log('indexes: ', indexes);
+
+  if (indexes.indexes.length === 1) {
+    console.log('Creating indexes!');
+
+    let indexByName = await db.createIndex({
+      index: {
+        fields: ['name'],
+        ddoc: 'index-by-name'
+      }
+    });
+
+    let indexByType = await db.createIndex({
+      index: {
+        fields: ['type'],
+        ddoc: 'index-by-type'
+      }
+    });
+
+    let indexByDone = await db.createIndex({
+      index: {
+        fields: ['done'],
+        ddoc: 'index-by-done'
+      }
+    });
+
+    console.log('indexByName: ', indexByName);
+    console.log('indexByType: ', indexByType);
+    console.log('indexByDone: ', indexByDone);
+  }
+
+  console.log('---------------------------------------------');
+}
+
 // Restore database from disk.
 
 // Dump database to disk.
@@ -16,23 +56,6 @@ const findByName = async (taskName) => {
   console.log('--- findByName() ------------------------------');
 
   try {
-    let indexes = await db.getIndexes();
-
-    console.log('indexes: ', indexes);
-
-    if (indexes.indexes.length === 1) {
-      console.log('Creating indexes!');
-
-      let createIndexResult = await db.createIndex({
-        index: {
-          fields: ['name'],
-          ddoc: 'index-by-name'
-        }
-      });
-
-      console.log('createIndexResult: ', createIndexResult);
-    }
-
     let findResult = await db.find({
       selector: {
         name: taskName
@@ -200,6 +223,7 @@ const testGetById = async () => {
 
 const doItAll = async () => {
   console.log('--- doItAll() ---------------------------------');
+  await createIndexes();
   await testGetAllDocs();
   await testUpsert();
   await testFindByName();
