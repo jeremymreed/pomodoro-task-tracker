@@ -97,6 +97,26 @@ const findByType = async (typeName) => {
 }
 
 // Done
+const findByDone = async (done) => {
+  console.log('--- findByDone() ------------------------------');
+
+  try {
+    let findResult = await db.find({
+      selector: {
+        done: done
+      },
+      use_index: 'index-by-done'
+    });
+
+    console.log('findResult: ', findResult);
+  } catch (error) {
+    console.log('Caught error', error);
+  }
+
+  console.log('done: ', done);
+
+  console.log('---------------------------------------------');
+}
 
 // Paging via allDocs.  Kind of like skip/take pattern.
 
@@ -254,6 +274,8 @@ const doItAll = async () => {
   await testFindByName();
   await findByType('task');
   await findByType('BS');
+  await findByDone(true);
+  await findByDone(false);
   await testGetById();
   await testRemove();
   await testGetById();  // Getting a deleted document.
