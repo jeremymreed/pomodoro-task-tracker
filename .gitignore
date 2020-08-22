@@ -2,7 +2,10 @@
 
 #### App Specific Stuff. ####
 build/
-pomdoro-task-tracker/
+
+# Testing databases.
+pomodoro-task-tracker/
+test/
 
 #### node ####
 # Logs
