@@ -52,6 +52,7 @@ const createIndexes = async () => {
 // Dump database to disk.
 
 // Queries using find()
+// Name
 const findByName = async (taskName) => {
   console.log('--- findByName() ------------------------------');
 
@@ -72,6 +73,30 @@ const findByName = async (taskName) => {
 
   console.log('---------------------------------------------');
 }
+
+// Type
+const findByType = async (typeName) => {
+  console.log('--- findByType() ------------------------------');
+
+  try {
+    let findResult = await db.find({
+      selector: {
+        type: typeName
+      },
+      use_index: 'index-by-type'
+    });
+
+    console.log('findResult: ', findResult);
+  } catch (error) {
+    console.log('Caught error', error);
+  }
+
+  console.log('typeName: ', typeName);
+
+  console.log('---------------------------------------------');
+}
+
+// Done
 
 // Paging via allDocs.  Kind of like skip/take pattern.
 
@@ -227,6 +252,8 @@ const doItAll = async () => {
   await testGetAllDocs();
   await testUpsert();
   await testFindByName();
+  await findByType('task');
+  await findByType('BS');
   await testGetById();
   await testRemove();
   await testGetById();  // Getting a deleted document.
