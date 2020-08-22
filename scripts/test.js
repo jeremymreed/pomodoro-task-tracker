@@ -1,6 +1,8 @@
 import PouchDB from 'pouchdb';
 import TaskMapper from './mappers/task-mapper';
 
+PouchDB.plugin(require('pouchdb-find'));
+
 const db = new PouchDB('pomodoro-task-tracker');
 
 let tasks = new Map();
@@ -10,6 +12,30 @@ let tasks = new Map();
 // Dump database to disk.
 
 // Queries using find()
+const findByName = async (taskName) => {
+  console.log('--- findByName() ------------------------------');
+
+  try {
+    let indexes = await db.getIndexes();
+
+    console.log('indexes: ', indexes);
+
+    let findResult = await db.find({
+      selector: {
+        name: taskName
+      },
+      use_index: 'index-by-name'
+    });
+
+    console.log('findResult: ', findResult);
+  } catch (error) {
+    console.log('Caught error', error);
+  }
+
+  console.log('taskName: ', taskName);
+
+  console.log('---------------------------------------------');
+}
 
 // Paging via allDocs.  Kind of like skip/take pattern.
 
@@ -86,6 +112,18 @@ const getById = async (id) => {
   Functions to exercise the PouchDB API.
  */
 
+const testFindByName = async () => {
+  console.log('--- testFindByName() ---------------------------------');
+
+  const task = tasks.get('251d9a36-a0b6-43d3-8bb5-16cc6e825c3c');
+
+  console.log('task: ', task);
+
+  await findByName(task.name);
+
+  console.log('---------------------------------------------');
+}
+
 const testRemove = async () => {
   console.log('--- testRemove() ---------------------------------');
 
@@ -103,7 +141,13 @@ const testGetAllDocs = async () => {
 
   for ( let i = 0 ; i < docs.rows.length ; i++ ) {
     console.log(`docs.rows[${i}]: `, docs.rows[i]);
-    tasks.set(docs.rows[i].id, TaskMapper.mapDataToTask(docs.rows[i].doc));
+
+    // The design document for the index will be in the results from allDocs().
+    // If it gets processed here, and we upsert the task as design doc, we will overwrite the index!
+    // We shouldn't be treating the design document as a Task, so we filter only for documents with the type === 'task'
+    if (docs.rows[i].doc.type !== undefined && docs.rows[i].doc.type === 'task') {
+      tasks.set(docs.rows[i].id, TaskMapper.mapDataToTask(docs.rows[i].doc));
+    }
   }
 
   console.log('tasks: ', tasks);
@@ -145,6 +189,7 @@ const doItAll = async () => {
   console.log('--- doItAll() ---------------------------------');
   await testGetAllDocs();
   await testUpsert();
+  await testFindByName();
   await testGetById();
   await testRemove();
   await testGetById();  // Getting a deleted document.
