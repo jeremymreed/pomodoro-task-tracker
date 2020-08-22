@@ -4,10 +4,10 @@
 build/
 
 # Testing databases.
-pomodoro-task-tracker/
-pomodoro-task-tracker-mrview*/
-test/
-test-mrview*/
+data/pomodoro-task-tracker/
+data/pomodoro-task-tracker-mrview*/
+data/pomodoro-task-tracker-test/
+data/pomodoro-task-tracker-test-mrview*/
 
 #### node ####
 # Logs
