@@ -35,6 +35,20 @@ const getAllDocs = async () => {
 }
 
 // Remove document.
+const remove = async (task) => {
+  console.log('--- remove() ------------------------------');
+
+  let result =  null;
+
+  try {
+    result = await db.remove(task._id, task._rev);
+    console.log('result: ', result);
+  } catch (error) {
+    console.log('error: ', error);
+  }
+
+  console.log('---------------------------------------------');
+}
 
 // Upsert document.
 const upsert = async (task) => {
@@ -74,6 +88,16 @@ const getById = async (id) => {
   Functions to exercise the PouchDB API.
  */
 
+const testRemove = async () => {
+  console.log('--- testRemove() ---------------------------------');
+
+  await remove(tasks[0]);
+
+  console.log('tasks: ', tasks);
+
+  console.log('---------------------------------------------');
+}
+
 const testGetAllDocs = async () => {
   console.log('--- testGetAllDocs() ---------------------------------');
 
@@ -111,6 +135,8 @@ const doItAll = async () => {
   await testGetAllDocs();
   await testUpsert();
   await testGetById();
+  await testRemove();
+  await testGetById();  // Getting a deleted document.
   console.log('---------------------------------------------');
 }
 
