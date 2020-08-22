@@ -3,7 +3,7 @@ import TaskMapper from './mappers/task-mapper';
 
 PouchDB.plugin(require('pouchdb-find'));
 
-const db = new PouchDB('pomodoro-task-tracker');
+const db = new PouchDB('data/pomodoro-task-tracker-test');
 
 let tasks = new Map();
 

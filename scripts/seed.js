@@ -3,7 +3,7 @@ import Task from './data-models/task';
 
 PouchDB.plugin(require('pouchdb-find'));
 
-const db = new PouchDB('pomodoro-task-tracker');
+const db = new PouchDB('data/pomodoro-task-tracker-test');
 
 let tasks = [
   new Task('2085beaf-03eb-4ef8-95af-27193e16845b', null, 'Test0', 'Task 0', 0, false),
