@@ -3,7 +3,7 @@ import TaskMapper from './mappers/task-mapper';
 
 const db = new PouchDB('pomodoro-task-tracker');
 
-let tasks = [];
+let tasks = new Map();
 
 // Restore database from disk.
 
@@ -24,7 +24,7 @@ const getAllDocs = async () => {
     console.log('docs: ', docs);
     for ( let i = 0 ; i < docs.rows.length ; i++ ) {
       console.log(`docs.rows[${i}]: `, docs.rows[i]);
-      tasks.push(TaskMapper.mapDataToTask(docs.rows[i].doc));
+      tasks.set(docs.rows[i].id, TaskMapper.mapDataToTask(docs.rows[i].doc));
     }
 
   } catch (error) {
@@ -43,6 +43,9 @@ const remove = async (task) => {
   try {
     result = await db.remove(task._id, task._rev);
     console.log('result: ', result);
+    if (result.ok) {
+      tasks.delete(task._id);
+    }
   } catch (error) {
     console.log('error: ', error);
   }
@@ -91,7 +94,7 @@ const getById = async (id) => {
 const testRemove = async () => {
   console.log('--- testRemove() ---------------------------------');
 
-  await remove(tasks[0]);
+  await remove(tasks.get('2085beaf-03eb-4ef8-95af-27193e16845b'));
 
   console.log('tasks: ', tasks);
 
@@ -111,9 +114,17 @@ const testGetAllDocs = async () => {
 const testUpsert = async () => {
   console.log('--- testUpsert() ---------------------------------');
 
-  for ( let i = 0 ; i < tasks.length ; i++ ) {
-    tasks[i].name = `Task 1${i}`;
-    await upsert(tasks[i]);
+  const iter = tasks.keys();
+
+  let item = iter.next();
+  let index = 0;
+  while ( !item.done ) {
+    let task = tasks.get(item.value);
+    task.name = `Task 1${index}`;
+    tasks.set(item.value, task);
+    await upsert(task);
+    index = index + 1;
+    item = iter.next();
   }
 
   console.log('tasks', tasks);
