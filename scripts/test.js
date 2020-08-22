@@ -20,6 +20,19 @@ const findByName = async (taskName) => {
 
     console.log('indexes: ', indexes);
 
+    if (indexes.indexes.length === 1) {
+      console.log('Creating indexes!');
+
+      let createIndexResult = await db.createIndex({
+        index: {
+          fields: ['name'],
+          ddoc: 'index-by-name'
+        }
+      });
+
+      console.log('createIndexResult: ', createIndexResult);
+    }
+
     let findResult = await db.find({
       selector: {
         name: taskName
