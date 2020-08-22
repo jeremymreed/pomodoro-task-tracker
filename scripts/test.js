@@ -22,16 +22,11 @@ const getAllDocs = async () => {
   try {
     docs = await db.allDocs({ include_docs: true });
     console.log('docs: ', docs);
-    for ( let i = 0 ; i < docs.rows.length ; i++ ) {
-      console.log(`docs.rows[${i}]: `, docs.rows[i]);
-      tasks.set(docs.rows[i].id, TaskMapper.mapDataToTask(docs.rows[i].doc));
-    }
-
   } catch (error) {
     console.log('error: ', error);
   }
   console.log('---------------------------------------------');
-  return tasks;
+  return docs;
 }
 
 // Remove document.
@@ -104,7 +99,12 @@ const testRemove = async () => {
 const testGetAllDocs = async () => {
   console.log('--- testGetAllDocs() ---------------------------------');
 
-  await getAllDocs();
+  let docs = await getAllDocs();
+
+  for ( let i = 0 ; i < docs.rows.length ; i++ ) {
+    console.log(`docs.rows[${i}]: `, docs.rows[i]);
+    tasks.set(docs.rows[i].id, TaskMapper.mapDataToTask(docs.rows[i].doc));
+  }
 
   console.log('tasks: ', tasks);
 
