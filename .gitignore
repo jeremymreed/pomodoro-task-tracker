@@ -5,7 +5,9 @@ build/
 
 # Testing databases.
 pomodoro-task-tracker/
+pomodoro-task-tracker-mrview*/
 test/
+test-mrview*/
 
 #### node ####
 # Logs
