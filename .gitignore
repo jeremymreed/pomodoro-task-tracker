@@ -3,6 +3,12 @@
 #### App Specific Stuff. ####
 build/
 
+# Testing databases.
+data/pomodoro-task-tracker/
+data/pomodoro-task-tracker-mrview*/
+data/pomodoro-task-tracker-test/
+data/pomodoro-task-tracker-test-mrview*/
+
 #### node ####
 # Logs
 logs

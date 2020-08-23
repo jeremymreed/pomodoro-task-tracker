@@ -16,20 +16,27 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+import {v4 as uuidv4} from 'uuid';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
+import Database from '../../database';
 import MainView from '../../views/main-view';
 import EditTaskView from '../../views/edit-task-view';
 import EditSettingsView from '../../views/edit-settings-view';
 import TaskRunningView from '../../views/task-running-view';
 import ViewTaskView from '../../views/view-task-view';
+import TaskMapper from '../../mappers/task-mapper';
 import Task from '../../data-models/task';
 
 class App extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.db = new Database();
+
+    this.createIndexes();
 
     this.handleDataReady = this.handleDataReady.bind(this);
     this.openEditTaskView = this.openEditTaskView.bind(this);
@@ -43,6 +50,8 @@ class App extends React.Component {
     this.taskDone = this.taskDone.bind(this);
     this.taskDoneById = this.taskDoneById.bind(this);
     this.editTask = this.editTask.bind(this);
+    this.removeTask = this.removeTask.bind(this);
+    this.setFilter = this.setFilter.bind(this);
     this.startTask = this.startTask.bind(this);
     this.stopTask = this.stopTask.bind(this);
 
@@ -59,10 +68,11 @@ class App extends React.Component {
     this.EditSettingsState = 4;
     this.ViewTaskState = 5;
 
-    // TODO: Consider using only dataMap, and generate data array on the fly when needed.
+    this.currentFilter = 'all';
+
     this.state = {
-      dataMap: new Map(),             // Task Data in map, makes lookup easier.
-      data: [],                       // Task Data in array, easy to display in TaskList.
+      dataMap: new Map(),             // Use for lookups only.
+      data: [],                       // Data for TaskList.  Passed to TaskList via prop.
       currentTask: -1,
       stateVar: this.MainViewState,
     }
@@ -73,26 +83,46 @@ class App extends React.Component {
     return this.state.stateVar >= 0 && this.state.stateVar <= 5;
   }
 
+  validateFilter(filterName) {
+    return (filterName === 'all' || filterName === 'tasksDone' || filterName === 'tasksNotDone');
+  }
+
   componentDidMount() {
     this._isMounted = true;
-    ipcRenderer.on('dataReady', this.handleDataReady);
+    //this.db.put(testDoc);
+
+    this.db.filterTasks(this.currentFilter).then((docs) => {
+      this.handleDataReady(docs);
+    }).catch((error) => {
+      console.log('Caught error while loading data: ', error);
+    });
+
     ipcRenderer.on('showEditSettingsView', this.openEditSettingsView);
-    ipcRenderer.send('getData');
   }
 
   componentWillUnmount() {
     this._isMounted = false;
   }
 
-  // This is a call back, and it is called when the main process has gotten the data we need.
-  handleDataReady(event, dataMap) {
-    let data = [];
-    const iter = dataMap.values();
+  createIndexes() {
+    this.db.createIndexes().catch((error) => {
+      console.log('Caught error: ', error);
+    })
 
-    let item = iter.next();
-    while ( !item.done ) {
-      data.push(item.value);
-      item = iter.next();
+  }
+
+  // This is a call back, and it is called when the main process has gotten the data we need.
+  handleDataReady(rawData) {
+    let data = [];
+    let dataMap = new Map();
+
+    for ( let i = 0 ; i < rawData.length ; i++ ) {
+      if (rawData[i].type === 'task') {
+        let task = TaskMapper.mapDataToTask(rawData[i]);
+
+        data.push(task);
+        dataMap.set(task._id, task);
+      }
     }
 
     if (this._isMounted) {
@@ -100,9 +130,18 @@ class App extends React.Component {
     }
   }
 
+  async reloadData() {
+    try {
+      const docs = await this.db.filterTasks(this.currentFilter);
+      this.handleDataReady(docs);
+    } catch (error) {
+      console.log('Caught error while loading data: ', error);
+    }
+  }
+
   getCurrentTask() {
     if (this.state.currentTask === -1) {
-      return new Task(-1, '', '');
+      return new Task(uuidv4(), '', '');
     } else {
       return this.state.dataMap.get(this.state.currentTask);
     }
@@ -125,7 +164,6 @@ class App extends React.Component {
   }
 
   openAddTaskView() {
-    console.log('openAddTaskView called');
     if (this.validateState()) {
       this.setState({currentTask: -1, stateVar: this.AddNewTaskState});
     } else {
@@ -177,7 +215,15 @@ class App extends React.Component {
     if (this.validateState()) {
       let task = this.getCurrentTask();
       task.timeSpent = task.timeSpent + timeSpentOnTask;
-      ipcRenderer.send('submitTaskData', task);
+      this.db.upsert(task).then((rev) => {
+        task._rev = rev;
+        ipcRenderer.send('showNotification', 'taskUpdated');
+        this.reloadData().catch((error) => {
+          console.log('Caught error: ', error);
+        });
+      }).catch((error) => {
+        console.log('error: ', error);
+      });
     } else {
       throw new Error('invalid state detected!');
     }
@@ -190,8 +236,15 @@ class App extends React.Component {
     if (this.validateState()) {
       let task = this.getCurrentTask();
       task.done = true;
-      ipcRenderer.send('submitTaskData', task)
-      ipcRenderer.send('showNotification', 'taskDone');
+      this.db.upsert(task).then((rev) => {
+        task._rev = rev;
+        ipcRenderer.send('showNotification', 'taskDone');
+        this.reloadData().catch((error) => {
+          console.log('Caught error: ', error);
+        });
+      }).catch((error) => {
+        console.log('error: ', error);
+      })
     } else {
       throw new Error('invalid state detected!');
     }
@@ -203,8 +256,15 @@ class App extends React.Component {
       if (this.state.dataMap.has(taskId)) {
         let task = this.state.dataMap.get(taskId);
         task.done = true;
-        ipcRenderer.send('submitTaskData', task);
-        ipcRenderer.send('showNotification', 'taskDone');
+        this.db.upsert(task).then((rev) => {
+          task._rev = rev;
+          ipcRenderer.send('showNotification', 'taskDone');
+          this.reloadData().catch((error) => {
+            console.log('Caught error: ', error);
+          });
+        }).catch((error) => {
+          console.log('error: ', error);
+        });
       }
     } else {
       throw new Error('invalid state detected!');
@@ -217,10 +277,32 @@ class App extends React.Component {
       task.name = name;
       task.description = description;
       task.done = done;
-      ipcRenderer.send('submitTaskData', task);
+      this.db.upsert(task).then((rev) => {
+        task._rev = rev;
+        ipcRenderer.send('showNotification', 'taskUpdated');
+        this.reloadData().catch((error) => {
+          console.log('Caught error: ', error);
+        });
+      }).catch((error) => {
+        console.log('error: ', error);
+      })
     } else {
       throw new Error('invalid state detected!');
     }
+  }
+
+  removeTask(taskId) {
+    let task = this.state.dataMap.get(taskId);
+
+    this.db.remove(task).then((result) => {
+      if (result.ok) {
+        this.reloadData().catch((error) => {
+          console.log('Caught error: ', error);
+        });
+      }
+    }).catch((error) => {
+      console.log('Could not remove the task! error: ', error);
+    })
   }
 
   stopTask() {
@@ -228,6 +310,17 @@ class App extends React.Component {
       this.setState({currentTask: -1, stateVar: this.MainViewState});
     } else {
       throw new Error('invalid state detected!');
+    }
+  }
+
+  setFilter(filterName) {
+    if (this.validateFilter(filterName)) {
+      this.currentFilter = filterName;
+      this.reloadData().catch((error) => {
+        console.log('Caught error: ', error);
+      })
+    } else {
+      throw new Error('invalid filter detected!');
     }
   }
 
@@ -259,7 +352,17 @@ class App extends React.Component {
     } else if (this.state.stateVar === this.MainViewState) {
       return (
         <div>
-          <MainView data={ this.state.data } startTask={ this.startTask } taskDoneById={ this.taskDoneById } openEditTaskView={ this.openEditTaskView } openAddTaskView={this.openAddTaskView} openViewTaskView={ this.openViewTaskView } openEditSettingsView={ this.openEditSettingsView }/>
+          <MainView
+            data={ this.state.data }
+            startTask={ this.startTask }
+            taskDoneById={ this.taskDoneById }
+            openEditTaskView={ this.openEditTaskView }
+            openAddTaskView={this.openAddTaskView}
+            openViewTaskView={ this.openViewTaskView }
+            openEditSettingsView={ this.openEditSettingsView }
+            removeTask={ this.removeTask }
+            setFilter={ this.setFilter }
+          />
         </div>
       );
     } else if (this.state.stateVar === this.ViewTaskState) {

@@ -43,6 +43,8 @@ class MainView extends React.Component {
           openEditTaskView={ this.props.openEditTaskView }
           openAddTaskView={ this.props.openAddTaskView }
           openViewTaskView={ this.props.openViewTaskView }
+          removeTask={ this.props.removeTask }
+          setFilter={ this.props.setFilter }
         />
       </div>
     );
@@ -56,7 +58,9 @@ MainView.propTypes = {
   openEditSettingsView: PropTypes.func,
   openViewTaskView: PropTypes.func,
   startTask: PropTypes.func,
-  taskDoneById: PropTypes.func
+  taskDoneById: PropTypes.func,
+  removeTask: PropTypes.func,
+  setFilter: PropTypes.func
 };
 
 export default MainView;

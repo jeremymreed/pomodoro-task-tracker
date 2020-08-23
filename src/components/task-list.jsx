@@ -31,7 +31,11 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import DoneIcon from '@material-ui/icons/Done';
-import { Typography } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
 
 const styles = () => ({
   table: {
@@ -46,6 +50,10 @@ const styles = () => ({
   },
   addTaskButton: {
     marginTop: '15px',
+  },
+  themeFormControl: {
+    width: 150,
+    maxWidth: 150,
   }
 });
 
@@ -55,6 +63,11 @@ class TaskList extends React.Component {
 
     this.startTask = this.startTask.bind(this);
     this.editTask = this.editTask.bind(this);
+    this.handleFilterSelectionChange = this.handleFilterSelectionChange.bind(this);
+
+    this.state = {
+      selectedFilter: 'all'
+    }
   }
 
   startTask(event, taskId, done) {
@@ -69,8 +82,6 @@ class TaskList extends React.Component {
 
   addTask(event) {
     event.preventDefault();
-
-    console.log('addTask called');
 
     this.props.openAddTaskView();
   }
@@ -96,7 +107,14 @@ class TaskList extends React.Component {
   removeTask(event, taskId) {
     event.preventDefault();
 
-    ipcRenderer.send('removeTask', taskId);
+    this.props.removeTask(taskId);
+  }
+
+  handleFilterSelectionChange(event) {
+    event.preventDefault();
+
+    this.setState({selectedFilter: event.target.value});
+    this.props.setFilter(event.target.value);
   }
 
   getDone(done) {
@@ -137,7 +155,7 @@ class TaskList extends React.Component {
     // We have tasks.
     const listTasks = this.props.data.map((task) => {
       return (
-        <TableRow key={ task.id }>
+        <TableRow key={ task._id }>
           <TableCell>
             <Container className={classes.taskNameContainer}>
               <Typography noWrap={true}>{ task.name }</Typography>
@@ -146,13 +164,13 @@ class TaskList extends React.Component {
           <TableCell>{ this.getDone(task.done) }</TableCell>
           <TableCell>
             <ButtonGroup className={classes.taskActionButtonGroup}>
-              <Button size="small" variant="contained" color="primary" onClick={(e) => this.startTask(e, task.id, task.done)}>Start</Button>
-              <Button size="small" variant="contained" color="primary" onClick={(e) => this.taskDoneById(e, task.id)}>Done</Button>
+              <Button size="small" variant="contained" color="primary" onClick={(e) => this.startTask(e, task._id, task.done)}>Start</Button>
+              <Button size="small" variant="contained" color="primary" onClick={(e) => this.taskDoneById(e, task._id)}>Done</Button>
             </ButtonGroup>
             <ButtonGroup className={classes.taskActionButtonGroup}>
-              <Button size="small" variant="contained" color="primary" onClick={(e) => this.viewTask(e, task.id)}>View</Button>
-              <Button size="small" variant="contained" color="primary" onClick={(e) => this.editTask(e, task.id)}>Edit</Button>
-              <Button size="small" variant="contained" color="secondary" onClick={(e) => this.removeTask(e, task.id)}>Remove</Button>
+              <Button size="small" variant="contained" color="primary" onClick={(e) => this.viewTask(e, task._id)}>View</Button>
+              <Button size="small" variant="contained" color="primary" onClick={(e) => this.editTask(e, task._id)}>Edit</Button>
+              <Button size="small" variant="contained" color="secondary" onClick={(e) => this.removeTask(e, task._id)}>Remove</Button>
             </ButtonGroup>
           </TableCell>
         </TableRow>
@@ -164,9 +182,23 @@ class TaskList extends React.Component {
         <Table className={classes.table}>
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Done</TableCell>
-              <TableCell></TableCell>
+              <TableCell><Typography variant="h6">Name</Typography></TableCell>
+              <TableCell><Typography variant="h6">Done</Typography></TableCell>
+              <TableCell>
+              <FormControl className={classes.themeFormControl}>
+                <InputLabel>Filter</InputLabel>
+                <Select
+                  label="Filter"
+                  value={this.state.selectedFilter}
+                  onChange={this.handleFilterSelectionChange}
+                >
+                  <MenuItem value={'all'}>All</MenuItem>
+                  <MenuItem value={'tasksDone'}>Complete</MenuItem>
+                  <MenuItem value={'tasksNotDone'}>Incomplete</MenuItem>
+                </Select>
+
+              </FormControl>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -203,7 +235,9 @@ TaskList.propTypes = {
   openAddTaskView: PropTypes.func,
   openViewTaskView: PropTypes.func,
   startTask: PropTypes.func,
-  taskDoneById: PropTypes.func
+  taskDoneById: PropTypes.func,
+  removeTask: PropTypes.func,
+  setFilter: PropTypes.func
 };
 
 export default withStyles(styles)(TaskList);
