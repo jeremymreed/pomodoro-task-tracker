@@ -137,7 +137,7 @@ class TaskList extends React.Component {
     // We have tasks.
     const listTasks = this.props.data.map((task) => {
       return (
-        <TableRow key={ task._id }>
+        <TableRow key={ task.id }>
           <TableCell>
             <Container className={classes.taskNameContainer}>
               <Typography noWrap={true}>{ task.name }</Typography>
