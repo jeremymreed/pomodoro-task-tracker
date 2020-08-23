@@ -65,10 +65,9 @@ class App extends React.Component {
     this.EditSettingsState = 4;
     this.ViewTaskState = 5;
 
-    // TODO: Consider using only dataMap, and generate data array on the fly when needed.
     this.state = {
-      dataMap: new Map(),             // Task Data in map, makes lookup easier.
-      data: [],                       // Task Data in array, easy to display in TaskList.
+      dataMap: new Map(),             // Use for lookups only.
+      data: [],                       // Data for TaskList.  Passed to TaskList via prop.
       currentTask: -1,
       stateVar: this.MainViewState,
     }
