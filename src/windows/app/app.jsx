@@ -90,7 +90,7 @@ class App extends React.Component {
 
     this.createIndexes();
 
-    this.db.getAllDocs().then((docs) => {
+    this.db.filterTasks(this.state.currentFilter).then((docs) => {
       this.handleDataReady(docs);
     }).catch((error) => {
       console.log('Caught error while loading data: ', error);
@@ -117,9 +117,11 @@ class App extends React.Component {
     let data = [];
     let dataMap = new Map();
 
-    for ( let i = 0 ; i < rawData.rows.length ; i++ ) {
-      if (rawData.rows[i].doc.type === 'task') {
-        let task = TaskMapper.mapDataToTask(rawData.rows[i].doc);
+    console.log('rawData: ', rawData);
+
+    for ( let i = 0 ; i < rawData.length ; i++ ) {
+      if (rawData[i].type === 'task') {
+        let task = TaskMapper.mapDataToTask(rawData[i]);
 
         data.push(task);
         dataMap.set(task._id, task);
@@ -133,7 +135,7 @@ class App extends React.Component {
 
   async reloadData() {
     try {
-      const docs = await this.db.getAllDocs();
+      const docs = await this.db.filterTasks(this.state.currentFilter);
       this.handleDataReady(docs);
     } catch (error) {
       console.log('Caught error while loading data: ', error);
