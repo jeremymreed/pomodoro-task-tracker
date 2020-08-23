@@ -53,7 +53,7 @@ class Database {
         use_index: 'index-by-type'
       });
 
-      console.log('findResult: ', findResult);
+      console.log('getTasks(): findResult: ', findResult);
       return findResult.docs;
     } catch (error) {
       console.log('Caught error', error);
@@ -69,7 +69,7 @@ class Database {
         use_index: 'index-by-done'
       });
 
-      console.log('findResult: ', findResult);
+      console.log('filterTasksByDone(): findResult: ', findResult);
       return findResult.docs;
     } catch (error) {
       console.log('Caught error', error);
@@ -77,6 +77,8 @@ class Database {
   }
 
   async filterTasks(filterName) {
+    console.log('filterName: ', filterName);
+
     try {
       if (filterName === 'all') {
         return this.getTasks();
