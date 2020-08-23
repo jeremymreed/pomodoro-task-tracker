@@ -3,13 +3,12 @@ import Task from './data-models/task';
 
 PouchDB.plugin(require('pouchdb-find'));
 
-const db = new PouchDB('data/pomodoro-task-tracker-test');
+const db = new PouchDB('data/pomodoro-task-tracker');
 
 let tasks = [
-  new Task('2085beaf-03eb-4ef8-95af-27193e16845b', null, 'Test0', 'Task 0', 0, false),
-  new Task('9304ec0b-8f4f-45b3-a79e-5198a88806cf', null, 'Task1', 'Task 1', 50000, true),
-  new Task('251d9a36-a0b6-43d3-8bb5-16cc6e825c3c', null, 'Task2', 'Task 2', 10000, false),
-  {_id: '40772086-585e-4625-a621-5d4a70eae2a3', name: 'Bull Shit', type: 'BS' }
+  new Task('2085beaf-03eb-4ef8-95af-27193e16845b', null, 'Foo', 'Foo Bar', 0, false),
+  new Task('9304ec0b-8f4f-45b3-a79e-5198a88806cf', null, 'Bar', 'Bar Foo', 50000, true),
+  new Task('251d9a36-a0b6-43d3-8bb5-16cc6e825c3c', null, 'Test', 'Test Task', 10000, false),
 ];
 
 // Upsert document.
