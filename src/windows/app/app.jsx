@@ -25,6 +25,7 @@ import EditTaskView from '../../views/edit-task-view';
 import EditSettingsView from '../../views/edit-settings-view';
 import TaskRunningView from '../../views/task-running-view';
 import ViewTaskView from '../../views/view-task-view';
+import TaskMapper from '../../mappers/task-mapper';
 import Task from '../../data-models/task';
 
 class App extends React.Component {
@@ -100,14 +101,7 @@ class App extends React.Component {
     let dataMap = new Map();
 
     for ( let i = 0 ; i < rawData.rows.length ; i++ ) {
-      let task = new Task(
-        rawData.rows[i].doc._id,
-        rawData.rows[i].doc._rev,
-        rawData.rows[i].doc.name,
-        rawData.rows[i].doc.description,
-        rawData.rows[i].doc.timeSpent,
-        rawData.rows[i].doc.done
-      );
+      let task = TaskMapper.mapDataToTask(rawData.rows[i].doc);
 
       data.push(task);
       dataMap.set(task._id, task);
