@@ -32,6 +32,16 @@ class Database {
       console.log('error:', error);
     }
   }
+
+  async remove(task) {
+    try {
+      const result = await this.db.remove(task._id, task._rev);
+
+      return result;
+    } catch (error) {
+      console.log('error: ', error);
+    }
+  }
 }
 
 export default Database;
