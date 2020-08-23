@@ -105,9 +105,7 @@ class App extends React.Component {
   }
 
   createIndexes() {
-    this.db.createIndexes().then(() => {
-      console.log('Created indexes');
-    }).catch((error) => {
+    this.db.createIndexes().catch((error) => {
       console.log('Caught error: ', error);
     })
 
@@ -117,8 +115,6 @@ class App extends React.Component {
   handleDataReady(rawData) {
     let data = [];
     let dataMap = new Map();
-
-    console.log('rawData: ', rawData);
 
     for ( let i = 0 ; i < rawData.length ; i++ ) {
       if (rawData[i].type === 'task') {
@@ -318,9 +314,7 @@ class App extends React.Component {
   }
 
   setFilter(filterName) {
-    console.log('App: setFilter called.  filterName: ', filterName);
     if (this.validateFilter(filterName)) {
-      console.log('filterName is valid');
       this.currentFilter = filterName;
       this.reloadData().catch((error) => {
         console.log('Caught error: ', error);

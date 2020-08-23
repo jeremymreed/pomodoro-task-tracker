@@ -12,35 +12,28 @@ class Database {
   async createIndexes() {
     let indexes = await this.db.getIndexes();
   
-    console.log('indexes: ', indexes);
-  
     if (indexes.indexes.length === 1) {
-      console.log('Creating indexes!');
   
-      let indexByName = await this.db.createIndex({
+      await this.db.createIndex({
         index: {
           fields: ['name'],
           ddoc: 'index-by-name'
         }
       });
   
-      let indexByType = await this.db.createIndex({
+      await this.db.createIndex({
         index: {
           fields: ['type'],
           ddoc: 'index-by-type'
         }
       });
   
-      let indexByDone = await this.db.createIndex({
+      await this.db.createIndex({
         index: {
           fields: ['done'],
           ddoc: 'index-by-done'
         }
       });
-  
-      console.log('indexByName: ', indexByName);
-      console.log('indexByType: ', indexByType);
-      console.log('indexByDone: ', indexByDone);
     }
   }
 
@@ -53,7 +46,6 @@ class Database {
         use_index: 'index-by-type'
       });
 
-      console.log('getTasks(): findResult: ', findResult);
       return findResult.docs;
     } catch (error) {
       console.log('Caught error', error);
@@ -69,7 +61,6 @@ class Database {
         use_index: 'index-by-done'
       });
 
-      console.log('filterTasksByDone(): findResult: ', findResult);
       return findResult.docs;
     } catch (error) {
       console.log('Caught error', error);
@@ -77,8 +68,6 @@ class Database {
   }
 
   async filterTasks(filterName) {
-    console.log('filterName: ', filterName);
-
     try {
       if (filterName === 'all') {
         return this.getTasks();
