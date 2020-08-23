@@ -206,7 +206,17 @@ class App extends React.Component {
     if (this.validateState()) {
       let task = this.getCurrentTask();
       task.timeSpent = task.timeSpent + timeSpentOnTask;
-      ipcRenderer.send('submitTaskData', task);
+      this.db.upsert(task).then((rev) => {
+        task._rev = rev;
+        ipcRenderer.send('showNotification', 'taskUpdated');
+        this.reloadData().then(() => {
+          console.log('reloaded data');
+        }).catch((error) => {
+          console.log('Caught error: ', error);
+        });
+      }).catch((error) => {
+        console.log('error: ', error);
+      });
     } else {
       throw new Error('invalid state detected!');
     }
