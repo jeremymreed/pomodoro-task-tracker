@@ -12,7 +12,6 @@ class Database {
 
     try {
       docs = await this.db.allDocs({ include_docs: true });
-      console.log('docs: ', docs);
     } catch (error) {
       console.log('error: ', error);
     }
@@ -22,7 +21,6 @@ class Database {
   async upsert(task) {
     try {
       const response = await this.db.put(task);
-      console.log('response: ', response);
       if (response.ok) {
         return response.rev;
       } else {

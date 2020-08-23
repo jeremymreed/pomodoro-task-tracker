@@ -70,8 +70,6 @@ class TaskList extends React.Component {
   addTask(event) {
     event.preventDefault();
 
-    console.log('addTask called');
-
     this.props.openAddTaskView();
   }
 

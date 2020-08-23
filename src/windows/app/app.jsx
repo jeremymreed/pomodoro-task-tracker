@@ -84,7 +84,6 @@ class App extends React.Component {
     //this.db.put(testDoc);
 
     this.db.getAllDocs().then((docs) => {
-      console.log('Loaded docs: ', docs);
       this.handleDataReady(docs);
     }).catch((error) => {
       console.log('Caught error while loading data: ', error);
@@ -111,9 +110,6 @@ class App extends React.Component {
       }
     }
 
-    console.log('data', data);
-    console.log('dataMap', dataMap);
-
     if (this._isMounted) {
       this.setState({dataMap: dataMap, data: data});
     }
@@ -122,7 +118,6 @@ class App extends React.Component {
   async reloadData() {
     try {
       const docs = await this.db.getAllDocs();
-      console.log('loaded docs: ', docs);
       this.handleDataReady(docs);
     } catch (error) {
       console.log('Caught error while loading data: ', error);
@@ -154,7 +149,6 @@ class App extends React.Component {
   }
 
   openAddTaskView() {
-    console.log('openAddTaskView called');
     if (this.validateState()) {
       this.setState({currentTask: -1, stateVar: this.AddNewTaskState});
     } else {
@@ -209,9 +203,7 @@ class App extends React.Component {
       this.db.upsert(task).then((rev) => {
         task._rev = rev;
         ipcRenderer.send('showNotification', 'taskUpdated');
-        this.reloadData().then(() => {
-          console.log('reloaded data');
-        }).catch((error) => {
+        this.reloadData().catch((error) => {
           console.log('Caught error: ', error);
         });
       }).catch((error) => {
@@ -232,9 +224,7 @@ class App extends React.Component {
       this.db.upsert(task).then((rev) => {
         task._rev = rev;
         ipcRenderer.send('showNotification', 'taskDone');
-        this.reloadData().then(() => {
-          console.log('reloaded data');
-        }).catch((error) => {
+        this.reloadData().catch((error) => {
           console.log('Caught error: ', error);
         });
       }).catch((error) => {
@@ -254,9 +244,7 @@ class App extends React.Component {
         this.db.upsert(task).then((rev) => {
           task._rev = rev;
           ipcRenderer.send('showNotification', 'taskDone');
-          this.reloadData().then(() => {
-            console.log('reloaded data');
-          }).catch((error) => {
+          this.reloadData().catch((error) => {
             console.log('Caught error: ', error);
           });
         }).catch((error) => {
@@ -277,9 +265,7 @@ class App extends React.Component {
       this.db.upsert(task).then((rev) => {
         task._rev = rev;
         ipcRenderer.send('showNotification', 'taskUpdated');
-        this.reloadData().then(() => {
-          console.log('reloaded data');
-        }).catch((error) => {
+        this.reloadData().catch((error) => {
           console.log('Caught error: ', error);
         });
       }).catch((error) => {
@@ -295,9 +281,7 @@ class App extends React.Component {
 
     this.db.remove(task).then((result) => {
       if (result.ok) {
-        this.reloadData().then(() => {
-          console.log('reloaded data');
-        }).catch((error) => {
+        this.reloadData().catch((error) => {
           console.log('Caught error: ', error);
         });
       }
