@@ -19,14 +19,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import { BrowserWindow, app, ipcMain, Notification } from 'electron';
 import path from 'path';
 import MenuGenerator from './menu-generator';
-import DB from './mock-db/db';
 import NotificationOptions from './utils/notification-options';
-import FilePersistence from './mock-db/file-persistence';
 // TODO: electron-settings is using the remote module, and this is going to be deprecated.
 // TODO: We may want to consider using a different system for settings management.
 import electronSettings from 'electron-settings';
 
-const db = new DB();
 const notificationOptions = new NotificationOptions();
 
 let mainWindow = null;
@@ -49,13 +46,7 @@ function initializeSettings() {
   }
 }
 
-function getDatabasePath() {
-  return app.getPath('userData') + '/' + electronSettings.getSync('databaseFileName');
-}
-
 function initializeDatabase() {
-  const jsonData = FilePersistence.loadFromFile(getDatabasePath());
-  db.restoreData(jsonData);
 }
 
 // Creates the browser window.
@@ -103,26 +94,13 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process code.
 // You can also put them in separate files and require them here.
 
-ipcMain.on('getData', (event) => {
-  event.reply('dataReady', db.data);
+ipcMain.on('getData', () => {
 });
 
-ipcMain.on('submitTaskData', (event, taskData) => {
-  if (taskData.id === -1) {
-    taskData.id = db.getNextId();
-  }
-
-  db.addTask(taskData);
-  FilePersistence.saveToFile(FilePersistence.mapData(db.nextId, db.data), getDatabasePath());
-
-  mainWindow.webContents.send('dataReady', db.data);
+ipcMain.on('submitTaskData', () => {
 });
 
-ipcMain.on('removeTask', (event, taskId) => {
-  db.removeTask(taskId);
-  FilePersistence.saveToFile(FilePersistence.mapData(db.nextId, db.data), getDatabasePath());
-
-  mainWindow.webContents.send('dataReady', db.data);
+ipcMain.on('removeTask', () => {
 })
 
 ipcMain.on('showNotification', (event, notificationName) => {
