@@ -104,8 +104,11 @@ class App extends React.Component {
       let task = TaskMapper.mapDataToTask(rawData.rows[i].doc);
 
       data.push(task);
-      dataMap.set(task._id, task);
+      dataMap.set(task.id, task);
     }
+
+    console.log('data', data);
+    console.log('dataMap', dataMap);
 
     if (this._isMounted) {
       this.setState({dataMap: dataMap, data: data});
