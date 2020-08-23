@@ -66,12 +66,13 @@ class App extends React.Component {
     this.EditSettingsState = 4;
     this.ViewTaskState = 5;
 
+    this.currentFilter = 'all';
+
     this.state = {
       dataMap: new Map(),             // Use for lookups only.
       data: [],                       // Data for TaskList.  Passed to TaskList via prop.
       currentTask: -1,
       stateVar: this.MainViewState,
-      currentFilter: 'all',
     }
   }
 
@@ -90,7 +91,7 @@ class App extends React.Component {
 
     this.createIndexes();
 
-    this.db.filterTasks(this.state.currentFilter).then((docs) => {
+    this.db.filterTasks(this.currentFilter).then((docs) => {
       this.handleDataReady(docs);
     }).catch((error) => {
       console.log('Caught error while loading data: ', error);
@@ -135,7 +136,7 @@ class App extends React.Component {
 
   async reloadData() {
     try {
-      const docs = await this.db.filterTasks(this.state.currentFilter);
+      const docs = await this.db.filterTasks(this.currentFilter);
       this.handleDataReady(docs);
     } catch (error) {
       console.log('Caught error while loading data: ', error);
@@ -320,7 +321,10 @@ class App extends React.Component {
     console.log('App: setFilter called.  filterName: ', filterName);
     if (this.validateFilter(filterName)) {
       console.log('filterName is valid');
-      this.setState({currentFilter: filterName});
+      this.currentFilter = filterName;
+      this.reloadData().catch((error) => {
+        console.log('Caught error: ', error);
+      })
     } else {
       throw new Error('invalid filter detected!');
     }
