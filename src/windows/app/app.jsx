@@ -19,7 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
-import PouchDB from 'pouchdb';
+import Database from '../../database';
 import MainView from '../../views/main-view';
 import EditTaskView from '../../views/edit-task-view';
 import EditSettingsView from '../../views/edit-settings-view';
@@ -32,7 +32,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.db = new PouchDB('pomodoro-task-tracker');
+    this.db = new Database();
 
     this.handleDataReady = this.handleDataReady.bind(this);
     this.openEditTaskView = this.openEditTaskView.bind(this);
@@ -80,8 +80,12 @@ class App extends React.Component {
     this._isMounted = true;
     //this.db.put(testDoc);
 
-    this.db.info().then((info) => {console.log(info)});
-    this.db.get('Test').then((doc) => {console.log('doc: ', doc)});
+    this.db.getAllDocs().then((docs) => {
+      console.log('Loaded docs: ', docs);
+      this.handleDataReady(docs);
+    }).catch((error) => {
+      console.log('Caught error while loading data: ', error);
+    });
 
     ipcRenderer.on('showEditSettingsView', this.openEditSettingsView);
   }
@@ -91,14 +95,22 @@ class App extends React.Component {
   }
 
   // This is a call back, and it is called when the main process has gotten the data we need.
-  handleDataReady(event, dataMap) {
+  handleDataReady(rawData) {
     let data = [];
-    const iter = dataMap.values();
+    let dataMap = new Map();
 
-    let item = iter.next();
-    while ( !item.done ) {
-      data.push(item.value);
-      item = iter.next();
+    for ( let i = 0 ; i < rawData.rows.length ; i++ ) {
+      let task = new Task(
+        rawData.rows[i].doc._id,
+        rawData.rows[i].doc._rev,
+        rawData.rows[i].doc.name,
+        rawData.rows[i].doc.description,
+        rawData.rows[i].doc.timeSpent,
+        rawData.rows[i].doc.done
+      );
+
+      data.push(task);
+      dataMap.set(task._id, task);
     }
 
     if (this._isMounted) {
