@@ -234,6 +234,12 @@ class App extends React.Component {
       task.name = name;
       task.description = description;
       task.done = done;
+      this.db.upsert(task).then((rev) => {
+        task._rev = rev;
+        ipcRenderer.send('submitTaskData', task);
+      }).catch((error) => {
+        console.log('error: ', error);
+      })
       ipcRenderer.send('submitTaskData', task);
     } else {
       throw new Error('invalid state detected!');

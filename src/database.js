@@ -18,6 +18,20 @@ class Database {
     }
     return docs;
   }
+
+  async upsert(task) {
+    try {
+      const response = await this.db.put(task);
+      console.log('response: ', response);
+      if (response.ok) {
+        return response.rev;
+      } else {
+        throw new Error('Failed to upsert!');
+      }
+    } catch (error) {
+      console.log('error:', error);
+    }
+  }
 }
 
 export default Database;
