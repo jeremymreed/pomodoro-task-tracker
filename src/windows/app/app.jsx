@@ -36,6 +36,8 @@ class App extends React.Component {
 
     this.db = new Database();
 
+    this.createIndexes();
+
     this.handleDataReady = this.handleDataReady.bind(this);
     this.openEditTaskView = this.openEditTaskView.bind(this);
     this.closeEditTaskView = this.closeEditTaskView.bind(this);
@@ -49,6 +51,7 @@ class App extends React.Component {
     this.taskDoneById = this.taskDoneById.bind(this);
     this.editTask = this.editTask.bind(this);
     this.removeTask = this.removeTask.bind(this);
+    this.setFilter = this.setFilter.bind(this);
     this.startTask = this.startTask.bind(this);
     this.stopTask = this.stopTask.bind(this);
 
@@ -65,6 +68,8 @@ class App extends React.Component {
     this.EditSettingsState = 4;
     this.ViewTaskState = 5;
 
+    this.currentFilter = 'all';
+
     this.state = {
       dataMap: new Map(),             // Use for lookups only.
       data: [],                       // Data for TaskList.  Passed to TaskList via prop.
@@ -78,11 +83,15 @@ class App extends React.Component {
     return this.state.stateVar >= 0 && this.state.stateVar <= 5;
   }
 
+  validateFilter(filterName) {
+    return (filterName === 'all' || filterName === 'tasksDone' || filterName === 'tasksNotDone');
+  }
+
   componentDidMount() {
     this._isMounted = true;
     //this.db.put(testDoc);
 
-    this.db.getAllDocs().then((docs) => {
+    this.db.filterTasks(this.currentFilter).then((docs) => {
       this.handleDataReady(docs);
     }).catch((error) => {
       console.log('Caught error while loading data: ', error);
@@ -95,14 +104,21 @@ class App extends React.Component {
     this._isMounted = false;
   }
 
+  createIndexes() {
+    this.db.createIndexes().catch((error) => {
+      console.log('Caught error: ', error);
+    })
+
+  }
+
   // This is a call back, and it is called when the main process has gotten the data we need.
   handleDataReady(rawData) {
     let data = [];
     let dataMap = new Map();
 
-    for ( let i = 0 ; i < rawData.rows.length ; i++ ) {
-      if (rawData.rows[i].doc.type === 'task') {
-        let task = TaskMapper.mapDataToTask(rawData.rows[i].doc);
+    for ( let i = 0 ; i < rawData.length ; i++ ) {
+      if (rawData[i].type === 'task') {
+        let task = TaskMapper.mapDataToTask(rawData[i]);
 
         data.push(task);
         dataMap.set(task._id, task);
@@ -116,7 +132,7 @@ class App extends React.Component {
 
   async reloadData() {
     try {
-      const docs = await this.db.getAllDocs();
+      const docs = await this.db.filterTasks(this.currentFilter);
       this.handleDataReady(docs);
     } catch (error) {
       console.log('Caught error while loading data: ', error);
@@ -297,6 +313,17 @@ class App extends React.Component {
     }
   }
 
+  setFilter(filterName) {
+    if (this.validateFilter(filterName)) {
+      this.currentFilter = filterName;
+      this.reloadData().catch((error) => {
+        console.log('Caught error: ', error);
+      })
+    } else {
+      throw new Error('invalid filter detected!');
+    }
+  }
+
   render() {
     if (this.state.stateVar === this.TaskRunningState) {
       return (
@@ -325,7 +352,17 @@ class App extends React.Component {
     } else if (this.state.stateVar === this.MainViewState) {
       return (
         <div>
-          <MainView data={ this.state.data } startTask={ this.startTask } taskDoneById={ this.taskDoneById } openEditTaskView={ this.openEditTaskView } openAddTaskView={this.openAddTaskView} openViewTaskView={ this.openViewTaskView } openEditSettingsView={ this.openEditSettingsView } removeTask={ this.removeTask }/>
+          <MainView
+            data={ this.state.data }
+            startTask={ this.startTask }
+            taskDoneById={ this.taskDoneById }
+            openEditTaskView={ this.openEditTaskView }
+            openAddTaskView={this.openAddTaskView}
+            openViewTaskView={ this.openViewTaskView }
+            openEditSettingsView={ this.openEditSettingsView }
+            removeTask={ this.removeTask }
+            setFilter={ this.setFilter }
+          />
         </div>
       );
     } else if (this.state.stateVar === this.ViewTaskState) {

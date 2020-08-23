@@ -31,7 +31,11 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import DoneIcon from '@material-ui/icons/Done';
-import { Typography } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
 
 const styles = () => ({
   table: {
@@ -46,6 +50,10 @@ const styles = () => ({
   },
   addTaskButton: {
     marginTop: '15px',
+  },
+  themeFormControl: {
+    width: 150,
+    maxWidth: 150,
   }
 });
 
@@ -55,6 +63,11 @@ class TaskList extends React.Component {
 
     this.startTask = this.startTask.bind(this);
     this.editTask = this.editTask.bind(this);
+    this.handleFilterSelectionChange = this.handleFilterSelectionChange.bind(this);
+
+    this.state = {
+      selectedFilter: 'all'
+    }
   }
 
   startTask(event, taskId, done) {
@@ -95,6 +108,13 @@ class TaskList extends React.Component {
     event.preventDefault();
 
     this.props.removeTask(taskId);
+  }
+
+  handleFilterSelectionChange(event) {
+    event.preventDefault();
+
+    this.setState({selectedFilter: event.target.value});
+    this.props.setFilter(event.target.value);
   }
 
   getDone(done) {
@@ -162,9 +182,23 @@ class TaskList extends React.Component {
         <Table className={classes.table}>
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Done</TableCell>
-              <TableCell></TableCell>
+              <TableCell><Typography variant="h6">Name</Typography></TableCell>
+              <TableCell><Typography variant="h6">Done</Typography></TableCell>
+              <TableCell>
+              <FormControl className={classes.themeFormControl}>
+                <InputLabel>Filter</InputLabel>
+                <Select
+                  label="Filter"
+                  value={this.state.selectedFilter}
+                  onChange={this.handleFilterSelectionChange}
+                >
+                  <MenuItem value={'all'}>All</MenuItem>
+                  <MenuItem value={'tasksDone'}>Complete</MenuItem>
+                  <MenuItem value={'tasksNotDone'}>Incomplete</MenuItem>
+                </Select>
+
+              </FormControl>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -202,7 +236,8 @@ TaskList.propTypes = {
   openViewTaskView: PropTypes.func,
   startTask: PropTypes.func,
   taskDoneById: PropTypes.func,
-  removeTask: PropTypes.func
+  removeTask: PropTypes.func,
+  setFilter: PropTypes.func
 };
 
 export default withStyles(styles)(TaskList);
