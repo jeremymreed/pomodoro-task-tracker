@@ -36,6 +36,8 @@ class App extends React.Component {
 
     this.db = new Database();
 
+    this.createIndexes();
+
     this.handleDataReady = this.handleDataReady.bind(this);
     this.openEditTaskView = this.openEditTaskView.bind(this);
     this.closeEditTaskView = this.closeEditTaskView.bind(this);
@@ -88,8 +90,6 @@ class App extends React.Component {
   componentDidMount() {
     this._isMounted = true;
     //this.db.put(testDoc);
-
-    this.createIndexes();
 
     this.db.filterTasks(this.currentFilter).then((docs) => {
       this.handleDataReady(docs);
