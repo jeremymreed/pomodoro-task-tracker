@@ -101,10 +101,12 @@ class App extends React.Component {
     let dataMap = new Map();
 
     for ( let i = 0 ; i < rawData.rows.length ; i++ ) {
-      let task = TaskMapper.mapDataToTask(rawData.rows[i].doc);
+      if (rawData.rows[i].doc.type === 'task') {
+        let task = TaskMapper.mapDataToTask(rawData.rows[i].doc);
 
-      data.push(task);
-      dataMap.set(task.id, task);
+        data.push(task);
+        dataMap.set(task._id, task);
+      }
     }
 
     console.log('data', data);

@@ -137,7 +137,7 @@ class TaskList extends React.Component {
     // We have tasks.
     const listTasks = this.props.data.map((task) => {
       return (
-        <TableRow key={ task.id }>
+        <TableRow key={ task._id }>
           <TableCell>
             <Container className={classes.taskNameContainer}>
               <Typography noWrap={true}>{ task.name }</Typography>
@@ -146,13 +146,13 @@ class TaskList extends React.Component {
           <TableCell>{ this.getDone(task.done) }</TableCell>
           <TableCell>
             <ButtonGroup className={classes.taskActionButtonGroup}>
-              <Button size="small" variant="contained" color="primary" onClick={(e) => this.startTask(e, task.id, task.done)}>Start</Button>
-              <Button size="small" variant="contained" color="primary" onClick={(e) => this.taskDoneById(e, task.id)}>Done</Button>
+              <Button size="small" variant="contained" color="primary" onClick={(e) => this.startTask(e, task._id, task.done)}>Start</Button>
+              <Button size="small" variant="contained" color="primary" onClick={(e) => this.taskDoneById(e, task._id)}>Done</Button>
             </ButtonGroup>
             <ButtonGroup className={classes.taskActionButtonGroup}>
-              <Button size="small" variant="contained" color="primary" onClick={(e) => this.viewTask(e, task.id)}>View</Button>
-              <Button size="small" variant="contained" color="primary" onClick={(e) => this.editTask(e, task.id)}>Edit</Button>
-              <Button size="small" variant="contained" color="secondary" onClick={(e) => this.removeTask(e, task.id)}>Remove</Button>
+              <Button size="small" variant="contained" color="primary" onClick={(e) => this.viewTask(e, task._id)}>View</Button>
+              <Button size="small" variant="contained" color="primary" onClick={(e) => this.editTask(e, task._id)}>Edit</Button>
+              <Button size="small" variant="contained" color="secondary" onClick={(e) => this.removeTask(e, task._id)}>Remove</Button>
             </ButtonGroup>
           </TableCell>
         </TableRow>
