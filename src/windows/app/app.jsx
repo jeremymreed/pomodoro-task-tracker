@@ -266,7 +266,7 @@ class App extends React.Component {
       task.done = done;
       this.db.upsert(task).then((rev) => {
         task._rev = rev;
-        ipcRenderer.send('submitTaskData', task);
+        ipcRenderer.send('showNotification', 'taskUpdated');
         this.reloadData().then(() => {
           console.log('reloaded data');
         }).catch((error) => {
@@ -275,7 +275,6 @@ class App extends React.Component {
       }).catch((error) => {
         console.log('error: ', error);
       })
-      ipcRenderer.send('submitTaskData', task);
     } else {
       throw new Error('invalid state detected!');
     }
