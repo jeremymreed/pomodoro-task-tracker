@@ -221,7 +221,6 @@ class App extends React.Component {
       task.done = true;
       this.db.upsert(task).then((rev) => {
         task._rev = rev;
-        ipcRenderer.send('submitTaskData', task);
         ipcRenderer.send('showNotification', 'taskDone');
         this.reloadData().then(() => {
           console.log('reloaded data');
@@ -244,7 +243,6 @@ class App extends React.Component {
         task.done = true;
         this.db.upsert(task).then((rev) => {
           task._rev = rev;
-          ipcRenderer.send('submitTaskData', task);
           ipcRenderer.send('showNotification', 'taskDone');
           this.reloadData().then(() => {
             console.log('reloaded data');
