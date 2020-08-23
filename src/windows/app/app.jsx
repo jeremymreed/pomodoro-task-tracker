@@ -16,6 +16,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+import {v4 as uuidv4} from 'uuid';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
@@ -119,7 +120,7 @@ class App extends React.Component {
 
   getCurrentTask() {
     if (this.state.currentTask === -1) {
-      return new Task(-1, '', '');
+      return new Task(uuidv4(), '', '');
     } else {
       return this.state.dataMap.get(this.state.currentTask);
     }
@@ -237,6 +238,12 @@ class App extends React.Component {
       this.db.upsert(task).then((rev) => {
         task._rev = rev;
         ipcRenderer.send('submitTaskData', task);
+        this.db.getAllDocs().then((docs) => {
+          console.log('Loaded docs: ', docs);
+          this.handleDataReady(docs);
+        }).catch((error) => {
+          console.log('Caught error while loading data: ', error);
+        });
       }).catch((error) => {
         console.log('error: ', error);
       })
