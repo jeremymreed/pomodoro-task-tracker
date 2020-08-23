@@ -49,6 +49,7 @@ class App extends React.Component {
     this.taskDoneById = this.taskDoneById.bind(this);
     this.editTask = this.editTask.bind(this);
     this.removeTask = this.removeTask.bind(this);
+    this.setFilter = this.setFilter.bind(this);
     this.startTask = this.startTask.bind(this);
     this.stopTask = this.stopTask.bind(this);
 
@@ -70,12 +71,17 @@ class App extends React.Component {
       data: [],                       // Data for TaskList.  Passed to TaskList via prop.
       currentTask: -1,
       stateVar: this.MainViewState,
+      currentFilter: 'all',
     }
   }
 
   // TODO: Magic numbers, yay!  Will be obsolete when we convert code to TypeScript.
   validateState() {
     return this.state.stateVar >= 0 && this.state.stateVar <= 5;
+  }
+
+  validateFilter(filterName) {
+    return (filterName === 'all' || filterName === 'tasksDone' || filterName === 'tasksNotDone');
   }
 
   componentDidMount() {
@@ -297,6 +303,16 @@ class App extends React.Component {
     }
   }
 
+  setFilter(filterName) {
+    console.log('App: setFilter called.  filterName: ', filterName);
+    if (this.validateFilter(filterName)) {
+      console.log('filterName is valid');
+      this.setState({currentFilter: filterName});
+    } else {
+      throw new Error('invalid filter detected!');
+    }
+  }
+
   render() {
     if (this.state.stateVar === this.TaskRunningState) {
       return (
@@ -325,7 +341,17 @@ class App extends React.Component {
     } else if (this.state.stateVar === this.MainViewState) {
       return (
         <div>
-          <MainView data={ this.state.data } startTask={ this.startTask } taskDoneById={ this.taskDoneById } openEditTaskView={ this.openEditTaskView } openAddTaskView={this.openAddTaskView} openViewTaskView={ this.openViewTaskView } openEditSettingsView={ this.openEditSettingsView } removeTask={ this.removeTask }/>
+          <MainView
+            data={ this.state.data }
+            startTask={ this.startTask }
+            taskDoneById={ this.taskDoneById }
+            openEditTaskView={ this.openEditTaskView }
+            openAddTaskView={this.openAddTaskView}
+            openViewTaskView={ this.openViewTaskView }
+            openEditSettingsView={ this.openEditSettingsView }
+            removeTask={ this.removeTask }
+            setFilter={ this.setFilter }
+          />
         </div>
       );
     } else if (this.state.stateVar === this.ViewTaskState) {

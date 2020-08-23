@@ -114,6 +114,7 @@ class TaskList extends React.Component {
     event.preventDefault();
 
     this.setState({selectedFilter: event.target.value});
+    this.props.setFilter(event.target.value);
   }
 
   getDone(done) {
@@ -235,7 +236,8 @@ TaskList.propTypes = {
   openViewTaskView: PropTypes.func,
   startTask: PropTypes.func,
   taskDoneById: PropTypes.func,
-  removeTask: PropTypes.func
+  removeTask: PropTypes.func,
+  setFilter: PropTypes.func
 };
 
 export default withStyles(styles)(TaskList);
