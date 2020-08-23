@@ -44,15 +44,50 @@ class Database {
     }
   }
 
-  async getAllDocs() {
-    let docs = null;
-
+  async getTasks() {
     try {
-      docs = await this.db.allDocs({ include_docs: true });
+      let findResult = await this.db.find({
+        selector: {
+          type: 'task'
+        },
+        use_index: 'index-by-type'
+      });
+
+      console.log('findResult: ', findResult);
+      return findResult.docs;
     } catch (error) {
-      console.log('error: ', error);
+      console.log('Caught error', error);
     }
-    return docs;
+  }
+
+  async filterTasksByDone(done) {
+    try {
+      let findResult = await this.db.find({
+        selector: {
+          done: done
+        },
+        use_index: 'index-by-done'
+      });
+
+      console.log('findResult: ', findResult);
+      return findResult.docs;
+    } catch (error) {
+      console.log('Caught error', error);
+    }
+  }
+
+  async filterTasks(filterName) {
+    try {
+      if (filterName === 'all') {
+        return this.getTasks();
+      } else if (filterName === 'tasksDone') {
+        return this.filterTasksByDone(true);
+      } else if (filterName === 'tasksNotDone') {
+        return this.filterTasksByDone(false);
+      }
+    } catch (error) {
+      console.log('Caught error: ', error);
+    }
   }
 
   async upsert(task) {
