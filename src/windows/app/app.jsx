@@ -88,6 +88,8 @@ class App extends React.Component {
     this._isMounted = true;
     //this.db.put(testDoc);
 
+    this.createIndexes();
+
     this.db.getAllDocs().then((docs) => {
       this.handleDataReady(docs);
     }).catch((error) => {
@@ -99,6 +101,15 @@ class App extends React.Component {
 
   componentWillUnmount() {
     this._isMounted = false;
+  }
+
+  createIndexes() {
+    this.db.createIndexes().then(() => {
+      console.log('Created indexes');
+    }).catch((error) => {
+      console.log('Caught error: ', error);
+    })
+
   }
 
   // This is a call back, and it is called when the main process has gotten the data we need.
