@@ -48,6 +48,7 @@ class App extends React.Component {
     this.taskDone = this.taskDone.bind(this);
     this.taskDoneById = this.taskDoneById.bind(this);
     this.editTask = this.editTask.bind(this);
+    this.removeTask = this.removeTask.bind(this);
     this.startTask = this.startTask.bind(this);
     this.stopTask = this.stopTask.bind(this);
 
@@ -115,6 +116,16 @@ class App extends React.Component {
 
     if (this._isMounted) {
       this.setState({dataMap: dataMap, data: data});
+    }
+  }
+
+  async reloadData() {
+    try {
+      const docs = await this.db.getAllDocs();
+      console.log('loaded docs: ', docs);
+      this.handleDataReady(docs);
+    } catch (error) {
+      console.log('Caught error while loading data: ', error);
     }
   }
 
@@ -238,11 +249,10 @@ class App extends React.Component {
       this.db.upsert(task).then((rev) => {
         task._rev = rev;
         ipcRenderer.send('submitTaskData', task);
-        this.db.getAllDocs().then((docs) => {
-          console.log('Loaded docs: ', docs);
-          this.handleDataReady(docs);
+        this.reloadData().then(() => {
+          console.log('reloaded data');
         }).catch((error) => {
-          console.log('Caught error while loading data: ', error);
+          console.log('Caught error: ', error);
         });
       }).catch((error) => {
         console.log('error: ', error);
@@ -251,6 +261,22 @@ class App extends React.Component {
     } else {
       throw new Error('invalid state detected!');
     }
+  }
+
+  removeTask(taskId) {
+    let task = this.state.dataMap.get(taskId);
+
+    this.db.remove(task).then((result) => {
+      if (result.ok) {
+        this.reloadData().then(() => {
+          console.log('reloaded data');
+        }).catch((error) => {
+          console.log('Caught error: ', error);
+        });
+      }
+    }).catch((error) => {
+      console.log('Could not remove the task! error: ', error);
+    })
   }
 
   stopTask() {
@@ -289,7 +315,7 @@ class App extends React.Component {
     } else if (this.state.stateVar === this.MainViewState) {
       return (
         <div>
-          <MainView data={ this.state.data } startTask={ this.startTask } taskDoneById={ this.taskDoneById } openEditTaskView={ this.openEditTaskView } openAddTaskView={this.openAddTaskView} openViewTaskView={ this.openViewTaskView } openEditSettingsView={ this.openEditSettingsView }/>
+          <MainView data={ this.state.data } startTask={ this.startTask } taskDoneById={ this.taskDoneById } openEditTaskView={ this.openEditTaskView } openAddTaskView={this.openAddTaskView} openViewTaskView={ this.openViewTaskView } openEditSettingsView={ this.openEditSettingsView } removeTask={ this.removeTask }/>
         </div>
       );
     } else if (this.state.stateVar === this.ViewTaskState) {

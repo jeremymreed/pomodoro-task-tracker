@@ -96,7 +96,7 @@ class TaskList extends React.Component {
   removeTask(event, taskId) {
     event.preventDefault();
 
-    ipcRenderer.send('removeTask', taskId);
+    this.props.removeTask(taskId);
   }
 
   getDone(done) {
@@ -203,7 +203,8 @@ TaskList.propTypes = {
   openAddTaskView: PropTypes.func,
   openViewTaskView: PropTypes.func,
   startTask: PropTypes.func,
-  taskDoneById: PropTypes.func
+  taskDoneById: PropTypes.func,
+  removeTask: PropTypes.func
 };
 
 export default withStyles(styles)(TaskList);
