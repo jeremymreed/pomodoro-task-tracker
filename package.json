@@ -1,6 +1,6 @@
 {
   "name": "pomodoro-task-tracker",
-  "version": "0.4.3",
+  "version": "0.5.0",
   "description": "Task Tracking using the Pomodoro technique",
   "private": true,
   "repository": {
