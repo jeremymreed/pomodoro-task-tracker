@@ -219,8 +219,18 @@ class App extends React.Component {
     if (this.validateState()) {
       let task = this.getCurrentTask();
       task.done = true;
-      ipcRenderer.send('submitTaskData', task)
-      ipcRenderer.send('showNotification', 'taskDone');
+      this.db.upsert(task).then((rev) => {
+        task._rev = rev;
+        ipcRenderer.send('submitTaskData', task);
+        ipcRenderer.send('showNotification', 'taskDone');
+        this.reloadData().then(() => {
+          console.log('reloaded data');
+        }).catch((error) => {
+          console.log('Caught error: ', error);
+        });
+      }).catch((error) => {
+        console.log('error: ', error);
+      })
     } else {
       throw new Error('invalid state detected!');
     }
@@ -232,8 +242,18 @@ class App extends React.Component {
       if (this.state.dataMap.has(taskId)) {
         let task = this.state.dataMap.get(taskId);
         task.done = true;
-        ipcRenderer.send('submitTaskData', task);
-        ipcRenderer.send('showNotification', 'taskDone');
+        this.db.upsert(task).then((rev) => {
+          task._rev = rev;
+          ipcRenderer.send('submitTaskData', task);
+          ipcRenderer.send('showNotification', 'taskDone');
+          this.reloadData().then(() => {
+            console.log('reloaded data');
+          }).catch((error) => {
+            console.log('Caught error: ', error);
+          });
+        }).catch((error) => {
+          console.log('error: ', error);
+        });
       }
     } else {
       throw new Error('invalid state detected!');
