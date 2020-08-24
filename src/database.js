@@ -1,6 +1,7 @@
 import PouchDB from 'pouchdb';
 
 PouchDB.plugin(require('pouchdb-find'));
+PouchDB.plugin(require('pouchdb-debug'));
 
 class Database {
   constructor() {
@@ -102,6 +103,10 @@ class Database {
     } catch (error) {
       console.log('error: ', error);
     }
+  }
+
+  enableDebug() {
+    PouchDB.debug.enable('*');
   }
 }
 
