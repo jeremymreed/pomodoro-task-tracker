@@ -36,8 +36,6 @@ class App extends React.Component {
 
     this.db = new Database();
 
-    // this.db.enableDebug();
-
     this.handleDataReady = this.handleDataReady.bind(this);
     this.openEditTaskView = this.openEditTaskView.bind(this);
     this.closeEditTaskView = this.closeEditTaskView.bind(this);
