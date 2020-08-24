@@ -13,9 +13,10 @@
     "babel": "babel src/ --out-dir build/ --source-maps",
     "babel-scripts": "babel scripts/ --out-dir build/ --source-maps",
     "move-static": "cp static/* build/",
+    "seed": "node build/seed.js",
     "test": "mocha -r esm tests/**/*.spec.js",
     "lint": "eslint src/**/*.jsx src/**/*.js",
-    "clean": "rm -rf out/ build/",
+    "clean": "rm -rf out/ build/ data/pomodoro-task-tracker*",
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
