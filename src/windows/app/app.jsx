@@ -34,8 +34,6 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
-    console.log('App Constructor started');
-
     this.db = new Database();
 
     this.db.enableDebug();
@@ -78,8 +76,6 @@ class App extends React.Component {
       currentTask: -1,
       stateVar: this.MainViewState,
     }
-
-    console.log('App Constructor finished');
   }
 
   // TODO: Magic numbers, yay!  Will be obsolete when we convert code to TypeScript.
