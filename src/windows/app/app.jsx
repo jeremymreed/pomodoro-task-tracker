@@ -17,7 +17,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import {v4 as uuidv4} from 'uuid';
-import moment from 'moment';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
@@ -29,7 +28,6 @@ import TaskRunningView from '../../views/task-running-view';
 import ViewTaskView from '../../views/view-task-view';
 import TaskMapper from '../../mappers/task-mapper';
 import Task from '../../data-models/task';
-import humanizeDuration from 'humanize-duration';
 
 class App extends React.Component {
 
@@ -95,23 +93,12 @@ class App extends React.Component {
 
   componentDidMount() {
     this._isMounted = true;
-    const start = moment();
-    console.log('App componentDidMount started');
-    //this.db.put(testDoc);
 
-    this.db.createIndexes().then(() => {
-      this.db.filterTasks(this.currentFilter).then((docs) => {
-        this.handleDataReady(docs);
-        console.log('App componentDidMount finished');
-        const stop = moment();
-        const diff = moment.duration(stop.diff(start));
-        console.log('componentDidMount Runtime: ', humanizeDuration(diff, {round: false, maxDecimalPoints: 3, units: ['h', 'm', 's', 'ms']}));
-      }).catch((error) => {
-        console.log('Caught error while loading data: ', error);
-      });
+    this.db.filterTasks(this.currentFilter).then((docs) => {
+      this.handleDataReady(docs);
     }).catch((error) => {
-      console.log('Caught error: ', error);
-    })
+      console.log('Caught error while loading data: ', error);
+    });
 
     ipcRenderer.on('showEditSettingsView', this.openEditSettingsView);
   }
@@ -323,14 +310,10 @@ class App extends React.Component {
   }
 
   setFilter(filterName) {
-    const start = moment();
-
     if (this.validateFilter(filterName)) {
       this.currentFilter = filterName;
+
       this.reloadData().then(() => {
-        const stop = moment();
-        const diff = moment.duration(stop.diff(start));
-        console.log('setFilter Runtime: ', humanizeDuration(diff, {round: false, maxDecimalPoints: 3, units: ['h', 'm', 's', 'ms']}));
       }).catch((error) => {
         console.log('Caught error: ', error);
       })
