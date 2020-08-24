@@ -64,6 +64,8 @@ function createWindow() {
   initializeDatabase();
 
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
+
+  // mainWindow.webContents.openDevTools();
 }
 
 app.whenReady().then(createWindow);

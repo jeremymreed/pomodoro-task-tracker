@@ -28,6 +28,16 @@ Run:
 npm install
 ```
 
+Build the software and install the database:
+```
+npm run build && npm run install
+```
+
+For testing purposes, you might want to seed the database with some test data:
+```
+npm run seed
+```
+
 Then run:
 ```
 npm start

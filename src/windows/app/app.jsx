@@ -36,7 +36,7 @@ class App extends React.Component {
 
     this.db = new Database();
 
-    this.createIndexes();
+    // this.db.enableDebug();
 
     this.handleDataReady = this.handleDataReady.bind(this);
     this.openEditTaskView = this.openEditTaskView.bind(this);
@@ -89,7 +89,6 @@ class App extends React.Component {
 
   componentDidMount() {
     this._isMounted = true;
-    //this.db.put(testDoc);
 
     this.db.filterTasks(this.currentFilter).then((docs) => {
       this.handleDataReady(docs);
@@ -102,13 +101,6 @@ class App extends React.Component {
 
   componentWillUnmount() {
     this._isMounted = false;
-  }
-
-  createIndexes() {
-    this.db.createIndexes().catch((error) => {
-      console.log('Caught error: ', error);
-    })
-
   }
 
   // This is a call back, and it is called when the main process has gotten the data we need.
@@ -316,7 +308,9 @@ class App extends React.Component {
   setFilter(filterName) {
     if (this.validateFilter(filterName)) {
       this.currentFilter = filterName;
-      this.reloadData().catch((error) => {
+
+      this.reloadData().then(() => {
+      }).catch((error) => {
         console.log('Caught error: ', error);
       })
     } else {
