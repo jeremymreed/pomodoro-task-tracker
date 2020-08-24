@@ -9,7 +9,8 @@
   },
   "main": "build/main.js",
   "scripts": {
-    "start": "npm run clean && npm run lint && npm run babel && npm run babel-scripts && npm run move-static && electron-forge start",
+    "start": "electron-forge start",
+    "build": "npm run clean && npm run lint && npm run babel && npm run babel-scripts && npm run move-static",
     "babel": "babel src/ --out-dir build/ --source-maps",
     "babel-scripts": "babel scripts/ --out-dir build/ --source-maps",
     "move-static": "cp static/* build/",
