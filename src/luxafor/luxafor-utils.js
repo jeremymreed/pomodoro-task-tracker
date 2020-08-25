@@ -24,6 +24,12 @@ class LuxaforUtils {
       this.luxafor.color(ledGroup, red, green, blue);
     }
   }
+
+  strobe(ledGroup, red, green, blue, time, repeat) {
+    if (this.active) {
+      this.luxafor.strobe(ledGroup, red, green, blue, time, repeat);
+    }
+  }
 }
 
 export default LuxaforUtils;
