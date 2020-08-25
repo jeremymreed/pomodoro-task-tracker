@@ -108,6 +108,10 @@ class Database {
   enableDebug() {
     PouchDB.debug.enable('*');
   }
+
+  disableDebug() {
+    PouchDB.debug.disable();
+  }
 }
 
 export default Database;
