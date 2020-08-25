@@ -124,6 +124,14 @@ ipcMain.on('setLuxaforOff', () => {
   luxaforUtils.color(0xff, 0, 0, 0);
 });
 
+ipcMain.on('setLuxaforWorkStrobe', () => {
+  luxaforUtils.strobe(0xff, 255, 0, 0, 5, 0);
+});
+
+ipcMain.on('setLuxaforRestStrobe', () => {
+  luxaforUtils.strobe(0xff, 0, 255, 0, 5, 0);
+});
+
 ipcMain.on('showNotification', (event, notificationName) => {
   if (Notification.isSupported()) {
     const options = notificationOptions.getNotification(notificationName);
