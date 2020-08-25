@@ -67,8 +67,6 @@ function createWindow() {
 
   initializeDatabase();
 
-  luxaforUtils.color(0xff, 255, 0, 255);
-
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
   // mainWindow.webContents.openDevTools();
@@ -86,6 +84,7 @@ app.on('browser-window-created', (event, window) => {
 // There, it's common for applications and their menu bar to stay active until the user quits
 // explictly with Cmd + Q.
 app.on('window-all-closed', () => {
+  // Be sure we've turned the luxafor off.
   luxaforUtils.color(0xff, 0, 0, 0);
 
   if (process.platform !== 'darwin') {
@@ -112,6 +111,18 @@ ipcMain.on('submitTaskData', () => {
 
 ipcMain.on('removeTask', () => {
 })
+
+ipcMain.on('setLuxaforRest', () => {
+  luxaforUtils.color(0xff, 0, 255, 0);
+});
+
+ipcMain.on('setLuxaforWork', () => {
+  luxaforUtils.color(0xff, 255, 0, 0);
+});
+
+ipcMain.on('setLuxaforOff', () => {
+  luxaforUtils.color(0xff, 0, 0, 0);
+});
 
 ipcMain.on('showNotification', (event, notificationName) => {
   if (Notification.isSupported()) {
