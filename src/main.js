@@ -29,6 +29,8 @@ import electronSettings from 'electron-settings';
 const notificationOptions = new NotificationOptions();
 
 let mainWindow = null;
+const luxaforUtils = new LuxaforUtils();
+luxaforUtils.init();
 
 // TODO: This should live in a config module.
 // If there are no settings, set our initial setting state.
@@ -65,8 +67,7 @@ function createWindow() {
 
   initializeDatabase();
 
-  const luxaforUtils = new LuxaforUtils();
-  luxaforUtils.init();
+  luxaforUtils.color(0xff, 255, 0, 255);
 
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
@@ -85,6 +86,8 @@ app.on('browser-window-created', (event, window) => {
 // There, it's common for applications and their menu bar to stay active until the user quits
 // explictly with Cmd + Q.
 app.on('window-all-closed', () => {
+  luxaforUtils.color(0xff, 0, 0, 0);
+
   if (process.platform !== 'darwin') {
     app.quit();
   }
