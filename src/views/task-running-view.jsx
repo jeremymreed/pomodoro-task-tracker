@@ -57,6 +57,7 @@ class TaskRunningView extends React.Component {
 
     this.handleTimerExpiration = this.handleTimerExpiration.bind(this);
     this.submitGetTotalTimeRan = this.submitGetTotalTimeRan.bind(this);
+    this.submitGetCurrentPhaseType = this.submitGetCurrentPhaseType.bind(this);
 
     this.state = {
       shouldRun: true,
@@ -76,13 +77,19 @@ class TaskRunningView extends React.Component {
     this.getTotalTimeRan = getTotalTimeRan;
   }
 
+  submitGetCurrentPhaseType(getCurrentPhaseType) {
+    this.getCurrentPhaseType = getCurrentPhaseType;
+  }
+
   // Timer tells us it has expired.
   handleTimerExpiration(type) {
     this._stopTimer();
     this.props.updateTaskTimeSpentOnTask(this.getTotalTimeRan());
-    if (type === 'Work') {
+    if (this.getCurrentPhaseType() === 'Work') {
+      ipcRenderer.send('setLuxaforRestStrobe');
       ipcRenderer.send('showNotification', 'timeToRest');
     } else if (type === 'Rest') {
+      ipcRenderer.send('setLuxaforWorkStrobe');
       ipcRenderer.send('showNotification', 'timeToWork');
     } else {
       throw new Error('Invalid type detected!');
@@ -102,6 +109,16 @@ class TaskRunningView extends React.Component {
     event.preventDefault();
 
     this._startTimer();
+
+    const currentPhase = this.getCurrentPhaseType();
+
+    if (currentPhase === 'Work') {
+      ipcRenderer.send('setLuxaforWork');
+    } else if (currentPhase === 'Rest') {
+      ipcRenderer.send('setLuxaforRest');
+    } else {
+      throw new Error('Invalid Phase Type detected!');
+    }
   }
 
   // User wants to stop working on this task, and return to the task list.
@@ -142,7 +159,12 @@ class TaskRunningView extends React.Component {
         </Container>
 
         <Container align="center">
-          <Timer shouldRun={ this.state.shouldRun } handleTimerExpiration={ this.handleTimerExpiration } submitGetTotalTimeRan={ this.submitGetTotalTimeRan }/>
+          <Timer
+            shouldRun={ this.state.shouldRun }
+            handleTimerExpiration={ this.handleTimerExpiration }
+            submitGetTotalTimeRan={ this.submitGetTotalTimeRan }
+            submitGetCurrentPhaseType={ this.submitGetCurrentPhaseType }
+          />
         </Container>
 
         <Container align="center">

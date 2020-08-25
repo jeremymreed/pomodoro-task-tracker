@@ -31,6 +31,7 @@ class Timer extends React.Component {
 
     this.updateDate = this.updateDate.bind(this);
     this.getTotalTimeRan = this.getTotalTimeRan.bind(this);
+    this.getCurrentPhaseType = this.getCurrentPhaseType.bind(this);
     this.totalTimeRan = 0;
 
     const initialPhase = this.pomodoro.getNextTimerSetting();
@@ -73,6 +74,7 @@ class Timer extends React.Component {
 
   componentDidMount() {
     this.props.submitGetTotalTimeRan(this.getTotalTimeRan);
+    this.props.submitGetCurrentPhaseType(this.getCurrentPhaseType);
     this.interval = setInterval(() => this.updateDate(), 1000);
   }
 
@@ -88,6 +90,10 @@ class Timer extends React.Component {
     const totalTimeRan = this.totalTimeRan;
     this.totalTimeRan = 0;
     return totalTimeRan;
+  }
+
+  getCurrentPhaseType() {
+    return this.state.type;
   }
 
   render() {
@@ -107,6 +113,7 @@ class Timer extends React.Component {
 Timer.propTypes = {
   shouldRun: PropTypes.bool,
   submitGetTotalTimeRan: PropTypes.func,
+  submitGetCurrentPhaseType: PropTypes.func,
   handleTimerExpiration: PropTypes.func
 }
 
