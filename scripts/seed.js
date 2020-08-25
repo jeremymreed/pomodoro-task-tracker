@@ -1,35 +1,13 @@
-import PouchDB from 'pouchdb';
+import Database from './database';
 import Task from './data-models/task';
 
-PouchDB.plugin(require('pouchdb-find'));
-
-const db = new PouchDB('data/pomodoro-task-tracker');
+const db = new Database();
 
 let tasks = [
   new Task('2085beaf-03eb-4ef8-95af-27193e16845b', null, 'Foo', 'Foo Bar', 0, false),
   new Task('9304ec0b-8f4f-45b3-a79e-5198a88806cf', null, 'Bar', 'Bar Foo', 50000, true),
   new Task('251d9a36-a0b6-43d3-8bb5-16cc6e825c3c', null, 'Test', 'Test Task', 10000, false),
 ];
-
-// Upsert document.
-const upsert = async (task) => {
-  console.log('--- upsert() ---------------------------------');
-
-  try {
-    const response = await db.put(task);
-    console.log('response: ', response);
-    if (response.ok) {
-      return response.rev;
-    } else {
-      console.log('response.ok was false!');
-      return null;
-    }
-  } catch (error) {
-    console.log('error:', error);
-  }
-
-  console.log('---------------------------------------------');
-}
 
 /*
   Initial database seed.
@@ -39,7 +17,7 @@ const seedDB = async () => {
   console.log('--- seedDB() ---------------------------------');
 
   for ( let i = 0 ; i < tasks.length ; i++ ) {
-    const rev = await upsert(tasks[i]);
+    const rev = await db.upsert(tasks[i]);
 
     if (rev !== null) {
       tasks[i]._rev = rev;

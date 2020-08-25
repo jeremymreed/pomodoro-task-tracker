@@ -36,8 +36,6 @@ class App extends React.Component {
 
     this.db = new Database();
 
-    // this.db.enableDebug();
-
     this.handleDataReady = this.handleDataReady.bind(this);
     this.openEditTaskView = this.openEditTaskView.bind(this);
     this.closeEditTaskView = this.closeEditTaskView.bind(this);
@@ -198,6 +196,7 @@ class App extends React.Component {
   startTask(taskId) {
     if (this.validateState()) {
       this.setState({currentTask: taskId, stateVar: this.TaskRunningState});
+      ipcRenderer.send('setLuxaforWork');
     } else {
       throw new Error('invalid state detected!');
     }
@@ -226,6 +225,7 @@ class App extends React.Component {
   // Called by TaskRunningView: Assumes that there is a current task.
   taskDone() {
     if (this.validateState()) {
+      ipcRenderer.send('setLuxaforOff');
       let task = this.getCurrentTask();
       task.done = true;
       this.db.upsert(task).then((rev) => {
@@ -245,6 +245,7 @@ class App extends React.Component {
   // Called by EditTaskView: Must get task from dataMap, as there is no current task.
   taskDoneById(taskId) {
     if (this.validateState()) {
+      ipcRenderer.send('setLuxaforOff');
       if (this.state.dataMap.has(taskId)) {
         let task = this.state.dataMap.get(taskId);
         task.done = true;
@@ -300,6 +301,7 @@ class App extends React.Component {
   stopTask() {
     if (this.validateState()) {
       this.setState({currentTask: -1, stateVar: this.MainViewState});
+      ipcRenderer.send('setLuxaforOff');
     } else {
       throw new Error('invalid state detected!');
     }

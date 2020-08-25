@@ -18,8 +18,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 import { BrowserWindow, app, ipcMain, Notification } from 'electron';
 import path from 'path';
+import LuxaforUtils from './luxafor/luxafor-utils';
 import MenuGenerator from './menu-generator';
 import NotificationOptions from './utils/notification-options';
+
 // TODO: electron-settings is using the remote module, and this is going to be deprecated.
 // TODO: We may want to consider using a different system for settings management.
 import electronSettings from 'electron-settings';
@@ -27,6 +29,8 @@ import electronSettings from 'electron-settings';
 const notificationOptions = new NotificationOptions();
 
 let mainWindow = null;
+const luxaforUtils = new LuxaforUtils();
+luxaforUtils.init();
 
 // TODO: This should live in a config module.
 // If there are no settings, set our initial setting state.
@@ -80,6 +84,9 @@ app.on('browser-window-created', (event, window) => {
 // There, it's common for applications and their menu bar to stay active until the user quits
 // explictly with Cmd + Q.
 app.on('window-all-closed', () => {
+  // Be sure we've turned the luxafor off.
+  luxaforUtils.color(0xff, 0, 0, 0);
+
   if (process.platform !== 'darwin') {
     app.quit();
   }
@@ -104,6 +111,26 @@ ipcMain.on('submitTaskData', () => {
 
 ipcMain.on('removeTask', () => {
 })
+
+ipcMain.on('setLuxaforRest', () => {
+  luxaforUtils.color(0xff, 0, 255, 0);
+});
+
+ipcMain.on('setLuxaforWork', () => {
+  luxaforUtils.color(0xff, 255, 0, 0);
+});
+
+ipcMain.on('setLuxaforOff', () => {
+  luxaforUtils.color(0xff, 0, 0, 0);
+});
+
+ipcMain.on('setLuxaforWorkStrobe', () => {
+  luxaforUtils.strobe(0xff, 255, 0, 0, 5, 0);
+});
+
+ipcMain.on('setLuxaforRestStrobe', () => {
+  luxaforUtils.strobe(0xff, 0, 255, 0, 5, 0);
+});
 
 ipcMain.on('showNotification', (event, notificationName) => {
   if (Notification.isSupported()) {
