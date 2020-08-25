@@ -18,8 +18,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 import { BrowserWindow, app, ipcMain, Notification } from 'electron';
 import path from 'path';
+import LuxaforUtils from './luxafor/luxafor-utils';
 import MenuGenerator from './menu-generator';
 import NotificationOptions from './utils/notification-options';
+
 // TODO: electron-settings is using the remote module, and this is going to be deprecated.
 // TODO: We may want to consider using a different system for settings management.
 import electronSettings from 'electron-settings';
@@ -62,6 +64,9 @@ function createWindow() {
   initializeSettings();
 
   initializeDatabase();
+
+  const luxaforUtils = new LuxaforUtils();
+  luxaforUtils.init();
 
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
