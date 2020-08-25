@@ -81,8 +81,10 @@ class TaskRunningView extends React.Component {
     this._stopTimer();
     this.props.updateTaskTimeSpentOnTask(this.getTotalTimeRan());
     if (type === 'Work') {
+      ipcRenderer.send('setLuxaforRest');
       ipcRenderer.send('showNotification', 'timeToRest');
     } else if (type === 'Rest') {
+      ipcRenderer.send('setLuxaforWork');
       ipcRenderer.send('showNotification', 'timeToWork');
     } else {
       throw new Error('Invalid type detected!');
