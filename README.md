@@ -13,6 +13,17 @@ Screenshot:
 # Purpose:
 This is an electron app to track tasks, using the pomodoro technique.
 
+This software supports the [Luxafor Flag](https://luxafor.com).  If the Luxafor flag hardware is set up and connected,
+the software will use the flag to display the current state of the pomodoro timer.
+It will light up as follows:
+   Steady Red: Working.
+   Steady Green: Resting.
+   Strobing Red: It's time to start working.
+   Strobing Green: It's time to take a rest.
+
+[Setting up a Luxafor Flag](https://luxafor.helpscoutdocs.com/article/6-luxafor-flag-set-up-and-use)
+[Linux instructions](https://github.com/jonathonball/fabufor)
+
 Warning: This software is very much alpha quality.  Do not use this to track tasks in a production environment.
 
 I have only tested this software on Linux.  (I use Manjaro KDE)
