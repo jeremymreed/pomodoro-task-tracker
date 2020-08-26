@@ -30,6 +30,7 @@
     "@babel/preset-react": "^7.10.4",
     "chai": "^4.2.0",
     "electron": "^9.1.0",
+    "electron-builder": "^22.8.0",
     "eslint": "^7.5.0",
     "eslint-plugin-react": "^7.20.3",
     "esm": "^3.2.25",
