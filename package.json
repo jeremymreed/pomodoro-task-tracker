@@ -14,7 +14,7 @@
     "babel": "babel src/ --out-dir build/ --source-maps",
     "babel-scripts": "babel scripts/ --out-dir build/ --source-maps",
     "move-static": "cp static/* build/",
-    "install": "node build/install.js",
+    "installDB": "node build/install.js",
     "seed": "node build/seed.js",
     "test": "mocha -r esm tests/**/*.spec.js",
     "lint": "eslint src/**/*.jsx src/**/*.js",
