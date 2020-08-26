@@ -18,10 +18,18 @@
     "seed": "node build/seed.js",
     "test": "mocha -r esm tests/**/*.spec.js",
     "lint": "eslint src/**/*.jsx src/**/*.js",
-    "clean": "rm -rf build/ data/pomodoro-task-tracker*"
+    "clean": "rm -rf build/ data/pomodoro-task-tracker*",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "author": "Jeremy M. Reed",
   "license": "GPLv2",
+  "build": {
+    "appId": "com.thetechforest.pomodoro-task-tracker",
+    "files": [
+      "./build/**/*"
+    ]
+  },
   "devDependencies": {
     "@babel/cli": "^7.10.4",
     "@babel/core": "^7.10.4",
