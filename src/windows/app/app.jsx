@@ -16,6 +16,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+import electron from 'electron';
 import {v4 as uuidv4} from 'uuid';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -34,7 +35,11 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.db = new Database();
+    const databasePath = (electron.app || electron.remote.app).getPath('userData') + '/pomodoro-task-tracker-data';
+    console.log('App constructor: databasePath', databasePath);
+
+    this.db = new Database(databasePath);
+    this.db.enableDebug();
 
     this.handleDataReady = this.handleDataReady.bind(this);
     this.openEditTaskView = this.openEditTaskView.bind(this);
