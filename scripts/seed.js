@@ -1,7 +1,11 @@
+import os from 'os';
 import Database from './database';
 import Task from './data-models/task';
 
-const db = new Database();
+const databasePath = os.homedir() + '/.config/pomodoro-task-tracker/pomodoro-task-tracker-data';
+console.log('App constructor: databasePath', databasePath);
+
+const db = new Database(databasePath);
 
 let tasks = [
   new Task('2085beaf-03eb-4ef8-95af-27193e16845b', null, 'Foo', 'Foo Bar', 0, false),
