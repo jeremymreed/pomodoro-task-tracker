@@ -22,13 +22,23 @@
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },
-  "author": "Jeremy M. Reed",
+  "author": "Jeremy M. Reed <reeje76@gmail.com> (https://thetechforest.com)",
   "license": "GPLv2",
   "build": {
     "appId": "com.thetechforest.pomodoro-task-tracker",
     "files": [
       "./build/**/*"
-    ]
+    ],
+    "linux": {
+      "target": [
+        {
+          "target": "pacman"
+        },
+        {
+          "target": "AppImage"
+        }
+      ]
+    }
   },
   "devDependencies": {
     "@babel/cli": "^7.10.4",
