@@ -41,7 +41,7 @@ npm install
 
 Build the software and install the database:
 ```
-npm run build && npm run install
+npm run build && npm run installDB
 ```
 
 For testing purposes, you might want to seed the database with some test data:
