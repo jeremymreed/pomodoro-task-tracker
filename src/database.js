@@ -4,8 +4,8 @@ PouchDB.plugin(require('pouchdb-find'));
 PouchDB.plugin(require('pouchdb-debug'));
 
 class Database {
-  constructor() {
-    this.db = new PouchDB('data/pomodoro-task-tracker');
+  constructor(databasePath) {
+    this.db = new PouchDB(databasePath);
   }
 
   // Check to see if indexes exist, if they don't, create them.

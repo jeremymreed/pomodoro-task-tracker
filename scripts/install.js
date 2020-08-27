@@ -1,6 +1,10 @@
+import os from 'os';
 import Database from './database';
 
-const db = new Database();
+const databasePath = os.homedir() + '/.config/pomodoro-task-tracker/pomodoro-task-tracker-data';
+console.log('App constructor: databasePath', databasePath);
+
+const db = new Database(databasePath);
 
 /*
   Initial database seed.

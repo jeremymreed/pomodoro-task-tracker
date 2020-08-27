@@ -1,6 +1,6 @@
 {
   "name": "pomodoro-task-tracker",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Task Tracking using the Pomodoro technique",
   "private": true,
   "repository": {
@@ -9,7 +9,7 @@
   },
   "main": "build/main.js",
   "scripts": {
-    "start": "electron-forge start",
+    "start": "electron ./",
     "build": "npm run clean && npm run lint && npm run babel && npm run babel-scripts && npm run move-static",
     "babel": "babel src/ --out-dir build/ --source-maps",
     "babel-scripts": "babel scripts/ --out-dir build/ --source-maps",
@@ -18,25 +18,46 @@
     "seed": "node build/seed.js",
     "test": "mocha -r esm tests/**/*.spec.js",
     "lint": "eslint src/**/*.jsx src/**/*.js",
-    "clean": "rm -rf out/ build/ data/pomodoro-task-tracker*",
-    "package": "electron-forge package",
-    "make": "electron-forge make"
+    "clean": "rm -rf dist/ build/ data/pomodoro-task-tracker*",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
-  "author": "Jeremy M. Reed",
+  "author": "Jeremy M. Reed <reeje76@gmail.com> (https://thetechforest.com)",
   "license": "GPLv2",
+  "build": {
+    "appId": "com.thetechforest.pomodoro-task-tracker",
+    "files": [
+      "./build/**/*"
+    ],
+    "linux": {
+      "target": [
+        {
+          "target": "pacman"
+        },
+        {
+          "target": "AppImage"
+        },
+        {
+          "target": "snap"
+        },
+        {
+          "target": "deb"
+        },
+        {
+          "target": "rpm"
+        }
+      ]
+    }
+  },
   "devDependencies": {
     "@babel/cli": "^7.10.4",
     "@babel/core": "^7.10.4",
     "@babel/plugin-transform-runtime": "^7.11.0",
     "@babel/preset-env": "^7.10.4",
     "@babel/preset-react": "^7.10.4",
-    "@electron-forge/cli": "^6.0.0-beta.52",
-    "@electron-forge/maker-deb": "^6.0.0-beta.52",
-    "@electron-forge/maker-rpm": "^6.0.0-beta.52",
-    "@electron-forge/maker-squirrel": "^6.0.0-beta.52",
-    "@electron-forge/maker-zip": "^6.0.0-beta.52",
     "chai": "^4.2.0",
     "electron": "^9.1.0",
+    "electron-builder": "^22.8.0",
     "eslint": "^7.5.0",
     "eslint-plugin-react": "^7.20.3",
     "esm": "^3.2.25",
@@ -47,7 +68,6 @@
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "electron-settings": "^4.0.2",
-    "electron-squirrel-startup": "^1.0.0",
     "formik": "^2.1.5",
     "humanize-duration": "^3.23.1",
     "moment": "^2.27.0",
@@ -59,32 +79,5 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "uuid": "^8.3.0"
-  },
-  "config": {
-    "forge": {
-      "packagerConfig": {},
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "electron_spike"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
-        }
-      ]
-    }
   }
 }
