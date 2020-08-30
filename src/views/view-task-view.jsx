@@ -54,6 +54,7 @@ class ViewTaskView extends React.Component {
       name: this.props.task.name,
       description: this.props.task.description,
       timeSpent: this.props.task.timeSpent,
+      label: this.props.task.label,
       done: this.props.task.done
     }
   }
@@ -86,6 +87,13 @@ class ViewTaskView extends React.Component {
             multiline
             rows={4}
             defaultValue={this.state.name}
+            inputProps={{readOnly: true}}
+          />
+
+          <TextField
+            className="label"
+            label="Label"
+            defaultValue={this.state.label}
             inputProps={{readOnly: true}}
           />
 

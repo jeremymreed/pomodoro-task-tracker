@@ -26,9 +26,9 @@ console.log('App constructor: databasePath', databasePath);
 const db = new Database(databasePath);
 
 let tasks = [
-  new Task('2085beaf-03eb-4ef8-95af-27193e16845b', null, 'Foo', 'Foo Bar', 0, false),
-  new Task('9304ec0b-8f4f-45b3-a79e-5198a88806cf', null, 'Bar', 'Bar Foo', 50000, true),
-  new Task('251d9a36-a0b6-43d3-8bb5-16cc6e825c3c', null, 'Test', 'Test Task', 10000, false),
+  new Task('2085beaf-03eb-4ef8-95af-27193e16845b', null, 'Foo', 'Foo Bar', 'Label0', 0, false),
+  new Task('9304ec0b-8f4f-45b3-a79e-5198a88806cf', null, 'Bar', 'Bar Foo', 'Label1', 50000, true),
+  new Task('251d9a36-a0b6-43d3-8bb5-16cc6e825c3c', null, 'Test', 'Test Task', 'Label0', 10000, false),
 ];
 
 /*

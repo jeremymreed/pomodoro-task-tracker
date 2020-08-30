@@ -53,6 +53,20 @@ class Database {
           ddoc: 'index-by-done'
         }
       });
+
+      await this.db.createIndex({
+        index: {
+          fields: ['label'],
+          ddoc: 'index-by-label'
+        }
+      });
+
+      await this.db.createIndex({
+        index: {
+          fields: ['type', 'label'],
+        },
+        ddoc: 'index-by-type-label'
+      });
     }
   }
 
