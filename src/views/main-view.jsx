@@ -31,6 +31,7 @@ class MainView extends React.Component {
     this.handleTabChange = this.handleTabChange.bind(this);
 
     this.state = {
+      // TODO: This could be stored in a enumeration!  Magic numbers galore!
       currentList: 0
     }
   }
