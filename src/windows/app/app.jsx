@@ -93,10 +93,8 @@ class App extends React.Component {
   componentDidMount() {
     this._isMounted = true;
 
-    this.db.filterTasks(this.currentFilter).then((docs) => {
-      this.handleDataReady(docs);
-    }).catch((error) => {
-      console.log('Caught error while loading data: ', error);
+    this.reloadData().catch((error) => {
+      console.log('Caught error: ', error);
     });
 
     ipcRenderer.on('showEditSettingsView', this.openEditSettingsView);
