@@ -38,6 +38,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 
 const styles = () => ({
+  divTable: {
+    overflowY: 'scroll',
+    minWidth: 640,
+    maxHeight:450
+  },
   table: {
     minWidth: 640,
   },
@@ -136,18 +141,20 @@ class TaskList extends React.Component {
     );
 
     return (
-      <TableContainer component={Paper}>
-        <Table className={classes.table}>
-          <TableHead>
-            <TableRow>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            { listTasks }
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Container className={classes.divTable}>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              { listTasks }
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Container>
     );
   }
 
@@ -178,34 +185,36 @@ class TaskList extends React.Component {
     });
 
     return (
-      <TableContainer component={Paper}>
-        <Table className={classes.table}>
-          <TableHead>
-            <TableRow>
-              <TableCell><Typography variant="h6">Name</Typography></TableCell>
-              <TableCell><Typography variant="h6">Done</Typography></TableCell>
-              <TableCell>
-              <FormControl className={classes.themeFormControl}>
-                <InputLabel>Filter</InputLabel>
-                <Select
-                  label="Filter"
-                  value={this.state.selectedFilter}
-                  onChange={this.handleFilterSelectionChange}
-                >
-                  <MenuItem value={'all'}>All</MenuItem>
-                  <MenuItem value={'tasksDone'}>Complete</MenuItem>
-                  <MenuItem value={'tasksNotDone'}>Incomplete</MenuItem>
-                </Select>
+      <Container className={classes.divTable}>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell><Typography variant="h6">Name</Typography></TableCell>
+                <TableCell><Typography variant="h6">Done</Typography></TableCell>
+                <TableCell>
+                <FormControl className={classes.themeFormControl}>
+                  <InputLabel>Filter</InputLabel>
+                  <Select
+                    label="Filter"
+                    value={this.state.selectedFilter}
+                    onChange={this.handleFilterSelectionChange}
+                  >
+                    <MenuItem value={'all'}>All</MenuItem>
+                    <MenuItem value={'tasksDone'}>Complete</MenuItem>
+                    <MenuItem value={'tasksNotDone'}>Incomplete</MenuItem>
+                  </Select>
 
-              </FormControl>
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            { listTasks }
-          </TableBody>
-        </Table>
-      </TableContainer>
+                </FormControl>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              { listTasks }
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Container>
     );
   }
 
