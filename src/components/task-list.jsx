@@ -38,6 +38,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 
 const styles = () => ({
+  divTable: {
+    overflowY: 'scroll',
+    minWidth: 640,
+    maxHeight:450
+  },
   table: {
     minWidth: 640,
   },
@@ -136,8 +141,8 @@ class TaskList extends React.Component {
     );
 
     return (
-      <TableContainer component={Paper}>
-        <Table className={classes.table}>
+      <TableContainer className={classes.divTable}>
+        <Table>
           <TableHead>
             <TableRow>
               <TableCell></TableCell>
@@ -178,8 +183,8 @@ class TaskList extends React.Component {
     });
 
     return (
-      <TableContainer component={Paper}>
-        <Table className={classes.table}>
+      <TableContainer component={Paper} className={classes.divTable}>
+        <Table>
           <TableHead>
             <TableRow>
               <TableCell><Typography variant="h6">Name</Typography></TableCell>
