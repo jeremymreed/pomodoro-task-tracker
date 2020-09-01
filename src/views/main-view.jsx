@@ -20,6 +20,8 @@ import React from 'react';
 import TaskList from '../components/task-list';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 class MainView extends React.Component {
   constructor (props) {
@@ -36,6 +38,10 @@ class MainView extends React.Component {
     return (
       <div>
         <Typography variant="h3" align="center">Pomodoro Task Tracker</Typography>
+        <Tabs value={0}>
+          <Tab label="Tasks" />
+          <Tab label="Labels" />
+        </Tabs>
         <TaskList
           data={this.props.data}
           startTask={ this.props.startTask }
