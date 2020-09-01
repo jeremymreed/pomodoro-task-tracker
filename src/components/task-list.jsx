@@ -41,7 +41,7 @@ const styles = () => ({
   divTable: {
     overflowY: 'scroll',
     minWidth: 640,
-    maxHeight:450
+    maxHeight: 425
   },
   table: {
     minWidth: 640,
