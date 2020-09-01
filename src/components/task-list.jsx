@@ -141,20 +141,18 @@ class TaskList extends React.Component {
     );
 
     return (
-      <Container className={classes.divTable}>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              { listTasks }
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Container>
+      <TableContainer className={classes.divTable}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            { listTasks }
+          </TableBody>
+        </Table>
+      </TableContainer>
     );
   }
 
@@ -185,36 +183,34 @@ class TaskList extends React.Component {
     });
 
     return (
-      <Container className={classes.divTable}>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell><Typography variant="h6">Name</Typography></TableCell>
-                <TableCell><Typography variant="h6">Done</Typography></TableCell>
-                <TableCell>
-                <FormControl className={classes.themeFormControl}>
-                  <InputLabel>Filter</InputLabel>
-                  <Select
-                    label="Filter"
-                    value={this.state.selectedFilter}
-                    onChange={this.handleFilterSelectionChange}
-                  >
-                    <MenuItem value={'all'}>All</MenuItem>
-                    <MenuItem value={'tasksDone'}>Complete</MenuItem>
-                    <MenuItem value={'tasksNotDone'}>Incomplete</MenuItem>
-                  </Select>
+      <TableContainer component={Paper} className={classes.divTable}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell><Typography variant="h6">Name</Typography></TableCell>
+              <TableCell><Typography variant="h6">Done</Typography></TableCell>
+              <TableCell>
+              <FormControl className={classes.themeFormControl}>
+                <InputLabel>Filter</InputLabel>
+                <Select
+                  label="Filter"
+                  value={this.state.selectedFilter}
+                  onChange={this.handleFilterSelectionChange}
+                >
+                  <MenuItem value={'all'}>All</MenuItem>
+                  <MenuItem value={'tasksDone'}>Complete</MenuItem>
+                  <MenuItem value={'tasksNotDone'}>Incomplete</MenuItem>
+                </Select>
 
-                </FormControl>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              { listTasks }
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Container>
+              </FormControl>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            { listTasks }
+          </TableBody>
+        </Table>
+      </TableContainer>
     );
   }
 
