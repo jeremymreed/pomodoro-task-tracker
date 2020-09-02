@@ -57,7 +57,7 @@ class MainView extends React.Component {
     } else if (this.state.currentList === 1) {
       return (
         <LabelList 
-          data={ [] }
+          labels={ this.props.labels }
         />
       );
     }
@@ -79,6 +79,7 @@ class MainView extends React.Component {
 
 MainView.propTypes = {
   data: PropTypes.array,
+  labels: PropTypes.array,
   openEditTaskView: PropTypes.func,
   openAddTaskView: PropTypes.func,
   openEditSettingsView: PropTypes.func,

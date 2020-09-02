@@ -89,7 +89,7 @@ class LabelList extends React.Component {
 
   getFullLabelList(classes) {
     // We have tasks.
-    const listsLabels = this.props.data.map((label) => {
+    const listsLabels = this.props.labels.map((label) => {
       return (
         <TableRow key={ label._id }>
           <TableCell>
@@ -125,7 +125,7 @@ class LabelList extends React.Component {
   }
 
   getLabelList(classes) {
-    if (this.props.data.length === 0) {
+    if (this.props.labels.length === 0) {
       return (this.getEmptyLabelList(classes));
     } else {
       return (this.getFullLabelList(classes))
@@ -145,7 +145,7 @@ class LabelList extends React.Component {
 
 LabelList.propTypes = {
   classes: PropTypes.object,
-  data: PropTypes.array
+  labels: PropTypes.array
 };
 
 export default withStyles(styles)(LabelList);

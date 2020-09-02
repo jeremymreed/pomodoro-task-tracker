@@ -386,6 +386,7 @@ class App extends React.Component {
         <div>
           <MainView
             data={ this.state.data }
+            labels={ this.state.labels }
             startTask={ this.startTask }
             taskDoneById={ this.taskDoneById }
             openEditTaskView={ this.openEditTaskView }
