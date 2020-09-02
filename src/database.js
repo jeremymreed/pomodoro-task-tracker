@@ -114,6 +114,21 @@ class Database {
     }
   }
 
+  async getLabels() {
+    try {
+      let findResult = await this.db.find({
+        selector: {
+          type: 'label'
+        },
+        use_index: 'index-by-type'
+      });
+
+      return findResult.docs;
+    } catch (error) {
+      console.log('Caught error: ', error);
+    }
+  }
+
   async upsert(task) {
     try {
       const response = await this.db.put(task);
