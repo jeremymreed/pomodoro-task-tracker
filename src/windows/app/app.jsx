@@ -28,6 +28,7 @@ import EditSettingsView from '../../views/edit-settings-view';
 import TaskRunningView from '../../views/task-running-view';
 import ViewTaskView from '../../views/view-task-view';
 import TaskMapper from '../../mappers/task-mapper';
+import LabelMapper from '../../mappers/label-mapper';
 import Task from '../../data-models/task';
 
 class App extends React.Component {
@@ -76,6 +77,7 @@ class App extends React.Component {
     this.state = {
       dataMap: new Map(),             // Use for lookups only.
       data: [],                       // Data for TaskList.  Passed to TaskList via prop.
+      labels: [],
       currentTask: -1,
       stateVar: this.MainViewState,
     }
@@ -93,7 +95,7 @@ class App extends React.Component {
   componentDidMount() {
     this._isMounted = true;
 
-    this.reloadData().catch((error) => {
+    this.loadState().catch((error) => {
       console.log('Caught error: ', error);
     });
 
@@ -123,13 +125,44 @@ class App extends React.Component {
     }
   }
 
-  async reloadData() {
+  async loadState() {
+    try {
+      await this.loadTasks();
+      await this.loadLabels();
+    } catch (error) {
+      console.log('Caught error while loading state: error: ', error)
+    }
+  }
+
+  async loadTasks() {
     try {
       const docs = await this.db.filterTasks(this.currentFilter);
       this.handleDataReady(docs);
     } catch (error) {
       console.log('Caught error while loading data: ', error);
     }
+  }
+
+  async loadLabels() {
+    try {
+      const rawLabels = await this.db.getLabels();
+      this.processRawLabels(rawLabels);
+    } catch (error) {
+      console.log('Caught error: ', error);
+    }
+  }
+
+  processRawLabels(rawLabels) {
+    let labels = [];
+
+    for (let i = 0 ; i < rawLabels.length ; i++) {
+      let label = LabelMapper.mapDataToLabel(rawLabels[i]);
+      labels.push(label);
+    }
+
+    console.log('labels:', labels);
+
+    this.setState({labels: labels});
   }
 
   getCurrentTask() {
@@ -212,7 +245,7 @@ class App extends React.Component {
       this.db.upsert(task).then((rev) => {
         task._rev = rev;
         ipcRenderer.send('showNotification', 'taskUpdated');
-        this.reloadData().catch((error) => {
+        this.loadState().catch((error) => {
           console.log('Caught error: ', error);
         });
       }).catch((error) => {
@@ -234,7 +267,7 @@ class App extends React.Component {
       this.db.upsert(task).then((rev) => {
         task._rev = rev;
         ipcRenderer.send('showNotification', 'taskDone');
-        this.reloadData().catch((error) => {
+        this.loadState().catch((error) => {
           console.log('Caught error: ', error);
         });
       }).catch((error) => {
@@ -255,7 +288,7 @@ class App extends React.Component {
         this.db.upsert(task).then((rev) => {
           task._rev = rev;
           ipcRenderer.send('showNotification', 'taskDone');
-          this.reloadData().catch((error) => {
+          this.loadState().catch((error) => {
             console.log('Caught error: ', error);
           });
         }).catch((error) => {
@@ -276,7 +309,7 @@ class App extends React.Component {
       this.db.upsert(task).then((rev) => {
         task._rev = rev;
         ipcRenderer.send('showNotification', 'taskUpdated');
-        this.reloadData().catch((error) => {
+        this.loadState().catch((error) => {
           console.log('Caught error: ', error);
         });
       }).catch((error) => {
@@ -292,7 +325,7 @@ class App extends React.Component {
 
     this.db.remove(task).then((result) => {
       if (result.ok) {
-        this.reloadData().catch((error) => {
+        this.loadState().catch((error) => {
           console.log('Caught error: ', error);
         });
       }
@@ -314,7 +347,7 @@ class App extends React.Component {
     if (this.validateFilter(filterName)) {
       this.currentFilter = filterName;
 
-      this.reloadData().then(() => {
+      this.loadState().then(() => {
       }).catch((error) => {
         console.log('Caught error: ', error);
       })
