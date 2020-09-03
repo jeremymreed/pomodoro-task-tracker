@@ -48,6 +48,13 @@ class NotificationOptions {
       });
 
     this.notificationOptions.set(
+      'labelUpdated', {
+        title: 'Label Updated',
+        body: 'The label was updated',
+        urgency: 'normal'
+      });
+
+    this.notificationOptions.set(
       'settingsUpdated', {
         title: 'Settings Updated',
         body: 'The Settings were updated',
