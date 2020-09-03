@@ -24,6 +24,7 @@ import { ipcRenderer } from 'electron';
 import Database from '../../database';
 import MainView from '../../views/main-view';
 import EditTaskView from '../../views/edit-task-view';
+import EditLabelView from '../../views/edit-label-view';
 import EditSettingsView from '../../views/edit-settings-view';
 import TaskRunningView from '../../views/task-running-view';
 import ViewTaskView from '../../views/view-task-view';
@@ -53,6 +54,9 @@ class App extends React.Component {
     this.closeViewTaskView = this.closeViewTaskView.bind(this);
     this.openViewLabelView = this.openViewLabelView.bind(this);
     this.closeViewLabelView = this.closeViewLabelView.bind(this);
+    this.editLabel = this.editLabel.bind(this);
+    this.openEditLabelView = this.openEditLabelView.bind(this);
+    this.closeEditLabelView = this.closeEditLabelView.bind(this);
     this.updateTaskTimeSpentOnTask = this.updateTaskTimeSpentOnTask.bind(this);
     this.taskDone = this.taskDone.bind(this);
     this.taskDoneById = this.taskDoneById.bind(this);
@@ -75,6 +79,7 @@ class App extends React.Component {
     this.EditSettingsState = 4;
     this.ViewTaskState = 5;
     this.ViewLabelState = 6
+    this.EditLabelState = 7
 
     this.currentFilter = 'all';
 
@@ -91,7 +96,7 @@ class App extends React.Component {
 
   // TODO: Magic numbers, yay!  Will be obsolete when we convert code to TypeScript.
   validateState() {
-    return this.state.stateVar >= 0 && this.state.stateVar <= 6;
+    return this.state.stateVar >= 0 && this.state.stateVar <= 7;
   }
 
   validateFilter(filterName) {
@@ -351,6 +356,39 @@ class App extends React.Component {
     }
   }
 
+  editLabel(name, description) {
+    if (this.validateState()) {
+      let label = this.getCurrentLabel();
+      label.name = name;
+      label.description = description;
+      this.db.upsert(label).then((rev) => {
+        label._rev = rev;
+        ipcRenderer.send('showNotification', 'labelUpdated');
+        this.loadState().catch((error) => {
+          console.log('Caught error: ', error);
+        });
+      })
+    } else {
+      throw new Error('invalid state detected');
+    }
+  }
+
+  openEditLabelView(labelId) {
+    if (this.validateState()) {
+      this.setState({currentLabel: labelId, stateVar: this.EditLabelState});
+    } else {
+      throw new Error('invalid state detected!');
+    }
+  }
+
+  closeEditLabelView() {
+    if (this.validateState()) {
+      this.setState({currentLabel: -1, stateVar: this.MainViewState});
+    } else {
+      throw new Error('invalid state detected!');
+    }
+  }
+
   removeTask(taskId) {
     let task = this.state.dataMap.get(taskId);
 
@@ -425,6 +463,7 @@ class App extends React.Component {
             openViewTaskView={ this.openViewTaskView }
             openEditSettingsView={ this.openEditSettingsView }
             openViewLabelView={ this.openViewLabelView }
+            openEditLabelView={ this.openEditLabelView }
             removeTask={ this.removeTask }
             setFilter={ this.setFilter }
           />
@@ -437,6 +476,10 @@ class App extends React.Component {
     } else if (this.state.stateVar === this.ViewLabelState) {
       return (
         <ViewLabelView label={this.getCurrentLabel() } closeViewLabelView={this.closeViewLabelView} />
+      );
+    } else if (this.state.stateVar === this.EditLabelState) {
+      return (
+        <EditLabelView title="Edit Label" label={ this.getCurrentLabel() } editLabel={ this.editLabel } closeEditLabelView={ this.closeEditLabelView } />
       );
     }
   }
