@@ -27,6 +27,7 @@ import EditTaskView from '../../views/edit-task-view';
 import EditSettingsView from '../../views/edit-settings-view';
 import TaskRunningView from '../../views/task-running-view';
 import ViewTaskView from '../../views/view-task-view';
+import ViewLabelView from '../../views/view-label-view';
 import TaskMapper from '../../mappers/task-mapper';
 import LabelMapper from '../../mappers/label-mapper';
 import Task from '../../data-models/task';
@@ -50,6 +51,8 @@ class App extends React.Component {
     this.closeEditSettingsView = this.closeEditSettingsView.bind(this);
     this.openViewTaskView = this.openViewTaskView.bind(this);
     this.closeViewTaskView = this.closeViewTaskView.bind(this);
+    this.openViewLabelView = this.openViewLabelView.bind(this);
+    this.closeViewLabelView = this.closeViewLabelView.bind(this);
     this.updateTaskTimeSpentOnTask = this.updateTaskTimeSpentOnTask.bind(this);
     this.taskDone = this.taskDone.bind(this);
     this.taskDoneById = this.taskDoneById.bind(this);
@@ -71,21 +74,24 @@ class App extends React.Component {
     this.TaskRunningState = 3;
     this.EditSettingsState = 4;
     this.ViewTaskState = 5;
+    this.ViewLabelState = 6
 
     this.currentFilter = 'all';
 
     this.state = {
       dataMap: new Map(),             // Use for lookups only.
       data: [],                       // Data for TaskList.  Passed to TaskList via prop.
-      labels: [],
+      labelMap: new Map(),            // Lookups only.
+      labels: [],                     // Data for LabelList.  Passed to LabelList via prop.
       currentTask: -1,
+      currentLabel: -1,
       stateVar: this.MainViewState,
     }
   }
 
   // TODO: Magic numbers, yay!  Will be obsolete when we convert code to TypeScript.
   validateState() {
-    return this.state.stateVar >= 0 && this.state.stateVar <= 5;
+    return this.state.stateVar >= 0 && this.state.stateVar <= 6;
   }
 
   validateFilter(filterName) {
@@ -154,15 +160,18 @@ class App extends React.Component {
 
   processRawLabels(rawLabels) {
     let labels = [];
+    let labelMap = new Map();
 
     for (let i = 0 ; i < rawLabels.length ; i++) {
       let label = LabelMapper.mapDataToLabel(rawLabels[i]);
       labels.push(label);
+      labelMap.set(label._id, label);
     }
 
     console.log('labels:', labels);
+    console.log('labelMap: ', labelMap);
 
-    this.setState({labels: labels});
+    this.setState({labels: labels, labelMap: labelMap});
   }
 
   getCurrentTask() {
@@ -170,6 +179,12 @@ class App extends React.Component {
       return new Task(uuidv4(), '', '');
     } else {
       return this.state.dataMap.get(this.state.currentTask);
+    }
+  }
+
+  getCurrentLabel() {
+    if (this.state.currentLabel !== -1) {
+      return this.state.labelMap.get(this.state.currentLabel);
     }
   }
 
@@ -224,6 +239,22 @@ class App extends React.Component {
   closeViewTaskView() {
     if (this.validateState()) {
       this.setState({currentTask: -1, stateVar: this.MainViewState});
+    } else {
+      throw new Error('invalid state detected!');
+    }
+  }
+
+  openViewLabelView(labelId) {
+    if (this.validateState()) {
+      this.setState({currentLabel: labelId, stateVar: this.ViewLabelState});
+    } else {
+      throw new Error('invalid state detected!');
+    }
+  }
+
+  closeViewLabelView() {
+    if (this.validateState()) {
+      this.setState({currentLabel: -1, stateVar: this.MainViewState});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -393,6 +424,7 @@ class App extends React.Component {
             openAddTaskView={this.openAddTaskView}
             openViewTaskView={ this.openViewTaskView }
             openEditSettingsView={ this.openEditSettingsView }
+            openViewLabelView={ this.openViewLabelView }
             removeTask={ this.removeTask }
             setFilter={ this.setFilter }
           />
@@ -401,6 +433,10 @@ class App extends React.Component {
     } else if (this.state.stateVar === this.ViewTaskState) {
       return (
         <ViewTaskView task={ this.getCurrentTask() } closeViewTaskView={this.closeViewTaskView} />
+      );
+    } else if (this.state.stateVar === this.ViewLabelState) {
+      return (
+        <ViewLabelView label={this.getCurrentLabel() } closeViewLabelView={this.closeViewLabelView} />
       );
     }
   }
