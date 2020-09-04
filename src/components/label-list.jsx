@@ -55,10 +55,6 @@ const styles = () => ({
 class LabelList extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      selectedFilter: 'all'
-    }
   }
 
   viewLabel(event, labelId) {
