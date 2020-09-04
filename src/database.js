@@ -129,9 +129,9 @@ class Database {
     }
   }
 
-  async upsert(task) {
+  async upsert(doc) {
     try {
-      const response = await this.db.put(task);
+      const response = await this.db.put(doc);
       if (response.ok) {
         return response.rev;
       } else {
@@ -142,9 +142,9 @@ class Database {
     }
   }
 
-  async remove(task) {
+  async remove(doc) {
     try {
-      const result = await this.db.remove(task._id, task._rev);
+      const result = await this.db.remove(doc._id, doc._rev);
 
       return result;
     } catch (error) {
