@@ -55,6 +55,7 @@ class App extends React.Component {
     this.openViewLabelView = this.openViewLabelView.bind(this);
     this.closeViewLabelView = this.closeViewLabelView.bind(this);
     this.editLabel = this.editLabel.bind(this);
+    this.removeLabel = this.removeLabel.bind(this);
     this.openEditLabelView = this.openEditLabelView.bind(this);
     this.closeEditLabelView = this.closeEditLabelView.bind(this);
     this.updateTaskTimeSpentOnTask = this.updateTaskTimeSpentOnTask.bind(this);
@@ -373,6 +374,20 @@ class App extends React.Component {
     }
   }
 
+  removeLabel(labelId) {
+    let label = this.state.labelMap.get(labelId);
+
+    this.db.remove(label).then((result) => {
+      if (result.ok) {
+        this.loadState().catch((error) => {
+          console.log('Caught error: ', error);
+        });
+      }
+    }).catch((error) => {
+      console.log('Could not remove the label! error: ', error);
+    })
+  }
+
   openEditLabelView(labelId) {
     if (this.validateState()) {
       this.setState({currentLabel: labelId, stateVar: this.EditLabelState});
@@ -465,6 +480,7 @@ class App extends React.Component {
             openViewLabelView={ this.openViewLabelView }
             openEditLabelView={ this.openEditLabelView }
             removeTask={ this.removeTask }
+            removeLabel={ this.removeLabel }
             setFilter={ this.setFilter }
           />
         </div>

@@ -60,6 +60,7 @@ class MainView extends React.Component {
           labels={ this.props.labels }
           openViewLabelView={ this.props.openViewLabelView }
           openEditLabelView={ this.props.openEditLabelView }
+          removeLabel={ this.props.removeLabel }
         />
       );
     }
@@ -91,6 +92,7 @@ MainView.propTypes = {
   startTask: PropTypes.func,
   taskDoneById: PropTypes.func,
   removeTask: PropTypes.func,
+  removeLabel: PropTypes.func,
   setFilter: PropTypes.func,
 };
 
