@@ -75,6 +75,12 @@ class LabelList extends React.Component {
     this.props.removeLabel(labelId);
   }
 
+  addLabel(event) {
+    event.preventDefault();
+
+    this.props.openAddLabelView();
+  }
+
   getEmptyLabelList(classes) {
     // No Labels.
     const listLabels= (
@@ -162,6 +168,7 @@ LabelList.propTypes = {
   labels: PropTypes.array,
   openViewLabelView: PropTypes.func,
   openEditLabelView: PropTypes.func,
+  openAddLabelView: PropTypes.func,
   removeLabel: PropTypes.func
 };
 
