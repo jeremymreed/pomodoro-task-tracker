@@ -129,6 +129,30 @@ class Database {
     }
   }
 
+  async getByLabel(labelId) {
+    try {
+      let findResult = await this.db.find({
+        selector: {
+          label: labelId
+        },
+        use_index: 'index-by-label'
+      });
+
+      return findResult.docs;
+    } catch (error) {
+      console.log('Caught error: ', error);
+    }
+  }
+
+  async bulkUpsert(docs) {
+    try {
+      const response = await this.db.bulkDocs(docs);
+      return response;
+    } catch (error) {
+      console.log('error: ', error);
+    }
+  }
+
   async upsert(doc) {
     try {
       const response = await this.db.put(doc);

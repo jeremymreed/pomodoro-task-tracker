@@ -52,6 +52,16 @@ class ViewLabelView extends React.Component {
     }
   }
 
+  getLabelLabelName() {
+    if (this.props.label.label === '') {
+      return '';
+    }
+
+    let labelLabel = this.props.getLabelById(this.props.label.label);
+
+    return labelLabel.name;
+  }
+
   exit(event) {
     event.preventDefault();
 
@@ -77,7 +87,7 @@ class ViewLabelView extends React.Component {
           <TextField
             className="label"
             label="Label"
-            defaultValue={this.state.label}
+            defaultValue={this.getLabelLabelName()}
             inputProps={{readOnly: true}}
           />
 
@@ -102,7 +112,8 @@ class ViewLabelView extends React.Component {
 ViewLabelView.propTypes = {
   classes: PropTypes.object,
   label: PropTypes.object,
-  closeViewLabelView: PropTypes.func
+  closeViewLabelView: PropTypes.func,
+  getLabelById: PropTypes.func
 }
 
 export default withStyles(styles)(ViewLabelView);

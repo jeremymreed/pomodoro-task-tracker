@@ -46,6 +46,7 @@ class App extends React.Component {
     this.db.enableDebug();
 
     this.handleDataReady = this.handleDataReady.bind(this);
+    this.getLabelById = this.getLabelById.bind(this);
     this.setCurrentList = this.setCurrentList.bind(this);
     this.openEditTaskView = this.openEditTaskView.bind(this);
     this.closeEditTaskView = this.closeEditTaskView.bind(this);
@@ -206,6 +207,10 @@ class App extends React.Component {
     } else {
       return this.state.labelMap.get(this.state.currentLabel);
     }
+  }
+
+  getLabelById(labelId) {
+    return this.state.labelMap.get(labelId);
   }
 
   setCurrentList(newValue) {
@@ -401,15 +406,38 @@ class App extends React.Component {
   removeLabel(labelId) {
     let label = this.state.labelMap.get(labelId);
 
-    this.db.remove(label).then((result) => {
-      if (result.ok) {
-        this.loadState().catch((error) => {
-          console.log('Caught error: ', error);
-        });
+    // First let's make sure that any task / label with this label, has its label set to an empty string.
+
+    this.db.getByLabel(labelId).then((results) => {
+      for ( let i = 0 ; i < results.length ; i++) {
+        results[i].label = '';
       }
+
+      this.db.bulkUpsert(results).then((responses) => {
+        // We throw exception at any error from bulkUpsert for debug purposes.
+        responses.map((response) => {
+          if (!response.ok) {
+            throw new Error('Failed to verify bulkUpsert');
+          }
+        });
+
+        // Load state here, to prevent the case where a label is it's own label.
+        // In this case, we update the label by setting it's label to empty string, and upsert it.
+        // Then the remove() call fails due to a document conflict.
+        this.loadState().then(() => {
+          label = this.state.labelMap.get(labelId);
+          this.db.remove(label).then((result) => {
+            if (result.ok) {
+              this.loadState().catch((error) => {
+                console.log('Caught error: ', error);
+              });
+            }
+          });
+        });
+      });
     }).catch((error) => {
       console.log('Could not remove the label! error: ', error);
-    })
+    });
   }
 
   openEditLabelView(labelId) {
@@ -534,11 +562,19 @@ class App extends React.Component {
       );
     } else if (this.state.stateVar === this.ViewTaskState) {
       return (
-        <ViewTaskView task={ this.getCurrentTask() } closeViewTaskView={this.closeViewTaskView} />
+        <ViewTaskView
+          task={ this.getCurrentTask() }
+          getLabelById={ this.getLabelById }
+          closeViewTaskView={this.closeViewTaskView}
+        />
       );
     } else if (this.state.stateVar === this.ViewLabelState) {
       return (
-        <ViewLabelView label={this.getCurrentLabel() } closeViewLabelView={this.closeViewLabelView} />
+        <ViewLabelView
+          label={this.getCurrentLabel() }
+          getLabelById={ this.getLabelById }
+          closeViewLabelView={this.closeViewLabelView}
+        />
       );
     } else if (this.state.stateVar === this.EditLabelState) {
       return (
