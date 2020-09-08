@@ -68,15 +68,15 @@ const validate = (values) => {
   return errors;
 }
 
-const mapLabelToValue = (label) => {
-  if (label === '') {
+const mapLabelIdToValue = (labelId) => {
+  if (labelId === '') {
     return 'none';
   }
 
-  return label;
+  return labelId;
 }
 
-const mapValueToLabel = (value) => {
+const mapValueToLabelId = (value) => {
   if (value === 'none') {
     return '';
   }
@@ -89,7 +89,7 @@ function EditTaskView(props) {
     initialValues: {
       name: props.task.name,
       description: props.task.description,
-      label: mapLabelToValue(props.task.label),
+      label: mapLabelIdToValue(props.task.label),
       done: props.task.done
     },
     validate,
@@ -97,7 +97,7 @@ function EditTaskView(props) {
       props.editTask(
         values.name,
         values.description,
-        mapValueToLabel(values.label),
+        mapValueToLabelId(values.label),
         values.done
       );
       ipcRenderer.send('showNotification', 'taskUpdated');
@@ -111,7 +111,7 @@ function EditTaskView(props) {
     labelMenuItems.push(<MenuItem key={0} value='none'>None</MenuItem>);
 
     for ( let i = 0 ; i < props.labels.length ; i++ ) {
-      labelMenuItems.push(<MenuItem key={props.labels[i]._id} value={props.labels[i].name}>{props.labels[i].name}</MenuItem>)
+      labelMenuItems.push(<MenuItem key={props.labels[i]._id} value={props.labels[i]._id}>{props.labels[i].name}</MenuItem>)
     }
 
     return labelMenuItems;
