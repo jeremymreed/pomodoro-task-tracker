@@ -72,7 +72,7 @@ class ViewLabelView extends React.Component {
     const { classes } = this.props;
     return (
       <div>
-        <Typography variant="h1" align="center">Task</Typography>
+        <Typography variant="h1" align="center">Label</Typography>
 
         <FormGroup>
           <TextField
