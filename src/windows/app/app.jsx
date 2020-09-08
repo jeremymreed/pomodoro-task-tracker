@@ -46,6 +46,7 @@ class App extends React.Component {
     this.db.enableDebug();
 
     this.handleDataReady = this.handleDataReady.bind(this);
+    this.getLabelById = this.getLabelById.bind(this);
     this.setCurrentList = this.setCurrentList.bind(this);
     this.openEditTaskView = this.openEditTaskView.bind(this);
     this.closeEditTaskView = this.closeEditTaskView.bind(this);
@@ -206,6 +207,10 @@ class App extends React.Component {
     } else {
       return this.state.labelMap.get(this.state.currentLabel);
     }
+  }
+
+  getLabelById(labelId) {
+    return this.state.labelMap.get(labelId);
   }
 
   setCurrentList(newValue) {
@@ -534,11 +539,19 @@ class App extends React.Component {
       );
     } else if (this.state.stateVar === this.ViewTaskState) {
       return (
-        <ViewTaskView task={ this.getCurrentTask() } closeViewTaskView={this.closeViewTaskView} />
+        <ViewTaskView
+          task={ this.getCurrentTask() }
+          getLabelById={ this.getLabelById }
+          closeViewTaskView={this.closeViewTaskView}
+        />
       );
     } else if (this.state.stateVar === this.ViewLabelState) {
       return (
-        <ViewLabelView label={this.getCurrentLabel() } closeViewLabelView={this.closeViewLabelView} />
+        <ViewLabelView
+          label={this.getCurrentLabel() }
+          getLabelById={ this.getLabelById }
+          closeViewLabelView={this.closeViewLabelView}
+        />
       );
     } else if (this.state.stateVar === this.EditLabelState) {
       return (

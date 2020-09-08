@@ -59,6 +59,16 @@ class ViewTaskView extends React.Component {
     }
   }
 
+  getLabelName() {
+    if (this.props.task.label === '') {
+      return '';
+    }
+
+    let label = this.props.getLabelById(this.props.task.label);
+
+    return label.name;
+  }
+
   getTimeString(timeInSeconds) {
     const durationInSeconds = moment.duration(timeInSeconds, 'seconds');
     if (electronSettings.getSync('shouldDisplaySeconds')) {
@@ -93,7 +103,7 @@ class ViewTaskView extends React.Component {
           <TextField
             className="label"
             label="Label"
-            defaultValue={this.state.label}
+            defaultValue={this.getLabelName()}
             inputProps={{readOnly: true}}
           />
 
@@ -135,7 +145,8 @@ class ViewTaskView extends React.Component {
 ViewTaskView.propTypes = {
   classes: PropTypes.object,
   task: PropTypes.object,
-  closeViewTaskView: PropTypes.func
+  closeViewTaskView: PropTypes.func,
+  getLabelById: PropTypes.func
 }
 
 export default withStyles(styles)(ViewTaskView);
