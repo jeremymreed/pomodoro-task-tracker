@@ -152,7 +152,7 @@ function EditLabelView(props) {
           />
 
           <FormControl className={classes.labelSelectFormControl} variant="outlined">
-            <InputLabel>Theme</InputLabel>
+            <InputLabel>Label</InputLabel>
             <Select
               id="labelLabel"
               name="labelLabel"
