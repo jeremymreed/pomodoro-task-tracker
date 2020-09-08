@@ -114,9 +114,24 @@ class Database {
     }
   }
 
-  async upsert(task) {
+  async getLabels() {
     try {
-      const response = await this.db.put(task);
+      let findResult = await this.db.find({
+        selector: {
+          type: 'label'
+        },
+        use_index: 'index-by-type'
+      });
+
+      return findResult.docs;
+    } catch (error) {
+      console.log('Caught error: ', error);
+    }
+  }
+
+  async upsert(doc) {
+    try {
+      const response = await this.db.put(doc);
       if (response.ok) {
         return response.rev;
       } else {
@@ -127,9 +142,9 @@ class Database {
     }
   }
 
-  async remove(task) {
+  async remove(doc) {
     try {
-      const result = await this.db.remove(task._id, task._rev);
+      const result = await this.db.remove(doc._id, doc._rev);
 
       return result;
     } catch (error) {

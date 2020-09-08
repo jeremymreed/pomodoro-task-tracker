@@ -19,6 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import os from 'os';
 import Database from './database';
 import Task from './data-models/task';
+import Label from './data-models/label';
 
 const databasePath = os.homedir() + '/.config/pomodoro-task-tracker/pomodoro-task-tracker-data';
 console.log('App constructor: databasePath', databasePath);
@@ -46,6 +47,14 @@ let tasks = [
   new Task('c984d61a-5c91-47d2-a2b1-dc5db4de8ff1', null, 'Task17', 'Test Task17', 'Label0', 10000, false),
 ];
 
+let labels = [
+  new Label('284e015f-ff7f-43a1-ab4e-46843628c727', null, 'Label0', 'Label0 Test'),
+  new Label('22c6c49c-d7f1-4943-a452-ce779854f6df', null, 'Label1', 'Label1 Test'),
+  new Label('a1a7cc7d-eb13-4020-b481-34ac1bc1969e', null, 'Label2', 'Label2 Test'),
+  new Label('82f91883-dd15-46be-bc80-78266a14cfe6', null, 'Label3', 'Label3 Test'),
+  new Label('3c061525-f6e2-490c-a330-50ee717c2a1d', null, 'Label4', 'Label4 Test'),
+];
+
 /*
   Initial database seed.
  */
@@ -53,17 +62,30 @@ let tasks = [
 const seedDB = async () => {
   console.log('--- seedDB() ---------------------------------');
 
+  // Tasks.
   for ( let i = 0 ; i < tasks.length ; i++ ) {
     const rev = await db.upsert(tasks[i]);
 
     if (rev !== null) {
       tasks[i]._rev = rev;
     } else {
-      console.log('Got invalid rev!');
+      console.log('Tasks: Got invalid rev!');
+    }
+  }
+
+  // Labels.
+  for ( let i = 0 ; i < labels.length ; i++ ) {
+    const rev = await db.upsert(labels[i]);
+
+    if (rev !== null) {
+      labels[i]._rev = rev
+    } else {
+      console.log('Labels: Got invalid rev!');
     }
   }
 
   console.log('tasks: ', tasks);
+  console.log('labels: ', labels);
   console.log('---------------------------------------------');
 }
 
