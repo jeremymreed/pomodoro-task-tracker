@@ -362,11 +362,12 @@ class App extends React.Component {
     }
   }
 
-  editLabel(name, description) {
+  editLabel(name, description, labelLabel) {
     if (this.validateState()) {
       let label = this.getCurrentLabel();
       label.name = name;
       label.description = description;
+      label.label = labelLabel;
       this.db.upsert(label).then((rev) => {
         label._rev = rev;
         ipcRenderer.send('showNotification', 'labelUpdated');
@@ -509,11 +510,23 @@ class App extends React.Component {
       );
     } else if (this.state.stateVar === this.EditLabelState) {
       return (
-        <EditLabelView title="Edit Label" label={ this.getCurrentLabel() } editLabel={ this.editLabel } closeEditLabelView={ this.closeEditLabelView } />
+        <EditLabelView
+          title="Edit Label"
+          label={ this.getCurrentLabel() }
+          labels={ this.state.labels }
+          editLabel={ this.editLabel }
+          closeEditLabelView={ this.closeEditLabelView }
+        />
       );
     } else if (this.state.stateVar === this.AddNewLabelState) {
       return (
-        <EditLabelView title="Add New Label" label={ this.getCurrentLabel() } editLabel={ this.editLabel } closeEditLabelView={ this.closeEditLabelView } />
+        <EditLabelView
+          title="Add New Label"
+          label={ this.getCurrentLabel() }
+          labels={ this.state.labels }
+          editLabel={ this.editLabel }
+          closeEditLabelView={ this.closeEditLabelView }
+        />
       );
     }
   }

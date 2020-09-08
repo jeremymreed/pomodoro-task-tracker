@@ -24,8 +24,17 @@ import FormGroup from '@material-ui/core/FormGroup';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+
 
 const styles = () => ({
+  labelSelectFormControl: {
+    maxWidth: 150,
+    marginTop: '15px'
+  },
   name: {
     marginBottom: '5px'
   },
@@ -57,18 +66,47 @@ const validate = (values) => {
   return errors;
 }
 
+const mapLabelLabelToValue = (labelLabel) => {
+  if (labelLabel === '') {
+    return 'none';
+  }
+
+  return labelLabel;
+}
+
+const mapValueToLabelLabel = (value) => {
+  if (value === 'none') {
+    return '';
+  }
+
+  return value;
+}
+
 function EditLabelView(props) {
     const formik = useFormik({
     initialValues: {
       name: props.label.name,
-      description: props.label.description
+      description: props.label.description,
+      labelLabel: mapLabelLabelToValue(props.label.label)
     },
     validate,
     onSubmit: (values) => {
-      props.editLabel(values.name, values.description);
+      props.editLabel(values.name, values.description, mapValueToLabelLabel(values.labelLabel));
       props.closeEditLabelView();
     }
   });
+
+  const getLabelMenuItems = () => {
+    let labelMenuItems = Array();
+
+    labelMenuItems.push(<MenuItem key={0} value='none'>None</MenuItem>);
+
+    for ( let i = 0 ; i < props.labels.length ; i++ ) {
+      labelMenuItems.push(<MenuItem key={props.labels[i]._id} value={props.labels[i].name}>{props.labels[i].name}</MenuItem>)
+    }
+
+    return labelMenuItems;
+  };
 
   const cancel = () => {
     props.closeEditLabelView();
@@ -113,6 +151,20 @@ function EditLabelView(props) {
             onChange={formik.handleChange}
           />
 
+          <FormControl className={classes.labelSelectFormControl} variant="outlined">
+            <InputLabel>Theme</InputLabel>
+            <Select
+              id="labelLabel"
+              name="labelLabel"
+              label="Label"
+              value={formik.values.labelLabel}
+              onChange={formik.handleChange}
+            >
+              { getLabelMenuItems() }
+            </Select>
+
+          </FormControl>
+
           <span>
             <Button
               type="submit"
@@ -135,6 +187,7 @@ EditLabelView.propTypes = {
   classes: PropTypes.object,
   title: PropTypes.string,
   label: PropTypes.object,
+  labels: PropTypes.array,
   editLabel: PropTypes.func,
   closeEditLabelView: PropTypes.func
 }
