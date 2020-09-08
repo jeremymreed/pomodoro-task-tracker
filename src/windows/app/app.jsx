@@ -406,15 +406,38 @@ class App extends React.Component {
   removeLabel(labelId) {
     let label = this.state.labelMap.get(labelId);
 
-    this.db.remove(label).then((result) => {
-      if (result.ok) {
-        this.loadState().catch((error) => {
-          console.log('Caught error: ', error);
-        });
+    // First let's make sure that any task / label with this label, has its label set to an empty string.
+
+    this.db.getByLabel(labelId).then((results) => {
+      for ( let i = 0 ; i < results.length ; i++) {
+        results[i].label = '';
       }
+
+      this.db.bulkUpsert(results).then((responses) => {
+        // We throw exception at any error from bulkUpsert for debug purposes.
+        responses.map((response) => {
+          if (!response.ok) {
+            throw new Error('Failed to verify bulkUpsert');
+          }
+        });
+
+        // Load state here, to prevent the case where a label is it's own label.
+        // In this case, we update the label by setting it's label to empty string, and upsert it.
+        // Then the remove() call fails due to a document conflict.
+        this.loadState().then(() => {
+          label = this.state.labelMap.get(labelId);
+          this.db.remove(label).then((result) => {
+            if (result.ok) {
+              this.loadState().catch((error) => {
+                console.log('Caught error: ', error);
+              });
+            }
+          });
+        });
+      });
     }).catch((error) => {
       console.log('Could not remove the label! error: ', error);
-    })
+    });
   }
 
   openEditLabelView(labelId) {
