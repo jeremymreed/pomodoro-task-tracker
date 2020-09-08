@@ -124,6 +124,7 @@ class LabelList extends React.Component {
               <Button size="small" variant="contained" color="secondary" onClick={(e) => this.removeLabel(e, label._id)}>Remove</Button>
             </ButtonGroup>
           </TableCell>
+          <TableCell></TableCell>
         </TableRow>
       );
     });
@@ -134,6 +135,8 @@ class LabelList extends React.Component {
           <TableHead>
             <TableRow>
               <TableCell><Typography variant="h6">Name</Typography></TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
