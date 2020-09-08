@@ -66,15 +66,15 @@ const validate = (values) => {
   return errors;
 }
 
-const mapLabelLabelToValue = (labelLabel) => {
-  if (labelLabel === '') {
+const mapLabelLabelIdToValue = (labelLabelId) => {
+  if (labelLabelId === '') {
     return 'none';
   }
 
-  return labelLabel;
+  return labelLabelId;
 }
 
-const mapValueToLabelLabel = (value) => {
+const mapValueToLabelLabelId = (value) => {
   if (value === 'none') {
     return '';
   }
@@ -87,11 +87,11 @@ function EditLabelView(props) {
     initialValues: {
       name: props.label.name,
       description: props.label.description,
-      labelLabel: mapLabelLabelToValue(props.label.label)
+      labelLabel: mapLabelLabelIdToValue(props.label.label)
     },
     validate,
     onSubmit: (values) => {
-      props.editLabel(values.name, values.description, mapValueToLabelLabel(values.labelLabel));
+      props.editLabel(values.name, values.description, mapValueToLabelLabelId(values.labelLabel));
       props.closeEditLabelView();
     }
   });
@@ -102,7 +102,7 @@ function EditLabelView(props) {
     labelMenuItems.push(<MenuItem key={0} value='none'>None</MenuItem>);
 
     for ( let i = 0 ; i < props.labels.length ; i++ ) {
-      labelMenuItems.push(<MenuItem key={props.labels[i]._id} value={props.labels[i].name}>{props.labels[i].name}</MenuItem>)
+      labelMenuItems.push(<MenuItem key={props.labels[i]._id} value={props.labels[i]._id}>{props.labels[i].name}</MenuItem>)
     }
 
     return labelMenuItems;
