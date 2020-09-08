@@ -27,8 +27,16 @@ import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
 
 const styles = () => ({
+  labelSelectFormControl: {
+    maxWidth: 150,
+    marginTop: '15px'
+  },
   name: {
     marginBottom: '5px'
   },
@@ -60,20 +68,54 @@ const validate = (values) => {
   return errors;
 }
 
+const mapLabelToValue = (label) => {
+  if (label === '') {
+    return 'none';
+  }
+
+  return label;
+}
+
+const mapValueToLabel = (value) => {
+  if (value === 'none') {
+    return '';
+  }
+
+  return value;
+}
+
 function EditTaskView(props) {
     const formik = useFormik({
     initialValues: {
       name: props.task.name,
       description: props.task.description,
+      label: mapLabelToValue(props.task.label),
       done: props.task.done
     },
     validate,
     onSubmit: (values) => {
-      props.editTask(values.name, values.description, values.done);
+      props.editTask(
+        values.name,
+        values.description,
+        mapValueToLabel(values.label),
+        values.done
+      );
       ipcRenderer.send('showNotification', 'taskUpdated');
       props.closeEditTaskView();
     }
   });
+
+  const getLabelMenuItems = () => {
+    let labelMenuItems = Array();
+
+    labelMenuItems.push(<MenuItem key={0} value='none'>None</MenuItem>);
+
+    for ( let i = 0 ; i < props.labels.length ; i++ ) {
+      labelMenuItems.push(<MenuItem key={props.labels[i]._id} value={props.labels[i].name}>{props.labels[i].name}</MenuItem>)
+    }
+
+    return labelMenuItems;
+  };
 
   const cancel = () => {
     props.closeEditTaskView();
@@ -118,6 +160,20 @@ function EditTaskView(props) {
             onChange={formik.handleChange}
           />
 
+          <FormControl className={classes.labelSelectFormControl} variant="outlined">
+            <InputLabel>Label</InputLabel>
+            <Select
+              id="label"
+              name="label"
+              label="Label"
+              value={formik.values.label}
+              onChange={formik.handleChange}
+            >
+              { getLabelMenuItems() }
+            </Select>
+
+          </FormControl>
+
           <FormControlLabel
             className="done"
             control= {<Checkbox
@@ -154,6 +210,7 @@ EditTaskView.propTypes = {
   classes: PropTypes.object,
   title: PropTypes.string,
   task: PropTypes.object,
+  labels: PropTypes.array,
   editTask: PropTypes.func,
   closeEditTaskView: PropTypes.func
 }

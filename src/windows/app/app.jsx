@@ -342,11 +342,12 @@ class App extends React.Component {
     }
   }
 
-  editTask(name, description, done) {
+  editTask(name, description, label, done) {
     if (this.validateState()) {
       let task = this.getCurrentTask();
       task.name = name;
       task.description = description;
+      task.label = label;
       task.done = done;
       this.db.upsert(task).then((rev) => {
         task._rev = rev;
@@ -469,14 +470,26 @@ class App extends React.Component {
       );
     } else if (this.state.stateVar === this.EditTaskState) {
       return (
-          <div>
-          <EditTaskView title="Task Editor" task={ this.getCurrentTask() } editTask={ this.editTask } closeEditTaskView={ this.closeEditTaskView }/>
+        <div>
+          <EditTaskView
+            title="Task Editor"
+            task={ this.getCurrentTask() }
+            labels={ this.state.labels }
+            editTask={ this.editTask }
+            closeEditTaskView={ this.closeEditTaskView }
+          />
         </div>
       );
     } else if (this.state.stateVar === this.AddNewTaskState) {
       return (
-          <div>
-          <EditTaskView title="Add New Task" task={ this.getCurrentTask() } editTask={ this.editTask } closeEditTaskView={ this.closeEditTaskView }/>
+        <div>
+          <EditTaskView
+            title="Add New Task"
+            task={ this.getCurrentTask() }
+            labels={ this.state.labels }
+            editTask={ this.editTask }
+            closeEditTaskView={ this.closeEditTaskView }
+          />
         </div>
       );
     } else if (this.state.stateVar === this.MainViewState) {
