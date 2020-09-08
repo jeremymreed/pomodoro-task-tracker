@@ -46,6 +46,7 @@ class App extends React.Component {
     this.db.enableDebug();
 
     this.handleDataReady = this.handleDataReady.bind(this);
+    this.setCurrentList = this.setCurrentList.bind(this);
     this.openEditTaskView = this.openEditTaskView.bind(this);
     this.closeEditTaskView = this.closeEditTaskView.bind(this);
     this.openAddTaskView = this.openAddTaskView.bind(this);
@@ -87,6 +88,9 @@ class App extends React.Component {
 
     this.currentFilter = 'all';
 
+    this.taskListState = 0;
+    this.labelListState = 1;
+
     this.state = {
       dataMap: new Map(),             // Use for lookups only.
       data: [],                       // Data for TaskList.  Passed to TaskList via prop.
@@ -95,12 +99,17 @@ class App extends React.Component {
       currentTask: -1,
       currentLabel: -1,
       stateVar: this.MainViewState,
+      currentList: this.taskListState
     }
   }
 
   // TODO: Magic numbers, yay!  Will be obsolete when we convert code to TypeScript.
   validateState() {
     return this.state.stateVar >= 0 && this.state.stateVar <= 8;
+  }
+
+  validateCurrentList() {
+    return this.state.currentList >= 0 && this.state.currentList <= 1;
   }
 
   validateFilter(filterName) {
@@ -196,6 +205,14 @@ class App extends React.Component {
       return new Label(uuidv4());
     } else {
       return this.state.labelMap.get(this.state.currentLabel);
+    }
+  }
+
+  setCurrentList(newValue) {
+    if (this.validateCurrentList()) {
+      this.setState({currentList: newValue});
+    } else {
+      throw new Error('invalid current list detected!');
     }
   }
 
@@ -498,8 +515,10 @@ class App extends React.Component {
           <MainView
             data={ this.state.data }
             labels={ this.state.labels }
+            currentList={ this.state.currentList }
             startTask={ this.startTask }
             taskDoneById={ this.taskDoneById }
+            setCurrentList={ this.setCurrentList }
             openEditTaskView={ this.openEditTaskView }
             openAddTaskView={this.openAddTaskView}
             openViewTaskView={ this.openViewTaskView }

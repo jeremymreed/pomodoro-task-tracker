@@ -29,19 +29,14 @@ class MainView extends React.Component {
     super(props);
 
     this.handleTabChange = this.handleTabChange.bind(this);
-
-    this.state = {
-      // TODO: This could be stored in a enumeration!  Magic numbers galore!
-      currentList: 0
-    }
   }
 
   handleTabChange(event, newValue) {
-    this.setState({currentList: newValue});
+    this.props.setCurrentList(newValue);
   }
 
   renderList() {
-    if (this.state.currentList === 0) {
+    if (this.props.currentList === 0) {
       return (
         <TaskList
           data={this.props.data}
@@ -54,7 +49,7 @@ class MainView extends React.Component {
           setFilter={ this.props.setFilter }
         />
       );
-    } else if (this.state.currentList === 1) {
+    } else if (this.props.currentList === 1) {
       return (
         <LabelList 
           labels={ this.props.labels }
@@ -71,7 +66,7 @@ class MainView extends React.Component {
     return (
       <div>
         <Typography variant="h3" align="center">Pomodoro Task Tracker</Typography>
-        <Tabs value={this.state.currentList} onChange={this.handleTabChange}>
+        <Tabs value={this.props.currentList} onChange={this.handleTabChange}>
           <Tab label="Tasks" />
           <Tab label="Labels" />
         </Tabs>
@@ -84,6 +79,8 @@ class MainView extends React.Component {
 MainView.propTypes = {
   data: PropTypes.array,
   labels: PropTypes.array,
+  currentList: PropTypes.number,
+  setCurrentList: PropTypes.func,
   openEditTaskView: PropTypes.func,
   openAddTaskView: PropTypes.func,
   openEditSettingsView: PropTypes.func,
