@@ -171,7 +171,6 @@ function EditTaskView(props) {
             >
               { getLabelMenuItems() }
             </Select>
-
           </FormControl>
 
           <FormControlLabel
