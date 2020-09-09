@@ -117,6 +117,34 @@ function EditTaskView(props) {
     return labelMenuItems;
   };
 
+  const getDoneCheckbox = () => {
+
+    // Note that this assumes that new tasks have _rev === empty string.
+    // If default values for new tasks change, this code may break.
+    // Also note that this does tie us to PouchDB implementation specific detail!
+    // What happens if we switch to a different DB and we no longer need _rev?
+    // This will break!  Come up with something better!
+    if (props.task._rev !== '') {
+      return (
+        <FormControlLabel
+          className="done"
+          control= {<Checkbox
+            id="done"
+            name="done"
+            type="checkbox"
+            checked={formik.values.done}
+            onChange={formik.handleChange}
+            color="primary"
+            inputProps={{ 'aria-label': 'task done checkbox' }}
+          />}
+          label="Done"
+        />
+      );
+    }
+
+    return '';
+  }
+
   const cancel = () => {
     props.closeEditTaskView();
   }
@@ -173,19 +201,7 @@ function EditTaskView(props) {
             </Select>
           </FormControl>
 
-          <FormControlLabel
-            className="done"
-            control= {<Checkbox
-              id="done"
-              name="done"
-              type="checkbox"
-              checked={formik.values.done}
-              onChange={formik.handleChange}
-              color="primary"
-              inputProps={{ 'aria-label': 'task done checkbox' }}
-            />}
-            label="Done"
-          />
+          { getDoneCheckbox() }
 
           <span>
             <Button
