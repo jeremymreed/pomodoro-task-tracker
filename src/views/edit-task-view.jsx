@@ -118,13 +118,7 @@ function EditTaskView(props) {
   };
 
   const getDoneCheckbox = () => {
-
-    // Note that this assumes that new tasks have _rev === empty string.
-    // If default values for new tasks change, this code may break.
-    // Also note that this does tie us to PouchDB implementation specific detail!
-    // What happens if we switch to a different DB and we no longer need _rev?
-    // This will break!  Come up with something better!
-    if (props.task._rev !== '') {
+    if (!props.newTask) {
       return (
         <FormControlLabel
           className="done"
@@ -223,6 +217,7 @@ function EditTaskView(props) {
 
 EditTaskView.propTypes = {
   classes: PropTypes.object,
+  newTask: PropTypes.bool,
   title: PropTypes.string,
   task: PropTypes.object,
   labels: PropTypes.array,
