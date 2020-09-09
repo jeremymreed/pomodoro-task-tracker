@@ -145,7 +145,21 @@ class TaskList extends React.Component {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell></TableCell>
+              <TableCell>
+                <FormControl className={classes.themeFormControl}>
+                  <InputLabel>Filter</InputLabel>
+                  <Select
+                    label="Filter"
+                    value={this.state.selectedFilter}
+                    onChange={this.handleFilterSelectionChange}
+                  >
+                    <MenuItem value={'all'}>All</MenuItem>
+                    <MenuItem value={'tasksDone'}>Complete</MenuItem>
+                    <MenuItem value={'tasksNotDone'}>Incomplete</MenuItem>
+                  </Select>
+
+                </FormControl>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -190,19 +204,19 @@ class TaskList extends React.Component {
               <TableCell><Typography variant="h6">Name</Typography></TableCell>
               <TableCell><Typography variant="h6">Done</Typography></TableCell>
               <TableCell>
-              <FormControl className={classes.themeFormControl}>
-                <InputLabel>Filter</InputLabel>
-                <Select
-                  label="Filter"
-                  value={this.state.selectedFilter}
-                  onChange={this.handleFilterSelectionChange}
-                >
-                  <MenuItem value={'all'}>All</MenuItem>
-                  <MenuItem value={'tasksDone'}>Complete</MenuItem>
-                  <MenuItem value={'tasksNotDone'}>Incomplete</MenuItem>
-                </Select>
+                <FormControl className={classes.themeFormControl}>
+                  <InputLabel>Filter</InputLabel>
+                  <Select
+                    label="Filter"
+                    value={this.state.selectedFilter}
+                    onChange={this.handleFilterSelectionChange}
+                  >
+                    <MenuItem value={'all'}>All</MenuItem>
+                    <MenuItem value={'tasksDone'}>Complete</MenuItem>
+                    <MenuItem value={'tasksNotDone'}>Incomplete</MenuItem>
+                  </Select>
 
-              </FormControl>
+                </FormControl>
               </TableCell>
             </TableRow>
           </TableHead>
