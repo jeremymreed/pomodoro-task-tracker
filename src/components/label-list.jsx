@@ -86,7 +86,7 @@ class LabelList extends React.Component {
     const listLabels= (
       <TableRow>
         <TableCell>
-          <Typography variant="h6" align="center">You have no labels!</Typography>
+          <Typography variant="h6" align="center">You have no labels.</Typography>
         </TableCell>
       </TableRow>
     );
