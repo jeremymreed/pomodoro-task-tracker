@@ -5,7 +5,8 @@ Pomodoro Task Tracker
 1. [Purpose](https://gitlab.com/jeremymreed/pomodoro-task-tracker#purpose)
 2. [Usage](https://gitlab.com/jeremymreed/pomodoro-task-tracker#usage)
 3. [Config](https://gitlab.com/jeremymreed/pomodoro-task-tracker#license)
-4. [License](https://gitlab.com/jeremymreed/pomodoro-task-tracker#license)
+4. [Debugging](https://gitlab.com/jeremymreed/pomodoro-task-tracker#debugging)
+5. [License](https://gitlab.com/jeremymreed/pomodoro-task-tracker#license)
 
 Screenshot:
 [![pomdoro-task-tracker-screenshot](images/task-list-with-task-done.png "Completed Task")](https://gitlab.com/jeremymreed/pomodoro-task-tracker/-/blob/master/images/task-list-with-task-done.png)
@@ -39,6 +40,11 @@ Run:
 npm install
 ```
 
+Once you run npm install, you will need to run this command once to avoid a segmentation fault.
+```
+npm run pack
+```
+
 Build the software and install the database:
 ```
 npm run build && npm run installDB
@@ -64,6 +70,25 @@ npm run test
 This program has a settings editor that can be accessed from the main screen.
 
 On Linux:  The settings are stored in ~./config/pomdoro-task-tracker/settings.json
+
+# Debugging:
+
+If you need to debug this app, you can turn debugging on by:
+
+You can enable dev tools by going to Help -> Toggle Developer Tools.
+
+Electron:
+Set these environment variables, then run the software: (Source: https://github.com/electron/electron/issues/4677#issuecomment-193141998)
+```
+export ELECTRON_ENABLE_LOGGING=1
+export ELECTRON_ENABLE_STACK_DUMPING=1
+npm start
+```
+
+PouchDB:
+In src/windows/app.js, uncomment the db.enableDebug() line.
+To disable debug, you'll need to add db.disableDebug(), and comment out the enableDebug() call.
+(I am going to make this a togglable option under Edit, similar to enabling dev tools)
 
 # License:
 This program is licensed under the GPLv2 License.

@@ -19,17 +19,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import { v4 as uuidv4 } from 'uuid';
 
 // TODO: Should we consider adding getters/setters, and avoid directly accessing these data members directly from code?
-class Task {
-  constructor(id = uuidv4(), rev = '', name = '', description = '', label = '', timeSpent = 0, done = false) {
+class Label {
+  constructor(id = uuidv4(), rev = '', name = '', description = '', label = '') {
     this._id = id;
     this._rev = rev;
-    this.type = 'task';
+    this.type = 'label';
     this.name = name;
     this.description = description;
     this.label = label;
-    this.timeSpent = timeSpent;  // In seconds.
-    this.done = done;
   }
 }
 
-export default Task;
+export default Label

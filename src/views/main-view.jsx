@@ -18,24 +18,26 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 import React from 'react';
 import TaskList from '../components/task-list';
+import LabelList from '../components/label-list';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 class MainView extends React.Component {
   constructor (props) {
     super(props);
+
+    this.handleTabChange = this.handleTabChange.bind(this);
   }
 
-  editSettings(event) {
-    event.preventDefault();
-
-    this.props.openEditSettingsView();
+  handleTabChange(event, newValue) {
+    this.props.setCurrentList(newValue);
   }
 
-  render() {
-    return (
-      <div>
-        <Typography variant="h3" align="center">Pomodoro Task Tracker</Typography>
+  renderList() {
+    if (this.props.currentList === 0) {
+      return (
         <TaskList
           data={this.props.data}
           startTask={ this.props.startTask }
@@ -46,6 +48,29 @@ class MainView extends React.Component {
           removeTask={ this.props.removeTask }
           setFilter={ this.props.setFilter }
         />
+      );
+    } else if (this.props.currentList === 1) {
+      return (
+        <LabelList 
+          labels={ this.props.labels }
+          openViewLabelView={ this.props.openViewLabelView }
+          openEditLabelView={ this.props.openEditLabelView }
+          openAddLabelView={ this.props.openAddLabelView }
+          removeLabel={ this.props.removeLabel }
+        />
+      );
+    }
+  }
+
+  render() {
+    return (
+      <div>
+        <Typography variant="h3" align="center">Pomodoro Task Tracker</Typography>
+        <Tabs value={this.props.currentList} onChange={this.handleTabChange}>
+          <Tab label="Tasks" />
+          <Tab label="Labels" />
+        </Tabs>
+        { this.renderList() }
       </div>
     );
   }
@@ -53,14 +78,21 @@ class MainView extends React.Component {
 
 MainView.propTypes = {
   data: PropTypes.array,
+  labels: PropTypes.array,
+  currentList: PropTypes.number,
+  setCurrentList: PropTypes.func,
   openEditTaskView: PropTypes.func,
   openAddTaskView: PropTypes.func,
   openEditSettingsView: PropTypes.func,
   openViewTaskView: PropTypes.func,
+  openViewLabelView: PropTypes.func,
+  openEditLabelView: PropTypes.func,
+  openAddLabelView: PropTypes.func,
   startTask: PropTypes.func,
   taskDoneById: PropTypes.func,
   removeTask: PropTypes.func,
-  setFilter: PropTypes.func
+  removeLabel: PropTypes.func,
+  setFilter: PropTypes.func,
 };
 
 export default MainView;

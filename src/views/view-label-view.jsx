@@ -18,16 +18,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import electronSettings from 'electron-settings';
 import { withStyles } from '@material-ui/styles';
 import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import moment from 'moment';
-import humanizeDuration from 'humanize-duration';
 
 const styles = () => ({
   name: {
@@ -46,49 +41,38 @@ const styles = () => ({
   }
 });
 
-class ViewTaskView extends React.Component {
+class ViewLabelView extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      name: this.props.task.name,
-      description: this.props.task.description,
-      timeSpent: this.props.task.timeSpent,
-      label: this.props.task.label,
-      done: this.props.task.done
+      name: this.props.label.name,
+      description: this.props.label.description,
+      label: this.props.label.label,
     }
   }
 
-  getLabelName() {
-    if (this.props.task.label === '') {
+  getLabelLabelName() {
+    if (this.props.label.label === '') {
       return '';
     }
 
-    let label = this.props.getLabelById(this.props.task.label);
+    let labelLabel = this.props.getLabelById(this.props.label.label);
 
-    return label.name;
-  }
-
-  getTimeString(timeInSeconds) {
-    const durationInSeconds = moment.duration(timeInSeconds, 'seconds');
-    if (electronSettings.getSync('shouldDisplaySeconds')) {
-      return humanizeDuration(durationInSeconds, {round: false, maxDecimalPoints: 0, units: ['d', 'h', 'm', 's']});
-    } else {
-      return humanizeDuration(durationInSeconds, {round: false, maxDecimalPoints: 0, units: ['d', 'h', 'm']});
-    }
+    return labelLabel.name;
   }
 
   exit(event) {
     event.preventDefault();
 
-    this.props.closeViewTaskView();
+    this.props.closeViewLabelView();
   }
 
   render() {
     const { classes } = this.props;
     return (
       <div>
-        <Typography variant="h1" align="center">Task</Typography>
+        <Typography variant="h1" align="center">Label</Typography>
 
         <FormGroup>
           <TextField
@@ -103,14 +87,7 @@ class ViewTaskView extends React.Component {
           <TextField
             className="label"
             label="Label"
-            defaultValue={this.getLabelName()}
-            inputProps={{readOnly: true}}
-          />
-
-          <TextField
-            className="name"
-            label="Time spent on task"
-            defaultValue={this.getTimeString(this.state.timeSpent)}
+            defaultValue={this.getLabelLabelName()}
             inputProps={{readOnly: true}}
           />
 
@@ -123,16 +100,6 @@ class ViewTaskView extends React.Component {
             inputProps={{readOnly: true}}
           />
 
-          <FormControlLabel
-            className="done"
-            control= {<Checkbox
-              checked={ this.state.done }
-              color="primary"
-              inputProps={{ readOnly: true, 'aria-label': 'task done checkbox' }}
-            />}
-            label="Done"
-          />
-
           <span>
             <Button className={classes.exitButton} variant="contained" color="primary" onClick={(e) => this.exit(e)}>Exit</Button>
           </span>
@@ -142,11 +109,11 @@ class ViewTaskView extends React.Component {
   }
 }
 
-ViewTaskView.propTypes = {
+ViewLabelView.propTypes = {
   classes: PropTypes.object,
-  task: PropTypes.object,
-  closeViewTaskView: PropTypes.func,
+  label: PropTypes.object,
+  closeViewLabelView: PropTypes.func,
   getLabelById: PropTypes.func
 }
 
-export default withStyles(styles)(ViewTaskView);
+export default withStyles(styles)(ViewLabelView);
