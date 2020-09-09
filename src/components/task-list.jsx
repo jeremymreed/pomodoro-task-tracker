@@ -135,7 +135,7 @@ class TaskList extends React.Component {
     const listTasks= (
       <TableRow>
         <TableCell>
-          <Typography variant="h6" align="center">You have no tasks!  Go add some!</Typography>
+          <Typography variant="h6" align="center">You have no tasks.</Typography>
         </TableCell>
       </TableRow>
     );
