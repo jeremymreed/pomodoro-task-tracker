@@ -117,6 +117,28 @@ function EditTaskView(props) {
     return labelMenuItems;
   };
 
+  const getDoneCheckbox = () => {
+    if (!props.newTask) {
+      return (
+        <FormControlLabel
+          className="done"
+          control= {<Checkbox
+            id="done"
+            name="done"
+            type="checkbox"
+            checked={formik.values.done}
+            onChange={formik.handleChange}
+            color="primary"
+            inputProps={{ 'aria-label': 'task done checkbox' }}
+          />}
+          label="Done"
+        />
+      );
+    }
+
+    return '';
+  }
+
   const cancel = () => {
     props.closeEditTaskView();
   }
@@ -173,19 +195,7 @@ function EditTaskView(props) {
             </Select>
           </FormControl>
 
-          <FormControlLabel
-            className="done"
-            control= {<Checkbox
-              id="done"
-              name="done"
-              type="checkbox"
-              checked={formik.values.done}
-              onChange={formik.handleChange}
-              color="primary"
-              inputProps={{ 'aria-label': 'task done checkbox' }}
-            />}
-            label="Done"
-          />
+          { getDoneCheckbox() }
 
           <span>
             <Button
@@ -207,6 +217,7 @@ function EditTaskView(props) {
 
 EditTaskView.propTypes = {
   classes: PropTypes.object,
+  newTask: PropTypes.bool,
   title: PropTypes.string,
   task: PropTypes.object,
   labels: PropTypes.array,

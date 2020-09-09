@@ -517,6 +517,7 @@ class App extends React.Component {
       return (
         <div>
           <EditTaskView
+            newTask={ false }
             title="Task Editor"
             task={ this.getCurrentTask() }
             labels={ this.state.labels }
@@ -529,6 +530,7 @@ class App extends React.Component {
       return (
         <div>
           <EditTaskView
+            newTask={ true }
             title="Add New Task"
             task={ this.getCurrentTask() }
             labels={ this.state.labels }
