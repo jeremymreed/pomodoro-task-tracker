@@ -31,6 +31,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
+import SaveIcon from '@material-ui/icons/Save';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 const styles = () => ({
   themeFormControl: {
@@ -242,8 +244,12 @@ class EditSettingsView extends React.Component {
           </FormControl>
 
           <span>
-            <Button className={classes.saveButton} variant="contained" color="primary" onClick={(e) => this.formSubmit(e)}>Save</Button>
-            <Button className={classes.cancelButton} variant="contained" color="primary" onClick={(e) => this.cancelEdit(e)}>Cancel</Button>
+            <Button className={classes.saveButton} variant="contained" color="primary" onClick={(e) => this.formSubmit(e)}>
+              <SaveIcon />
+            </Button>
+            <Button className={classes.cancelButton} variant="contained" color="primary" onClick={(e) => this.cancelEdit(e)}>
+              <CancelIcon />
+            </Button>
           </span>
         </FormGroup>
       </div>
