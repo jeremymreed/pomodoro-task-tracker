@@ -29,6 +29,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import AddIcon from '@material-ui/icons/Add';
 
 const styles = () => ({
   divTable: {
@@ -42,7 +45,7 @@ const styles = () => ({
   labelNameContainer: {
     maxWidth: 200,
   },
-  labelActionButtonGroup: {
+  labelActionButtons: {
     marginLeft: '5px',
     marginRight: '5px'
   },
@@ -117,9 +120,13 @@ class LabelList extends React.Component {
             </Container>
           </TableCell>
           <TableCell>
-            <Button size="small" variant="contained" color="primary" onClick={(e) => this.viewLabel(e, label._id)}>View</Button>
-            <Button size="small" variant="contained" color="primary" onClick={(e) => this.editLabel(e, label._id)}>Edit</Button>
-            <Button size="small" variant="contained" color="secondary" onClick={(e) => this.removeLabel(e, label._id)}>Remove</Button>
+            { /* <Button size="small" variant="contained" color="primary" onClick={(e) => this.viewLabel(e, label._id)}>View</Button> */ }
+            <Button className={ classes.labelActionButtons } size="small" variant="contained" color="primary" onClick={(e) => this.editLabel(e, label._id)}>
+              <EditIcon />
+            </Button>
+            <Button className={ classes.labelActionButtons } size="small" variant="contained" color="secondary" onClick={(e) => this.removeLabel(e, label._id)}>
+              <DeleteIcon />
+            </Button>
           </TableCell>
           <TableCell></TableCell>
         </TableRow>
@@ -157,7 +164,9 @@ class LabelList extends React.Component {
     return (
       <div>
         { this.getLabelList(classes) }
-        <Button className={classes.addLabelButton} variant="contained" color="primary" onClick={(e) => this.addLabel(e)}>Add new label</Button>
+        <Button className={classes.addLabelButton} variant="contained" color="primary" onClick={(e) => this.addLabel(e)}>
+          <AddIcon />
+        </Button>
       </div>
     );
   }
