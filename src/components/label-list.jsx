@@ -45,6 +45,10 @@ const styles = () => ({
   labelNameContainer: {
     maxWidth: 200,
   },
+  labelName: {
+    textDecoration: 'underline',
+    textTransform: 'none'
+  },
   labelActionButtons: {
     marginLeft: '5px',
     marginRight: '5px'
@@ -116,11 +120,14 @@ class LabelList extends React.Component {
         <TableRow key={ label._id }>
           <TableCell>
             <Container className={classes.labelNameContainer}>
-              <Typography noWrap={true}>{ label.name }</Typography>
+              <Button className={ classes.taskButtons } size="small" onClick={(e) => this.viewLabel(e, label._id)}>
+                <Typography className={ classes.labelName } variant="button" noWrap={true}>
+                  { label.name }
+                </Typography>
+              </Button>
             </Container>
           </TableCell>
           <TableCell>
-            { /* <Button size="small" variant="contained" color="primary" onClick={(e) => this.viewLabel(e, label._id)}>View</Button> */ }
             <Button className={ classes.labelActionButtons } size="small" variant="contained" color="primary" onClick={(e) => this.editLabel(e, label._id)}>
               <EditIcon />
             </Button>
