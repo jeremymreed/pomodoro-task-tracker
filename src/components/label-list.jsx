@@ -21,7 +21,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/styles';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -30,6 +29,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import AddIcon from '@material-ui/icons/Add';
 
 const styles = () => ({
   divTable: {
@@ -43,7 +45,11 @@ const styles = () => ({
   labelNameContainer: {
     maxWidth: 200,
   },
-  labelActionButtonGroup: {
+  labelName: {
+    textDecoration: 'underline',
+    textTransform: 'none'
+  },
+  labelActionButtons: {
     marginLeft: '5px',
     marginRight: '5px'
   },
@@ -114,15 +120,20 @@ class LabelList extends React.Component {
         <TableRow key={ label._id }>
           <TableCell>
             <Container className={classes.labelNameContainer}>
-              <Typography noWrap={true}>{ label.name }</Typography>
+              <Button className={ classes.taskButtons } size="small" onClick={(e) => this.viewLabel(e, label._id)}>
+                <Typography className={ classes.labelName } variant="button" noWrap={true}>
+                  { label.name }
+                </Typography>
+              </Button>
             </Container>
           </TableCell>
           <TableCell>
-            <ButtonGroup className={classes.labelActionButtonGroup}>
-              <Button size="small" variant="contained" color="primary" onClick={(e) => this.viewLabel(e, label._id)}>View</Button>
-              <Button size="small" variant="contained" color="primary" onClick={(e) => this.editLabel(e, label._id)}>Edit</Button>
-              <Button size="small" variant="contained" color="secondary" onClick={(e) => this.removeLabel(e, label._id)}>Remove</Button>
-            </ButtonGroup>
+            <Button className={ classes.labelActionButtons } size="small" variant="contained" color="primary" onClick={(e) => this.editLabel(e, label._id)}>
+              <EditIcon />
+            </Button>
+            <Button className={ classes.labelActionButtons } size="small" variant="contained" color="secondary" onClick={(e) => this.removeLabel(e, label._id)}>
+              <DeleteIcon />
+            </Button>
           </TableCell>
           <TableCell></TableCell>
         </TableRow>
@@ -160,7 +171,9 @@ class LabelList extends React.Component {
     return (
       <div>
         { this.getLabelList(classes) }
-        <Button className={classes.addLabelButton} variant="contained" color="primary" onClick={(e) => this.addLabel(e)}>Add new label</Button>
+        <Button className={classes.addLabelButton} variant="contained" color="primary" onClick={(e) => this.addLabel(e)}>
+          <AddIcon />
+        </Button>
       </div>
     );
   }

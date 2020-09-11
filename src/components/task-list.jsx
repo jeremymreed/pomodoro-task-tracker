@@ -22,7 +22,6 @@ import { ipcRenderer } from 'electron';
 import { withStyles } from '@material-ui/styles';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -30,12 +29,17 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import DoneIcon from '@material-ui/icons/Done';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import AddIcon from '@material-ui/icons/Add';
 
 const styles = () => ({
   divTable: {
@@ -49,9 +53,13 @@ const styles = () => ({
   taskNameContainer: {
     maxWidth: 200,
   },
-  taskActionButtonGroup: {
+  taskName: {
+    textDecoration: 'underline',
+    textTransform: 'none'
+  },
+  taskButtons: {
     marginLeft: '5px',
-    marginRight: '5px'
+    marginRight: '5px',
   },
   addTaskButton: {
     marginTop: '15px',
@@ -103,10 +111,12 @@ class TaskList extends React.Component {
     this.props.openEditTaskView(taskId)
   }
 
-  taskDoneById(event, taskId) {
+  taskDoneById(event, taskId, taskDone) {
     event.preventDefault();
 
-    this.props.taskDoneById(taskId);
+    if (!taskDone) {
+      this.props.taskDoneById(taskId);
+    }
   }
 
   removeTask(event, taskId) {
@@ -124,9 +134,9 @@ class TaskList extends React.Component {
 
   getDone(done) {
     if (done) {
-      return (<DoneIcon />);
+      return (<CheckCircleIcon />);
     } else {
-      return '';
+      return (<RadioButtonUncheckedIcon />);
     }
   }
 
@@ -176,21 +186,29 @@ class TaskList extends React.Component {
       return (
         <TableRow key={ task._id }>
           <TableCell>
+            <Button size="small" onClick={(e) => this.taskDoneById(e, task._id, task.done)}>
+              { this.getDone(task.done) }
+            </Button>
+          </TableCell>
+          <TableCell>
             <Container className={classes.taskNameContainer}>
-              <Typography noWrap={true}>{ task.name }</Typography>
+              <Button className={ classes.taskButtons } size="small" onClick={(e) => this.viewTask(e, task._id)}>
+                <Typography className={ classes.taskName } variant="button" noWrap={true}>
+                  {task.name}
+                </Typography>
+              </Button>
             </Container>
           </TableCell>
-          <TableCell>{ this.getDone(task.done) }</TableCell>
           <TableCell>
-            <ButtonGroup className={classes.taskActionButtonGroup}>
-              <Button size="small" variant="contained" color="primary" onClick={(e) => this.startTask(e, task._id, task.done)}>Start</Button>
-              <Button size="small" variant="contained" color="primary" onClick={(e) => this.taskDoneById(e, task._id)}>Done</Button>
-            </ButtonGroup>
-            <ButtonGroup className={classes.taskActionButtonGroup}>
-              <Button size="small" variant="contained" color="primary" onClick={(e) => this.viewTask(e, task._id)}>View</Button>
-              <Button size="small" variant="contained" color="primary" onClick={(e) => this.editTask(e, task._id)}>Edit</Button>
-              <Button size="small" variant="contained" color="secondary" onClick={(e) => this.removeTask(e, task._id)}>Remove</Button>
-            </ButtonGroup>
+            <Button className={ classes.taskButtons } size="small" variant="contained" color="primary" onClick={(e) => this.startTask(e, task._id, task.done)}>
+              <PlayArrowIcon />
+            </Button>
+            <Button className={ classes.taskButtons } size="small" variant="contained" color="primary" onClick={(e) => this.editTask(e, task._id)}>
+              <EditIcon />
+            </Button>
+            <Button className={ classes.taskButtons } size="small" variant="contained" color="secondary" onClick={(e) => this.removeTask(e, task._id)}>
+              <DeleteIcon />
+            </Button>
           </TableCell>
         </TableRow>
       );
@@ -201,8 +219,8 @@ class TaskList extends React.Component {
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell></TableCell>
               <TableCell><Typography variant="h6">Name</Typography></TableCell>
-              <TableCell><Typography variant="h6">Done</Typography></TableCell>
               <TableCell>
                 <FormControl className={classes.themeFormControl}>
                   <InputLabel>Filter</InputLabel>
@@ -241,7 +259,9 @@ class TaskList extends React.Component {
     return (
       <div>
         { this.getTaskList(classes) }
-        <Button className={classes.addTaskButton} variant="contained" color="primary" onClick={(e) => this.addTask(e)}>Add new task</Button>
+        <Button className={classes.addTaskButton} variant="contained" color="primary" onClick={(e) => this.addTask(e)}>
+          <AddIcon />
+        </Button>
       </div>
     );
   }

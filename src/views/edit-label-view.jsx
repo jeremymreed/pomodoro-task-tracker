@@ -28,6 +28,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
+import SaveIcon from '@material-ui/icons/Save';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 
 const styles = () => ({
@@ -173,9 +175,11 @@ function EditLabelView(props) {
               color="primary"
               disabled={disableSaveButton()}
             >
-              Save
+              <SaveIcon />
             </Button>
-            <Button className={classes.cancelButton} variant="contained" color="primary" onClick={() => {cancel()}}>Cancel</Button>
+            <Button className={classes.cancelButton} variant="contained" color="primary" onClick={() => {cancel()}}>
+              <CancelIcon />
+            </Button>
           </span>
         </FormGroup>
       </form>

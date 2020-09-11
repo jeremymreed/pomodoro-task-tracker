@@ -28,6 +28,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
 import humanizeDuration from 'humanize-duration';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 const styles = () => ({
   name: {
@@ -134,7 +135,9 @@ class ViewTaskView extends React.Component {
           />
 
           <span>
-            <Button className={classes.exitButton} variant="contained" color="primary" onClick={(e) => this.exit(e)}>Exit</Button>
+            <Button className={classes.exitButton} variant="contained" color="primary" onClick={(e) => this.exit(e)}>
+              <CancelIcon />
+            </Button>
           </span>
         </FormGroup>
       </div>
