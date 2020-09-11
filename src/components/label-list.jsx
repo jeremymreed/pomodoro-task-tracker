@@ -21,7 +21,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/styles';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -118,11 +117,9 @@ class LabelList extends React.Component {
             </Container>
           </TableCell>
           <TableCell>
-            <ButtonGroup className={classes.labelActionButtonGroup}>
-              <Button size="small" variant="contained" color="primary" onClick={(e) => this.viewLabel(e, label._id)}>View</Button>
-              <Button size="small" variant="contained" color="primary" onClick={(e) => this.editLabel(e, label._id)}>Edit</Button>
-              <Button size="small" variant="contained" color="secondary" onClick={(e) => this.removeLabel(e, label._id)}>Remove</Button>
-            </ButtonGroup>
+            <Button size="small" variant="contained" color="primary" onClick={(e) => this.viewLabel(e, label._id)}>View</Button>
+            <Button size="small" variant="contained" color="primary" onClick={(e) => this.editLabel(e, label._id)}>Edit</Button>
+            <Button size="small" variant="contained" color="secondary" onClick={(e) => this.removeLabel(e, label._id)}>Remove</Button>
           </TableCell>
           <TableCell></TableCell>
         </TableRow>
