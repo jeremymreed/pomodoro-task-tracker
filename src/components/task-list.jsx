@@ -22,7 +22,6 @@ import { ipcRenderer } from 'electron';
 import { withStyles } from '@material-ui/styles';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -52,7 +51,7 @@ const styles = () => ({
   taskNameContainer: {
     maxWidth: 200,
   },
-  taskActionButtonGroup: {
+  taskButtons: {
     marginLeft: '5px',
     marginRight: '5px'
   },
@@ -184,21 +183,17 @@ class TaskList extends React.Component {
             </Container>
           </TableCell>
           <TableCell>
-            <ButtonGroup className={classes.taskActionButtonGroup}>
-              <Button size="small" variant="contained" color="primary" onClick={(e) => this.startTask(e, task._id, task.done)}>
-                <PlayArrowIcon />
-              </Button>
-              { /* <Button size="small" variant="contained" color="primary" onClick={(e) => this.taskDoneById(e, task._id)}>Done</Button> */ }
-            </ButtonGroup>
-            <ButtonGroup className={classes.taskActionButtonGroup}>
-              <Button size="small" variant="contained" color="primary" onClick={(e) => this.viewTask(e, task._id)}>View</Button>
-              <Button size="small" variant="contained" color="primary" onClick={(e) => this.editTask(e, task._id)}>
-                <EditIcon />
-              </Button>
-              <Button size="small" variant="contained" color="secondary" onClick={(e) => this.removeTask(e, task._id)}>
-                <DeleteIcon />
-              </Button>
-            </ButtonGroup>
+            <Button className={ classes.taskButtons } size="small" variant="contained" color="primary" onClick={(e) => this.startTask(e, task._id, task.done)}>
+              <PlayArrowIcon />
+            </Button>
+            { /* <Button size="small" variant="contained" color="primary" onClick={(e) => this.taskDoneById(e, task._id)}>Done</Button> */ }
+            { /* <Button className={ classes.taskButtons } size="small" variant="contained" color="primary" onClick={(e) => this.viewTask(e, task._id)}>View</Button> */ }
+            <Button className={ classes.taskButtons } size="small" variant="contained" color="primary" onClick={(e) => this.editTask(e, task._id)}>
+              <EditIcon />
+            </Button>
+            <Button className={ classes.taskButtons } size="small" variant="contained" color="secondary" onClick={(e) => this.removeTask(e, task._id)}>
+              <DeleteIcon />
+            </Button>
           </TableCell>
         </TableRow>
       );
