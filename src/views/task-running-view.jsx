@@ -25,6 +25,10 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Timer from '../components/timer';
+import PauseIcon from '@material-ui/icons/Pause';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import StopIcon from '@material-ui/icons/Stop';
+import CheckIcon from '@material-ui/icons/Check';
 
 /*
   We create custom TextField component with 'disabled' text styling overridden.
@@ -147,9 +151,13 @@ class TaskRunningView extends React.Component {
     const { classes } = this.props;
     let pauseResumeButton = '';
     if (this.state.shouldRun) {
-      pauseResumeButton = <Button className={classes.pauseResumeButton} variant="contained" color="primary" onClick={(e) => this.handlePause(e)}>Pause</Button>;
+      pauseResumeButton = <Button className={classes.pauseResumeButton} variant="contained" color="primary" onClick={(e) => this.handlePause(e)}>
+        <PauseIcon />
+      </Button>;
     } else {
-      pauseResumeButton = <Button className={classes.pauseResumeButton} variant="contained" color="primary" onClick={(e) => this.handleResume(e)}>Resume</Button>;
+      pauseResumeButton = <Button className={classes.pauseResumeButton} variant="contained" color="primary" onClick={(e) => this.handleResume(e)}>
+        <PlayArrowIcon />
+      </Button>;
     }
     return (
       <div>
@@ -180,8 +188,12 @@ class TaskRunningView extends React.Component {
         <Container align="center">
           <p>
             { pauseResumeButton }
-            <Button className={classes.stopButton} variant="contained" color="primary" onClick={(e) => this.stopTask(e)}>Stop</Button>
-            <Button className={classes.doneButton} variant="contained" color="primary" onClick={(e) => this.taskDone(e)}>Done</Button>
+            <Button className={classes.stopButton} variant="contained" color="primary" onClick={(e) => this.stopTask(e)}>
+              <StopIcon />
+            </Button>
+            <Button className={classes.doneButton} variant="contained" color="primary" onClick={(e) => this.taskDone(e)}>
+              <CheckIcon />
+            </Button>
           </p>
         </Container>
       </div>
