@@ -182,13 +182,12 @@ class TaskList extends React.Component {
               <Typography noWrap={true}>{ task.name }</Typography>
             </Container>
           </TableCell>
-          <TableCell>{ this.getDone(task.done) }</TableCell>
           <TableCell>
             <ButtonGroup className={classes.taskActionButtonGroup}>
               <Button size="small" variant="contained" color="primary" onClick={(e) => this.startTask(e, task._id, task.done)}>
                 <PlayArrowIcon />
               </Button>
-              <Button size="small" variant="contained" color="primary" onClick={(e) => this.taskDoneById(e, task._id)}>Done</Button>
+              { /* <Button size="small" variant="contained" color="primary" onClick={(e) => this.taskDoneById(e, task._id)}>Done</Button> */ }
             </ButtonGroup>
             <ButtonGroup className={classes.taskActionButtonGroup}>
               <Button size="small" variant="contained" color="primary" onClick={(e) => this.viewTask(e, task._id)}>View</Button>
@@ -208,7 +207,6 @@ class TaskList extends React.Component {
           <TableHead>
             <TableRow>
               <TableCell><Typography variant="h6">Name</Typography></TableCell>
-              <TableCell><Typography variant="h6">Done</Typography></TableCell>
               <TableCell>
                 <FormControl className={classes.themeFormControl}>
                   <InputLabel>Filter</InputLabel>
