@@ -29,7 +29,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import DoneIcon from '@material-ui/icons/Done';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
@@ -38,6 +37,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+import RadioButtonUnchecked from '@material-ui/icons/RadioButtonUnchecked';
+import CheckCircle from '@material-ui/icons/CheckCircle';
 
 const styles = () => ({
   divTable: {
@@ -109,10 +110,12 @@ class TaskList extends React.Component {
     this.props.openEditTaskView(taskId)
   }
 
-  taskDoneById(event, taskId) {
+  taskDoneById(event, taskId, taskDone) {
     event.preventDefault();
 
-    this.props.taskDoneById(taskId);
+    if (!taskDone) {
+      this.props.taskDoneById(taskId);
+    }
   }
 
   removeTask(event, taskId) {
@@ -130,9 +133,9 @@ class TaskList extends React.Component {
 
   getDone(done) {
     if (done) {
-      return (<DoneIcon />);
+      return (<CheckCircle />);
     } else {
-      return '';
+      return (<RadioButtonUnchecked />);
     }
   }
 
@@ -182,6 +185,11 @@ class TaskList extends React.Component {
       return (
         <TableRow key={ task._id }>
           <TableCell>
+            <Button size="small" onClick={(e) => this.taskDoneById(e, task._id, task.done)}>
+              { this.getDone(task.done) }
+            </Button>
+          </TableCell>
+          <TableCell>
             <Container className={classes.taskNameContainer}>
               <Button className={ classes.taskButtons } size="small" onClick={(e) => this.viewTask(e, task._id)}>
                 <Typography className={ classes.taskName } variant="button" noWrap={true}>
@@ -194,7 +202,6 @@ class TaskList extends React.Component {
             <Button className={ classes.taskButtons } size="small" variant="contained" color="primary" onClick={(e) => this.startTask(e, task._id, task.done)}>
               <PlayArrowIcon />
             </Button>
-            { /* <Button size="small" variant="contained" color="primary" onClick={(e) => this.taskDoneById(e, task._id)}>Done</Button> */ }
             <Button className={ classes.taskButtons } size="small" variant="contained" color="primary" onClick={(e) => this.editTask(e, task._id)}>
               <EditIcon />
             </Button>
@@ -211,6 +218,7 @@ class TaskList extends React.Component {
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell></TableCell>
               <TableCell><Typography variant="h6">Name</Typography></TableCell>
               <TableCell>
                 <FormControl className={classes.themeFormControl}>
