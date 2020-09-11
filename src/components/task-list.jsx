@@ -51,9 +51,13 @@ const styles = () => ({
   taskNameContainer: {
     maxWidth: 200,
   },
+  taskName: {
+    textDecoration: 'underline',
+    textTransform: 'none'
+  },
   taskButtons: {
     marginLeft: '5px',
-    marginRight: '5px'
+    marginRight: '5px',
   },
   addTaskButton: {
     marginTop: '15px',
@@ -179,7 +183,11 @@ class TaskList extends React.Component {
         <TableRow key={ task._id }>
           <TableCell>
             <Container className={classes.taskNameContainer}>
-              <Typography noWrap={true}>{ task.name }</Typography>
+              <Button className={ classes.taskButtons } size="small" onClick={(e) => this.viewTask(e, task._id)}>
+                <Typography className={ classes.taskName } variant="button" noWrap={true}>
+                  {task.name}
+                </Typography>
+              </Button>
             </Container>
           </TableCell>
           <TableCell>
@@ -187,7 +195,6 @@ class TaskList extends React.Component {
               <PlayArrowIcon />
             </Button>
             { /* <Button size="small" variant="contained" color="primary" onClick={(e) => this.taskDoneById(e, task._id)}>Done</Button> */ }
-            { /* <Button className={ classes.taskButtons } size="small" variant="contained" color="primary" onClick={(e) => this.viewTask(e, task._id)}>View</Button> */ }
             <Button className={ classes.taskButtons } size="small" variant="contained" color="primary" onClick={(e) => this.editTask(e, task._id)}>
               <EditIcon />
             </Button>
