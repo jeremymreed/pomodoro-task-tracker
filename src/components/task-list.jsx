@@ -37,6 +37,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import EditIcon from '@material-ui/icons/Edit';
 
 const styles = () => ({
   divTable: {
@@ -191,7 +192,9 @@ class TaskList extends React.Component {
             </ButtonGroup>
             <ButtonGroup className={classes.taskActionButtonGroup}>
               <Button size="small" variant="contained" color="primary" onClick={(e) => this.viewTask(e, task._id)}>View</Button>
-              <Button size="small" variant="contained" color="primary" onClick={(e) => this.editTask(e, task._id)}>Edit</Button>
+              <Button size="small" variant="contained" color="primary" onClick={(e) => this.editTask(e, task._id)}>
+                <EditIcon />
+              </Button>
               <Button size="small" variant="contained" color="secondary" onClick={(e) => this.removeTask(e, task._id)}>Remove</Button>
             </ButtonGroup>
           </TableCell>
