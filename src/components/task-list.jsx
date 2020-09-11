@@ -39,6 +39,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import RadioButtonUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import CheckCircle from '@material-ui/icons/CheckCircle';
+import AddIcon from '@material-ui/icons/Add';
 
 const styles = () => ({
   divTable: {
@@ -258,7 +259,9 @@ class TaskList extends React.Component {
     return (
       <div>
         { this.getTaskList(classes) }
-        <Button className={classes.addTaskButton} variant="contained" color="primary" onClick={(e) => this.addTask(e)}>Add new task</Button>
+        <Button className={classes.addTaskButton} variant="contained" color="primary" onClick={(e) => this.addTask(e)}>
+          <AddIcon />
+        </Button>
       </div>
     );
   }
