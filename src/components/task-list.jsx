@@ -36,6 +36,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 
 const styles = () => ({
   divTable: {
@@ -183,7 +184,9 @@ class TaskList extends React.Component {
           <TableCell>{ this.getDone(task.done) }</TableCell>
           <TableCell>
             <ButtonGroup className={classes.taskActionButtonGroup}>
-              <Button size="small" variant="contained" color="primary" onClick={(e) => this.startTask(e, task._id, task.done)}>Start</Button>
+              <Button size="small" variant="contained" color="primary" onClick={(e) => this.startTask(e, task._id, task.done)}>
+                <PlayArrowIcon />
+              </Button>
               <Button size="small" variant="contained" color="primary" onClick={(e) => this.taskDoneById(e, task._id)}>Done</Button>
             </ButtonGroup>
             <ButtonGroup className={classes.taskActionButtonGroup}>
