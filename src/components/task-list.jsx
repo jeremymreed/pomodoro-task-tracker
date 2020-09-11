@@ -37,8 +37,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import RadioButtonUnchecked from '@material-ui/icons/RadioButtonUnchecked';
-import CheckCircle from '@material-ui/icons/CheckCircle';
+import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import AddIcon from '@material-ui/icons/Add';
 
 const styles = () => ({
@@ -134,9 +134,9 @@ class TaskList extends React.Component {
 
   getDone(done) {
     if (done) {
-      return (<CheckCircle />);
+      return (<CheckCircleIcon />);
     } else {
-      return (<RadioButtonUnchecked />);
+      return (<RadioButtonUncheckedIcon />);
     }
   }
 
