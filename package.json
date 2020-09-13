@@ -10,14 +10,11 @@
   "main": "build/main.js",
   "scripts": {
     "start": "electron ./",
-    "build": "npm run clean && npm run lint && npm run babel && npm run babel-scripts && npm run move-static",
-    "babel": "babel src/ --out-dir build/ --source-maps",
-    "babel-scripts": "babel scripts/ --out-dir build/ --source-maps",
+    "build": "npm run clean && tsc -p . && npm run move-static",
     "move-static": "cp static/* build/",
     "installDB": "node build/install.js",
     "seed": "node build/seed.js",
     "test": "mocha -r esm tests/**/*.spec.js",
-    "lint": "eslint src/**/*.jsx src/**/*.js",
     "clean": "rm -rf dist/ build/ data/pomodoro-task-tracker*",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
