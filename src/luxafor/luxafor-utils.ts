@@ -19,6 +19,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import {Luxafor} from 'node-luxafor2';
 
 class LuxaforUtils {
+  luxafor: Luxafor
+  active: boolean
+
   constructor() {
     this.luxafor = new Luxafor();
     this.active = false;
@@ -35,7 +38,7 @@ class LuxaforUtils {
     }
   }
 
-  color(ledGroup, red, green, blue) {
+  color(ledGroup: number, red: number, green: number, blue: number) {
     this.init();
 
     if (this.active) {
@@ -43,7 +46,7 @@ class LuxaforUtils {
     }
   }
 
-  strobe(ledGroup, red, green, blue, time, repeat) {
+  strobe(ledGroup: number, red: number, green: number, blue: number, time: number, repeat: number) {
     this.init();
 
     if (this.active) {
