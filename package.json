@@ -61,7 +61,8 @@
     "eslint": "^7.5.0",
     "eslint-plugin-react": "^7.20.3",
     "esm": "^3.2.25",
-    "mocha": "^8.1.1"
+    "mocha": "^8.1.1",
+    "typescript": "^4.0.2"
   },
   "dependencies": {
     "@babel/runtime": "^7.11.2",
