@@ -19,8 +19,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import { Menu, dialog } from 'electron';
 
 class MenuGenerator {
-  static getMenu(window, version) {
-    const template = [
+  static getMenu(window: any, version: any) {
+    const template: any = [
       {
         label: 'File',
         submenu: [
