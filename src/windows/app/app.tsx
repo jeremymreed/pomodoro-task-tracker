@@ -48,19 +48,22 @@ interface AppState {
   currentList: number
 }
 
+enum StateVars {
+  MainViewState,
+  EditTaskState,
+  AddNewTaskState,
+  TaskRunningState,
+  EditSettingsState,
+  ViewTaskState,
+  ViewLabelState,
+  AddNewLabelState,
+  EditLabelState,
+}
+
 class App extends React.Component<AppProps, AppState> {
 
   _isMounted: boolean
   db: Database
-  MainViewState: number
-  EditTaskState: number
-  AddNewTaskState: number
-  TaskRunningState: number
-  EditSettingsState: number
-  ViewTaskState: number
-  ViewLabelState: number
-  AddNewLabelState: number
-  EditLabelState: number
 
   currentFilter: string
 
@@ -103,22 +106,6 @@ class App extends React.Component<AppProps, AppState> {
     this.startTask = this.startTask.bind(this);
     this.stopTask = this.stopTask.bind(this);
 
-    // Place all App state variables here.
-    // stateVar:
-    //    0: MainView
-    //    1: EditTaskView
-    //    2: TaskRunningView
-    // Putting state var names here, we should use an enum here.
-    this.MainViewState = 0;
-    this.EditTaskState = 1;
-    this.AddNewTaskState = 2
-    this.TaskRunningState = 3;
-    this.EditSettingsState = 4;
-    this.ViewTaskState = 5;
-    this.ViewLabelState = 6;
-    this.AddNewLabelState = 7;
-    this.EditLabelState = 8;
-
     this.currentFilter = 'all';
 
     this.taskListState = 0;
@@ -131,14 +118,14 @@ class App extends React.Component<AppProps, AppState> {
       labels: [],                     // Data for LabelList.  Passed to LabelList via prop.
       currentTask: '',
       currentLabel: '',
-      stateVar: this.MainViewState,
+      stateVar: StateVars.MainViewState,
       currentList: this.taskListState
     }
   }
 
   // TODO: Magic numbers, yay!  Will be obsolete when we convert code to TypeScript.
   validateState() {
-    return this.state.stateVar >= 0 && this.state.stateVar <= 8;
+    return true;
   }
 
   validateCurrentList() {
@@ -275,7 +262,7 @@ class App extends React.Component<AppProps, AppState> {
 
   openEditTaskView(taskId: string) {
     if (this.validateState()) {
-      this.setState({currentTask: taskId, stateVar: this.EditTaskState});
+      this.setState({currentTask: taskId, stateVar: StateVars.EditTaskState});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -283,7 +270,7 @@ class App extends React.Component<AppProps, AppState> {
 
   closeEditTaskView() {
     if (this.validateState()) {
-      this.setState({currentTask: '', stateVar: this.MainViewState});
+      this.setState({currentTask: '', stateVar: StateVars.MainViewState});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -291,7 +278,7 @@ class App extends React.Component<AppProps, AppState> {
 
   openAddTaskView() {
     if (this.validateState()) {
-      this.setState({currentTask: '', stateVar: this.AddNewTaskState});
+      this.setState({currentTask: '', stateVar: StateVars.AddNewTaskState});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -299,7 +286,7 @@ class App extends React.Component<AppProps, AppState> {
 
   openEditSettingsView() {
     if (this.validateState()) {
-      this.setState({stateVar: this.EditSettingsState});
+      this.setState({stateVar: StateVars.EditSettingsState});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -307,7 +294,7 @@ class App extends React.Component<AppProps, AppState> {
 
   closeEditSettingsView() {
     if (this.validateState()) {
-      this.setState({currentTask: '', stateVar: this.MainViewState});
+      this.setState({currentTask: '', stateVar: StateVars.MainViewState});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -315,7 +302,7 @@ class App extends React.Component<AppProps, AppState> {
 
   openViewTaskView(taskId: string) {
     if (this.validateState()) {
-      this.setState({currentTask: taskId, stateVar: this.ViewTaskState});
+      this.setState({currentTask: taskId, stateVar: StateVars.ViewTaskState});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -323,7 +310,7 @@ class App extends React.Component<AppProps, AppState> {
 
   closeViewTaskView() {
     if (this.validateState()) {
-      this.setState({currentTask: '', stateVar: this.MainViewState});
+      this.setState({currentTask: '', stateVar: StateVars.MainViewState});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -331,7 +318,7 @@ class App extends React.Component<AppProps, AppState> {
 
   openViewLabelView(labelId: string) {
     if (this.validateState()) {
-      this.setState({currentLabel: labelId, stateVar: this.ViewLabelState});
+      this.setState({currentLabel: labelId, stateVar: StateVars.ViewLabelState});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -339,7 +326,7 @@ class App extends React.Component<AppProps, AppState> {
 
   closeViewLabelView() {
     if (this.validateState()) {
-      this.setState({currentLabel: '', stateVar: this.MainViewState});
+      this.setState({currentLabel: '', stateVar: StateVars.MainViewState});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -347,7 +334,7 @@ class App extends React.Component<AppProps, AppState> {
 
   startTask(taskId: string) {
     if (this.validateState()) {
-      this.setState({currentTask: taskId, stateVar: this.TaskRunningState});
+      this.setState({currentTask: taskId, stateVar: StateVars.TaskRunningState});
       ipcRenderer.send('setLuxaforWork');
     } else {
       throw new Error('invalid state detected!');
@@ -494,7 +481,7 @@ class App extends React.Component<AppProps, AppState> {
 
   openEditLabelView(labelId: string) {
     if (this.validateState()) {
-      this.setState({currentLabel: labelId, stateVar: this.EditLabelState});
+      this.setState({currentLabel: labelId, stateVar: StateVars.EditLabelState});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -502,7 +489,7 @@ class App extends React.Component<AppProps, AppState> {
 
   closeEditLabelView() {
     if (this.validateState()) {
-      this.setState({currentLabel: '', stateVar: this.MainViewState});
+      this.setState({currentLabel: '', stateVar: StateVars.MainViewState});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -510,7 +497,7 @@ class App extends React.Component<AppProps, AppState> {
 
   openAddLabelView() {
     if (this.validateState()) {
-      this.setState({currentLabel: '', stateVar: this.AddNewLabelState});
+      this.setState({currentLabel: '', stateVar: StateVars.AddNewLabelState});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -532,7 +519,7 @@ class App extends React.Component<AppProps, AppState> {
 
   stopTask() {
     if (this.validateState()) {
-      this.setState({currentTask: '', stateVar: this.MainViewState});
+      this.setState({currentTask: '', stateVar: StateVars.MainViewState});
       ipcRenderer.send('setLuxaforOff');
     } else {
       throw new Error('invalid state detected!');
@@ -553,19 +540,19 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   render() {
-    if (this.state.stateVar === this.TaskRunningState) {
+    if (this.state.stateVar === StateVars.TaskRunningState) {
       return (
         <div>
           <TaskRunningView task={ this.getCurrentTask() } updateTaskTimeSpentOnTask={ this.updateTaskTimeSpentOnTask } taskDone={ this.taskDone } stopTask={ this.stopTask }/>
         </div>
       );
-    } else if (this.state.stateVar === this.EditSettingsState) {
+    } else if (this.state.stateVar === StateVars.EditSettingsState) {
       return (
           <div>
           <EditSettingsView closeEditSettingsView={ this.closeEditSettingsView } changeTheme={this.props.changeTheme} />
         </div>
       );
-    } else if (this.state.stateVar === this.EditTaskState) {
+    } else if (this.state.stateVar === StateVars.EditTaskState) {
       return (
         <div>
           <EditTaskView
@@ -578,7 +565,7 @@ class App extends React.Component<AppProps, AppState> {
           />
         </div>
       );
-    } else if (this.state.stateVar === this.AddNewTaskState) {
+    } else if (this.state.stateVar === StateVars.AddNewTaskState) {
       return (
         <div>
           <EditTaskView
@@ -591,7 +578,7 @@ class App extends React.Component<AppProps, AppState> {
           />
         </div>
       );
-    } else if (this.state.stateVar === this.MainViewState) {
+    } else if (this.state.stateVar === StateVars.MainViewState) {
       return (
         <div>
           <MainView
@@ -614,7 +601,7 @@ class App extends React.Component<AppProps, AppState> {
           />
         </div>
       );
-    } else if (this.state.stateVar === this.ViewTaskState) {
+    } else if (this.state.stateVar === StateVars.ViewTaskState) {
       return (
         <ViewTaskView
           task={ this.getCurrentTask() }
@@ -622,7 +609,7 @@ class App extends React.Component<AppProps, AppState> {
           closeViewTaskView={this.closeViewTaskView}
         />
       );
-    } else if (this.state.stateVar === this.ViewLabelState) {
+    } else if (this.state.stateVar === StateVars.ViewLabelState) {
       return (
         <ViewLabelView
           label={this.getCurrentLabel() }
@@ -630,7 +617,7 @@ class App extends React.Component<AppProps, AppState> {
           closeViewLabelView={this.closeViewLabelView}
         />
       );
-    } else if (this.state.stateVar === this.EditLabelState) {
+    } else if (this.state.stateVar === StateVars.EditLabelState) {
       return (
         <EditLabelView
           title="Edit Label"
@@ -640,7 +627,7 @@ class App extends React.Component<AppProps, AppState> {
           closeEditLabelView={ this.closeEditLabelView }
         />
       );
-    } else if (this.state.stateVar === this.AddNewLabelState) {
+    } else if (this.state.stateVar === StateVars.AddNewLabelState) {
       return (
         <EditLabelView
           title="Add New Label"
