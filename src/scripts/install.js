@@ -17,7 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import os from 'os';
-import Database from './database';
+import Database from '../database';
 
 const databasePath = os.homedir() + '/.config/pomodoro-task-tracker/pomodoro-task-tracker-data';
 console.log('App constructor: databasePath', databasePath);
