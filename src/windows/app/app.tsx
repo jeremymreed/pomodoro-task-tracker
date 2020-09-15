@@ -44,8 +44,8 @@ interface AppState {
   labels: Array<Label>
   currentTask: string
   currentLabel: string
-  stateVar: number
-  currentList: number
+  stateVar: StateVars
+  currentList: CurrentListState
 }
 
 enum StateVars {
@@ -60,15 +60,17 @@ enum StateVars {
   EditLabelState,
 }
 
+enum CurrentListState {
+  taskListState,
+  labelListState
+}
+
 class App extends React.Component<AppProps, AppState> {
 
   _isMounted: boolean
   db: Database
 
   currentFilter: string
-
-  taskListState: number
-  labelListState: number
 
   constructor(props: AppProps) {
     super(props);
@@ -108,9 +110,6 @@ class App extends React.Component<AppProps, AppState> {
 
     this.currentFilter = 'all';
 
-    this.taskListState = 0;
-    this.labelListState = 1;
-
     this.state = {
       dataMap: new Map(),             // Use for lookups only.
       data: [],                       // Data for TaskList.  Passed to TaskList via prop.
@@ -119,7 +118,7 @@ class App extends React.Component<AppProps, AppState> {
       currentTask: '',
       currentLabel: '',
       stateVar: StateVars.MainViewState,
-      currentList: this.taskListState
+      currentList: CurrentListState.taskListState
     }
   }
 
