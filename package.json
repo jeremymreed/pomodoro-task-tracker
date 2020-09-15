@@ -10,8 +10,11 @@
   "main": "build/main.js",
   "scripts": {
     "start": "electron ./",
-    "build": "npm run clean && tsc -p . && npm run move-static",
-    "move-static": "cp static/* build/",
+    "build": "npm run clean && npm run build:types && npm run build:js && npm run move-static",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:js": "babel src --out-dir build --extensions \".js,.jsx,.ts,.tsx\" --source-maps inline",
+    "check-types": "tsc --noEmit -p .",
+    "copy-static": "cp static/* build/",
     "installDB": "node build/scripts/install.js",
     "seed": "node build/scripts/seed.js",
     "test": "mocha -r esm tests/**/*.spec.js",
