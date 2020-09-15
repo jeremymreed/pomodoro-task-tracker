@@ -10,7 +10,7 @@
   "main": "build/main.js",
   "scripts": {
     "start": "electron ./",
-    "build": "npm run clean && npm run build:types && npm run build:js && npm run move-static",
+    "build": "npm run clean && npm run build:js && npm run copy-static",
     "build:types": "tsc --emitDeclarationOnly",
     "build:js": "babel src --out-dir build --extensions \".js,.jsx,.ts,.tsx\" --source-maps inline",
     "check-types": "tsc --noEmit -p .",
