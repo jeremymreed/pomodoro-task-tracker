@@ -33,6 +33,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
+import Task from '../data-models/task';
+import Label from '../data-models/label';
 
 const styles = () => ({
   labelSelectFormControl: {
@@ -60,8 +62,9 @@ const styles = () => ({
   }
 });
 
-const validate = (values) => {
-  const errors = {};
+const validate = (values: any) => {
+  // Can't predict what the shape of errors will be, so use any.
+  const errors: any = {};
 
   if (!values.name || values.name === '') {
     errors.name = 'The name is required';
@@ -70,7 +73,7 @@ const validate = (values) => {
   return errors;
 }
 
-const mapLabelIdToValue = (labelId) => {
+const mapLabelIdToValue = (labelId: string) => {
   if (labelId === '') {
     return 'none';
   }
@@ -78,7 +81,7 @@ const mapLabelIdToValue = (labelId) => {
   return labelId;
 }
 
-const mapValueToLabelId = (value) => {
+const mapValueToLabelId = (value: string) => {
   if (value === 'none') {
     return '';
   }
@@ -86,7 +89,17 @@ const mapValueToLabelId = (value) => {
   return value;
 }
 
-function EditTaskView(props) {
+interface Props {
+  classes: any,
+  newTask: boolean,
+  title: string,
+  task: Task,
+  labels: Label[],
+  editTask: Function,
+  closeEditTaskView: Function
+}
+
+function EditTaskView(props: Props) {
     const formik = useFormik({
     initialValues: {
       name: props.task.name,
@@ -127,7 +140,6 @@ function EditTaskView(props) {
           control= {<Checkbox
             id="done"
             name="done"
-            type="checkbox"
             checked={formik.values.done}
             onChange={formik.handleChange}
             color="primary"
@@ -217,16 +229,6 @@ function EditTaskView(props) {
       </form>
     </div>
   );
-}
-
-EditTaskView.propTypes = {
-  classes: PropTypes.object,
-  newTask: PropTypes.bool,
-  title: PropTypes.string,
-  task: PropTypes.object,
-  labels: PropTypes.array,
-  editTask: PropTypes.func,
-  closeEditTaskView: PropTypes.func
 }
 
 export default withStyles(styles)(EditTaskView);
