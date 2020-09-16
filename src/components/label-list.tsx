@@ -17,7 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import React from 'react';
-import PropTypes from 'prop-types';
+import Label from '../data-models/label';
 import { withStyles } from '@material-ui/styles';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
@@ -33,7 +33,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 
-const styles = () => ({
+const styles = (): any => ({
   divTable: {
     overflowY: 'scroll',
     minWidth: 640,
@@ -58,36 +58,45 @@ const styles = () => ({
   }
 });
 
-class LabelList extends React.Component {
-  constructor(props) {
+interface Props {
+  classes: any,
+  labels: Array<Label>,
+  openViewLabelView: Function,
+  openEditLabelView: Function,
+  openAddLabelView: Function,
+  removeLabel: Function
+}
+
+class LabelList extends React.Component<Props>{
+  constructor(props: Props) {
     super(props);
   }
 
-  viewLabel(event, labelId) {
+  viewLabel(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, labelId: string) {
     event.preventDefault();
 
     this.props.openViewLabelView(labelId);
   }
 
-  editLabel(event, labelId) {
+  editLabel(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, labelId:string) {
     event.preventDefault();
 
     this.props.openEditLabelView(labelId);
   }
 
-  removeLabel(event, labelId) {
+  removeLabel(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, labelId: string) {
     event.preventDefault();
 
     this.props.removeLabel(labelId);
   }
 
-  addLabel(event) {
+  addLabel(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     event.preventDefault();
 
     this.props.openAddLabelView();
   }
 
-  getEmptyLabelList(classes) {
+  getEmptyLabelList(classes: any) {
     // No Labels.
     const listLabels= (
       <TableRow>
@@ -113,7 +122,7 @@ class LabelList extends React.Component {
     );
   }
 
-  getFullLabelList(classes) {
+  getFullLabelList(classes: any) {
     // We have tasks.
     const listsLabels = this.props.labels.map((label) => {
       return (
@@ -158,7 +167,7 @@ class LabelList extends React.Component {
     );
   }
 
-  getLabelList(classes) {
+  getLabelList(classes: any) {
     if (this.props.labels.length === 0) {
       return (this.getEmptyLabelList(classes));
     } else {
@@ -167,7 +176,7 @@ class LabelList extends React.Component {
   }
 
   render () {
-    const { classes } = this.props;
+    const { classes }: any = this.props;
     return (
       <div>
         { this.getLabelList(classes) }
@@ -178,14 +187,5 @@ class LabelList extends React.Component {
     );
   }
 }
-
-LabelList.propTypes = {
-  classes: PropTypes.object,
-  labels: PropTypes.array,
-  openViewLabelView: PropTypes.func,
-  openEditLabelView: PropTypes.func,
-  openAddLabelView: PropTypes.func,
-  removeLabel: PropTypes.func
-};
 
 export default withStyles(styles)(LabelList);
