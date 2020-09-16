@@ -179,7 +179,7 @@ class App extends React.Component<AppProps, AppState> {
 
   async loadTasks() {
     try {
-      const docs = await this.db.filterTasks(this.currentFilter);
+      const docs: any = await this.db.filterTasks(this.currentFilter);
       this.handleDataReady(docs);
     } catch (error) {
       console.log('Caught error while loading data: ', error);
@@ -188,7 +188,7 @@ class App extends React.Component<AppProps, AppState> {
 
   async loadLabels() {
     try {
-      const rawLabels = await this.db.getLabels();
+      const rawLabels: any = await this.db.getLabels();
       this.processRawLabels(rawLabels);
     } catch (error) {
       console.log('Caught error: ', error);
@@ -342,9 +342,13 @@ class App extends React.Component<AppProps, AppState> {
 
   updateTaskTimeSpentOnTask(timeSpentOnTask: number) {
     if (this.validateState()) {
-      let task = this.getCurrentTask();
+      let task: Task = this.getCurrentTask();
       task.timeSpent = task.timeSpent + timeSpentOnTask;
       this.db.upsert(task).then((rev) => {
+        if (rev == undefined) {
+          throw new Error('updateTaskTimeSpentOnTask: rev is undefined!');
+        }
+
         task._rev = rev;
         ipcRenderer.send('showNotification', 'taskUpdated');
         this.loadState().catch((error) => {
@@ -367,6 +371,10 @@ class App extends React.Component<AppProps, AppState> {
       let task = this.getCurrentTask();
       task.done = true;
       this.db.upsert(task).then((rev) => {
+        if (rev == undefined) {
+          throw new Error('taskDone: rev is undefined!');
+        }
+
         task._rev = rev;
         ipcRenderer.send('showNotification', 'taskDone');
         this.loadState().catch((error) => {
@@ -388,6 +396,10 @@ class App extends React.Component<AppProps, AppState> {
         let task = this.getTaskById(taskId);
         task.done = true;
         this.db.upsert(task).then((rev) => {
+          if (rev == undefined) {
+            throw new Error('taskDoneById: rev is undefined!');
+          }
+
           task._rev = rev;
           ipcRenderer.send('showNotification', 'taskDone');
           this.loadState().catch((error) => {
@@ -410,6 +422,10 @@ class App extends React.Component<AppProps, AppState> {
       task.label = label;
       task.done = done;
       this.db.upsert(task).then((rev) => {
+        if (rev == undefined) {
+          throw new Error('editTask: rev is undefined!');
+        }
+
         task._rev = rev;
         ipcRenderer.send('showNotification', 'taskUpdated');
         this.loadState().catch((error) => {
@@ -430,6 +446,10 @@ class App extends React.Component<AppProps, AppState> {
       label.description = description;
       label.label = labelLabel;
       this.db.upsert(label).then((rev) => {
+        if (rev == undefined) {
+          throw new Error('editLabel: rev is undefined!');
+        }
+
         label._rev = rev;
         ipcRenderer.send('showNotification', 'labelUpdated');
         this.loadState().catch((error) => {
@@ -446,12 +466,19 @@ class App extends React.Component<AppProps, AppState> {
 
     // First let's make sure that any task / label with this label, has its label set to an empty string.
 
-    this.db.getByLabel(labelId).then((results) => {
+    this.db.getByLabel(labelId).then((results: any) => {
+      if (results == undefined) {
+        throw new Error('removeLabel: results is undefined!');
+      }
+
       for ( let i = 0 ; i < results.length ; i++) {
         results[i].label = '';
       }
 
       this.db.bulkUpsert(results).then((responses) => {
+        if (responses == undefined) {
+          throw new Error('removeLabel: responses is undefined!');
+        }
         // We throw exception at any error from bulkUpsert for debug purposes.
         responses.map((response: any) => {
           if (!response.ok) {
@@ -465,6 +492,9 @@ class App extends React.Component<AppProps, AppState> {
         this.loadState().then(() => {
           label = this.state.labelMap.get(labelId);
           this.db.remove(label).then((result) => {
+            if (result == undefined) {
+              throw new Error('removeLabel: result is undefined!');
+            }
             if (result.ok) {
               this.loadState().catch((error) => {
                 console.log('Caught error: ', error);
@@ -506,6 +536,9 @@ class App extends React.Component<AppProps, AppState> {
     let task = this.state.dataMap.get(taskId);
 
     this.db.remove(task).then((result) => {
+      if (result == undefined) {
+        throw new Error('removeTask: result is undefined');
+      }
       if (result.ok) {
         this.loadState().catch((error) => {
           console.log('Caught error: ', error);
