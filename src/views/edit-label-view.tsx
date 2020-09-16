@@ -30,6 +30,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
+import Label from '../data-models/label';
 
 
 const styles = () => ({
@@ -58,8 +59,8 @@ const styles = () => ({
   }
 });
 
-const validate = (values) => {
-  const errors = {};
+const validate = (values: any) => {
+  const errors: any = {};
 
   if (!values.name || values.name === '') {
     errors.name = 'The name is required';
@@ -68,7 +69,7 @@ const validate = (values) => {
   return errors;
 }
 
-const mapLabelLabelIdToValue = (labelLabelId) => {
+const mapLabelLabelIdToValue = (labelLabelId: string) => {
   if (labelLabelId === '') {
     return 'none';
   }
@@ -76,7 +77,7 @@ const mapLabelLabelIdToValue = (labelLabelId) => {
   return labelLabelId;
 }
 
-const mapValueToLabelLabelId = (value) => {
+const mapValueToLabelLabelId = (value: string) => {
   if (value === 'none') {
     return '';
   }
@@ -84,7 +85,16 @@ const mapValueToLabelLabelId = (value) => {
   return value;
 }
 
-function EditLabelView(props) {
+interface Props {
+  classes: any,
+  title: string,
+  label: Label,
+  labels: Label[],
+  editLabel: Function,
+  closeEditLabelView: Function
+}
+
+function EditLabelView(props: Props) {
     const formik = useFormik({
     initialValues: {
       name: props.label.name,
@@ -185,15 +195,6 @@ function EditLabelView(props) {
       </form>
     </div>
   );
-}
-
-EditLabelView.propTypes = {
-  classes: PropTypes.object,
-  title: PropTypes.string,
-  label: PropTypes.object,
-  labels: PropTypes.array,
-  editLabel: PropTypes.func,
-  closeEditLabelView: PropTypes.func
 }
 
 export default withStyles(styles)(EditLabelView);
