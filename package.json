@@ -10,10 +10,9 @@
   "main": "build/main.js",
   "scripts": {
     "start": "electron ./",
-    "build": "npm run clean && npm run build:js && npm run copy-static",
-    "build:types": "tsc --emitDeclarationOnly",
-    "build:js": "babel src --out-dir build --extensions \".js,.jsx,.ts,.tsx\" --source-maps inline",
-    "check-types": "tsc --noEmit -p .",
+    "build": "npm run clean && npm run compile && npm run babel && npm run copy-static",
+    "compile": "tsc -p ./",
+    "babel": "babel build/ --out-dir build/ --source-maps",
     "copy-static": "cp static/* build/",
     "installDB": "node build/scripts/install.js",
     "seed": "node build/scripts/seed.js",
