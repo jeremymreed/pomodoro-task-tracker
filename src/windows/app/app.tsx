@@ -32,6 +32,7 @@ import TaskMapper from '../../mappers/task-mapper';
 import LabelMapper from '../../mappers/label-mapper';
 import Task from '../../data-models/task';
 import Label from '../../data-models/label';
+import CurrentListState from '../../enums/current-list-state-enum';
 
 interface AppProps {
   changeTheme: (themeName: string) => void
@@ -58,11 +59,6 @@ enum StateVars {
   ViewLabelState,
   AddNewLabelState,
   EditLabelState,
-}
-
-enum CurrentListState {
-  taskListState,
-  labelListState
 }
 
 class App extends React.Component<AppProps, AppState> {
