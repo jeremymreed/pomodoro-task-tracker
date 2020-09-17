@@ -17,13 +17,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/styles';
 import FormGroup from '@material-ui/core/FormGroup';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import CancelIcon from '@material-ui/icons/Cancel';
+import Label from '../data-models/label';
 
 const styles = () => ({
   name: {
@@ -42,14 +42,27 @@ const styles = () => ({
   }
 });
 
-class ViewLabelView extends React.Component {
-  constructor(props) {
+interface Props {
+  classes: any,
+  label: Label,
+  closeViewLabelView: Function,
+  getLabelById: Function
+}
+
+interface State {
+  name: string,
+  description: string,
+  label: string
+}
+
+class ViewLabelView extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
       name: this.props.label.name,
       description: this.props.label.description,
-      label: this.props.label.label,
+      label: this.props.label.label
     }
   }
 
@@ -63,7 +76,7 @@ class ViewLabelView extends React.Component {
     return labelLabel.name;
   }
 
-  exit(event) {
+  exit(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     event.preventDefault();
 
     this.props.closeViewLabelView();
@@ -110,13 +123,6 @@ class ViewLabelView extends React.Component {
       </div>
     );
   }
-}
-
-ViewLabelView.propTypes = {
-  classes: PropTypes.object,
-  label: PropTypes.object,
-  closeViewLabelView: PropTypes.func,
-  getLabelById: PropTypes.func
 }
 
 export default withStyles(styles)(ViewLabelView);
