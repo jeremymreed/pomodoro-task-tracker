@@ -17,7 +17,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import electronSettings from 'electron-settings';
 import { withStyles } from '@material-ui/styles';
 import FormGroup from '@material-ui/core/FormGroup';
@@ -26,9 +25,9 @@ import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import moment from 'moment';
 import humanizeDuration from 'humanize-duration';
 import CancelIcon from '@material-ui/icons/Cancel';
+import Task from '../data-models/task';
 
 const styles = () => ({
   name: {
@@ -47,8 +46,23 @@ const styles = () => ({
   }
 });
 
-class ViewTaskView extends React.Component {
-  constructor(props) {
+interface Props {
+  classes: any,
+  task: Task,
+  closeViewTaskView: Function,
+  getLabelById: Function
+}
+
+interface State {
+  name: string,
+  description: string,
+  timeSpent: number,
+  label: string,
+  done: boolean
+}
+
+class ViewTaskView extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -70,16 +84,15 @@ class ViewTaskView extends React.Component {
     return label.name;
   }
 
-  getTimeString(timeInSeconds) {
-    const durationInSeconds = moment.duration(timeInSeconds, 'seconds');
+  getTimeString(timeInSeconds: number) {
     if (electronSettings.getSync('shouldDisplaySeconds')) {
-      return humanizeDuration(durationInSeconds, {round: false, maxDecimalPoints: 0, units: ['d', 'h', 'm', 's']});
+      return humanizeDuration(timeInSeconds * 1000, {round: false, maxDecimalPoints: 0, units: ['d', 'h', 'm', 's']});
     } else {
-      return humanizeDuration(durationInSeconds, {round: false, maxDecimalPoints: 0, units: ['d', 'h', 'm']});
+      return humanizeDuration(timeInSeconds * 1000, {round: false, maxDecimalPoints: 0, units: ['d', 'h', 'm']});
     }
   }
 
-  exit(event) {
+  exit(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     event.preventDefault();
 
     this.props.closeViewTaskView();
@@ -143,13 +156,6 @@ class ViewTaskView extends React.Component {
       </div>
     );
   }
-}
-
-ViewTaskView.propTypes = {
-  classes: PropTypes.object,
-  task: PropTypes.object,
-  closeViewTaskView: PropTypes.func,
-  getLabelById: PropTypes.func
 }
 
 export default withStyles(styles)(ViewTaskView);
