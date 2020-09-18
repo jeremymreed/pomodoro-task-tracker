@@ -20,6 +20,15 @@ import { v4 as uuidv4 } from 'uuid';
 
 // TODO: Should we consider adding getters/setters, and avoid directly accessing these data members directly from code?
 class Task {
+  _id: string
+  _rev: string
+  type: string
+  name: string
+  description: string
+  label: string
+  timeSpent: number
+  done: boolean
+
   constructor(id = uuidv4(), rev = '', name = '', description = '', label = '', timeSpent = 0, done = false) {
     this._id = id;
     this._rev = rev;
