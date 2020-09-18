@@ -17,10 +17,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
 import { withStyles } from '@material-ui/styles';
-import Container from '@material-ui/core/Container';
+import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -29,6 +28,7 @@ import PauseIcon from '@material-ui/icons/Pause';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
 import CheckIcon from '@material-ui/icons/Check';
+import Task from '../data-models/task';
 
 /*
   We create custom TextField component with 'disabled' text styling overridden.
@@ -52,16 +52,37 @@ const styles = () => ({
   doneButton: {
     marginTop: '5px',
     marginLeft: '5px'
+  },
+  containerCenter: {
+    alignContent: "center"
   }
 });
 
-class TaskRunningView extends React.Component {
-  constructor(props) {
+interface Props {
+  classes: any,
+  task: Task,
+  updateTaskTimeSpentOnTask: Function,
+  taskDone: Function,
+  stopTask: Function
+}
+
+interface State {
+  shouldRun: boolean
+}
+
+class TaskRunningView extends React.Component<Props, State> {
+  getTotalTimeRan: Function
+  getCurrentPhaseType: Function
+
+  constructor(props: Props) {
     super(props);
 
     this.handleTimerExpiration = this.handleTimerExpiration.bind(this);
     this.submitGetTotalTimeRan = this.submitGetTotalTimeRan.bind(this);
     this.submitGetCurrentPhaseType = this.submitGetCurrentPhaseType.bind(this);
+
+    this.getTotalTimeRan = () => {};
+    this.getCurrentPhaseType = () => {};
 
     this.state = {
       shouldRun: true,
@@ -77,16 +98,16 @@ class TaskRunningView extends React.Component {
   }
 
   // Called by Timer, to pass in its getTotalTimeRan function, so we can call it here.
-  submitGetTotalTimeRan(getTotalTimeRan) {
+  submitGetTotalTimeRan(getTotalTimeRan: Function) {
     this.getTotalTimeRan = getTotalTimeRan;
   }
 
-  submitGetCurrentPhaseType(getCurrentPhaseType) {
+  submitGetCurrentPhaseType(getCurrentPhaseType: Function) {
     this.getCurrentPhaseType = getCurrentPhaseType;
   }
 
   // Timer tells us it has expired.
-  handleTimerExpiration(type) {
+  handleTimerExpiration(type: string) {
     this._stopTimer();
     this.props.updateTaskTimeSpentOnTask(this.getTotalTimeRan());
     if (this.getCurrentPhaseType() === 'Work') {
@@ -101,7 +122,7 @@ class TaskRunningView extends React.Component {
   }
 
   // User wants to pause the timer.
-  handlePause(event) {
+  handlePause(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     event.preventDefault();
 
     this._stopTimer();
@@ -109,7 +130,7 @@ class TaskRunningView extends React.Component {
   }
 
   // User wants to resume the timer.
-  handleResume(event) {
+  handleResume(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     event.preventDefault();
 
     this._startTimer();
@@ -127,7 +148,7 @@ class TaskRunningView extends React.Component {
 
   // User wants to stop working on this task, and return to the task list.
   // This does not set the task as being 'done'.
-  stopTask(event) {
+  stopTask(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     event.preventDefault();
 
     this._stopTimer();
@@ -138,7 +159,7 @@ class TaskRunningView extends React.Component {
   }
 
   // User is done with this task.
-  taskDone(event) {
+  taskDone(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     event.preventDefault();
 
     this._stopTimer();
@@ -149,33 +170,38 @@ class TaskRunningView extends React.Component {
 
   render() {
     const { classes } = this.props;
-    let pauseResumeButton = '';
+    let pauseResumeButton;
+
     if (this.state.shouldRun) {
-      pauseResumeButton = <Button className={classes.pauseResumeButton} variant="contained" color="primary" onClick={(e) => this.handlePause(e)}>
-        <PauseIcon />
-      </Button>;
+      pauseResumeButton = (
+        <Button className={classes.pauseResumeButton} variant="contained" color="primary" onClick={(e) => this.handlePause(e)}>
+          <PauseIcon />
+        </Button>
+      );
     } else {
-      pauseResumeButton = <Button className={classes.pauseResumeButton} variant="contained" color="primary" onClick={(e) => this.handleResume(e)}>
-        <PlayArrowIcon />
-      </Button>;
+      pauseResumeButton = (
+        <Button className={classes.pauseResumeButton} variant="contained" color="primary" onClick={(e) => this.handleResume(e)}>
+          <PlayArrowIcon />
+        </Button>
+      );
     }
     return (
       <div>
         {/* NOTE: Docs don't say anthing about Container taking this prop, but seems to work. */}
-        <Container align="center">
+        <Box display="flex" justifyContent="center">
           <Typography className={classes.activeTask} variant="h6">Active Task:</Typography> <Typography className={classes.activeTask}>{ this.props.task.name }</Typography>
-        </Container>
+        </Box>
 
-        <Container align="center">
+        <Box display="flex" justifyContent="center">
           <Timer
             shouldRun={ this.state.shouldRun }
             handleTimerExpiration={ this.handleTimerExpiration }
             submitGetTotalTimeRan={ this.submitGetTotalTimeRan }
             submitGetCurrentPhaseType={ this.submitGetCurrentPhaseType }
           />
-        </Container>
+        </Box>
 
-        <Container align="center">
+        <Box display="flex" justifyContent="center">
           <TextField
             label="Description"
             multiline
@@ -183,9 +209,9 @@ class TaskRunningView extends React.Component {
             defaultValue={ this.props.task.description }
             inputProps={{readOnly: true}}
           />
-        </Container>
+        </Box>
 
-        <Container align="center">
+        <Box display="flex" justifyContent="center">
           <p>
             { pauseResumeButton }
             <Button className={classes.stopButton} variant="contained" color="primary" onClick={(e) => this.stopTask(e)}>
@@ -195,18 +221,10 @@ class TaskRunningView extends React.Component {
               <CheckIcon />
             </Button>
           </p>
-        </Container>
+        </Box>
       </div>
     );
   }
-}
-
-TaskRunningView.propTypes = {
-  classes: PropTypes.object,
-  task: PropTypes.object,
-  updateTaskTimeSpentOnTask: PropTypes.func,
-  taskDone: PropTypes.func,
-  stopTask: PropTypes.func
 }
 
 export default withStyles(styles)(TaskRunningView);
