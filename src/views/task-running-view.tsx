@@ -187,9 +187,8 @@ class TaskRunningView extends React.Component<Props, State> {
     }
     return (
       <div>
-        {/* NOTE: Docs don't say anthing about Container taking this prop, but seems to work. */}
         <Box display="flex" justifyContent="center">
-          <Typography className={classes.activeTask} variant="h6">Active Task:</Typography> <Typography className={classes.activeTask}>{ this.props.task.name }</Typography>
+          <Typography className={classes.activeTask} variant="h6">Active Task: { this.props.task.name }</Typography>
         </Box>
 
         <Box display="flex" justifyContent="center">
