@@ -17,13 +17,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import React from 'react';
-import { ipcRenderer } from 'electron';
 import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import { withStyles } from '@material-ui/styles';
 import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -33,6 +30,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
+import Label from '../data-models/label';
+
 
 const styles = () => ({
   labelSelectFormControl: {
@@ -60,8 +59,8 @@ const styles = () => ({
   }
 });
 
-const validate = (values) => {
-  const errors = {};
+const validate = (values: any) => {
+  const errors: any = {};
 
   if (!values.name || values.name === '') {
     errors.name = 'The name is required';
@@ -70,15 +69,15 @@ const validate = (values) => {
   return errors;
 }
 
-const mapLabelIdToValue = (labelId) => {
-  if (labelId === '') {
+const mapLabelLabelIdToValue = (labelLabelId: string) => {
+  if (labelLabelId === '') {
     return 'none';
   }
 
-  return labelId;
+  return labelLabelId;
 }
 
-const mapValueToLabelId = (value) => {
+const mapValueToLabelLabelId = (value: string) => {
   if (value === 'none') {
     return '';
   }
@@ -86,24 +85,26 @@ const mapValueToLabelId = (value) => {
   return value;
 }
 
-function EditTaskView(props) {
+interface Props {
+  classes: any,
+  title: string,
+  label: Label,
+  labels: Label[],
+  editLabel: Function,
+  closeEditLabelView: Function
+}
+
+function EditLabelView(props: Props) {
     const formik = useFormik({
     initialValues: {
-      name: props.task.name,
-      description: props.task.description,
-      label: mapLabelIdToValue(props.task.label),
-      done: props.task.done
+      name: props.label.name,
+      description: props.label.description,
+      labelLabel: mapLabelLabelIdToValue(props.label.label)
     },
     validate,
     onSubmit: (values) => {
-      props.editTask(
-        values.name,
-        values.description,
-        mapValueToLabelId(values.label),
-        values.done
-      );
-      ipcRenderer.send('showNotification', 'taskUpdated');
-      props.closeEditTaskView();
+      props.editLabel(values.name, values.description, mapValueToLabelLabelId(values.labelLabel));
+      props.closeEditLabelView();
     }
   });
 
@@ -119,30 +120,8 @@ function EditTaskView(props) {
     return labelMenuItems;
   };
 
-  const getDoneCheckbox = () => {
-    if (!props.newTask) {
-      return (
-        <FormControlLabel
-          className="done"
-          control= {<Checkbox
-            id="done"
-            name="done"
-            type="checkbox"
-            checked={formik.values.done}
-            onChange={formik.handleChange}
-            color="primary"
-            inputProps={{ 'aria-label': 'task done checkbox' }}
-          />}
-          label="Done"
-        />
-      );
-    }
-
-    return '';
-  }
-
   const cancel = () => {
-    props.closeEditTaskView();
+    props.closeEditLabelView();
   }
 
   // TODO: See if there's a better way to do this.  The save button must be disabled while the form is not fully filled out.
@@ -187,17 +166,16 @@ function EditTaskView(props) {
           <FormControl className={classes.labelSelectFormControl} variant="outlined">
             <InputLabel>Label</InputLabel>
             <Select
-              id="label"
-              name="label"
+              id="labelLabel"
+              name="labelLabel"
               label="Label"
-              value={formik.values.label}
+              value={formik.values.labelLabel}
               onChange={formik.handleChange}
             >
               { getLabelMenuItems() }
             </Select>
-          </FormControl>
 
-          { getDoneCheckbox() }
+          </FormControl>
 
           <span>
             <Button
@@ -219,14 +197,4 @@ function EditTaskView(props) {
   );
 }
 
-EditTaskView.propTypes = {
-  classes: PropTypes.object,
-  newTask: PropTypes.bool,
-  title: PropTypes.string,
-  task: PropTypes.object,
-  labels: PropTypes.array,
-  editTask: PropTypes.func,
-  closeEditTaskView: PropTypes.func
-}
-
-export default withStyles(styles)(EditTaskView);
+export default withStyles(styles)(EditLabelView);

@@ -19,24 +19,45 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import React from 'react';
 import TaskList from '../components/task-list';
 import LabelList from '../components/label-list';
-import PropTypes from 'prop-types';
+import CurrentListState from '../enums/current-list-state-enum';
+import Task from '../data-models/task';
+import Label from '../data-models/label';
 import Typography from '@material-ui/core/Typography';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
-class MainView extends React.Component {
-  constructor (props) {
+interface Props {
+  data: Array<Task>,
+  labels: Array<Label>,
+  currentList: CurrentListState,
+  setCurrentList: Function,
+  openEditTaskView: Function,
+  openAddTaskView: Function,
+  openEditSettingsView: Function,
+  openViewTaskView: Function,
+  openViewLabelView: Function,
+  openEditLabelView: Function,
+  openAddLabelView: Function,
+  startTask: Function,
+  taskDoneById: Function,
+  removeTask: Function,
+  removeLabel: Function,
+  setFilter: Function,
+}
+
+class MainView extends React.Component<Props, any> {
+  constructor (props: Props) {
     super(props);
 
     this.handleTabChange = this.handleTabChange.bind(this);
   }
 
-  handleTabChange(event, newValue) {
+  handleTabChange(event: any, newValue: CurrentListState) {
     this.props.setCurrentList(newValue);
   }
 
   renderList() {
-    if (this.props.currentList === 0) {
+    if (this.props.currentList === CurrentListState.taskListState) {
       return (
         <TaskList
           data={this.props.data}
@@ -49,7 +70,7 @@ class MainView extends React.Component {
           setFilter={ this.props.setFilter }
         />
       );
-    } else if (this.props.currentList === 1) {
+    } else if (this.props.currentList === CurrentListState.labelListState) {
       return (
         <LabelList 
           labels={ this.props.labels }
@@ -75,24 +96,5 @@ class MainView extends React.Component {
     );
   }
 }
-
-MainView.propTypes = {
-  data: PropTypes.array,
-  labels: PropTypes.array,
-  currentList: PropTypes.number,
-  setCurrentList: PropTypes.func,
-  openEditTaskView: PropTypes.func,
-  openAddTaskView: PropTypes.func,
-  openEditSettingsView: PropTypes.func,
-  openViewTaskView: PropTypes.func,
-  openViewLabelView: PropTypes.func,
-  openEditLabelView: PropTypes.func,
-  openAddLabelView: PropTypes.func,
-  startTask: PropTypes.func,
-  taskDoneById: PropTypes.func,
-  removeTask: PropTypes.func,
-  removeLabel: PropTypes.func,
-  setFilter: PropTypes.func,
-};
 
 export default MainView;

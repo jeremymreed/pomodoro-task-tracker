@@ -16,24 +16,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import os from 'os';
-import Database from './database';
+import Label from '../data-models/label';
 
-const databasePath = os.homedir() + '/.config/pomodoro-task-tracker/pomodoro-task-tracker-data';
-console.log('App constructor: databasePath', databasePath);
-
-const db = new Database(databasePath);
-
-/*
-  Initial database seed.
- */
-
-const installDB = async () => {
-  console.log('--- installDB() ---------------------------------');
-
-  await db.createIndexes();
-
-  console.log('---------------------------------------------');
+// data is raw doc from PouchDB / CouchDB.
+class LabelMapper {
+  static mapDataToLabel(data: any) {
+    return new Label(data._id, data._rev, data.name, data.description, data.label);
+  }
 }
 
-installDB().then(() => { console.log('Installed the database!'); }).catch((error) => { console.log('Caught error: ', error); });
+export default LabelMapper;

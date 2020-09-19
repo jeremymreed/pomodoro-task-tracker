@@ -17,7 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 class TimeConverter {
-  static getAsDays(durationInSeconds) {
+  static getAsDays(durationInSeconds: moment.Duration): string {
     if (Math.trunc(durationInSeconds.asDays()) < 10) {
       return `0${Math.trunc(durationInSeconds.asDays())}`;
     } else {
@@ -25,7 +25,7 @@ class TimeConverter {
     }
   }
 
-  static getHours(durationInSeconds) {
+  static getHours(durationInSeconds: moment.Duration): string {
     if (durationInSeconds.hours() < 10) {
       return `0${durationInSeconds.hours()}`;
     } else {
@@ -33,7 +33,7 @@ class TimeConverter {
     }
   }
 
-  static getAsMinutes(durationInSeconds) {
+  static getAsMinutes(durationInSeconds: moment.Duration): string {
     if (Math.trunc(durationInSeconds.asMinutes()) < 10 ) {
       return `0${Math.trunc(durationInSeconds.asMinutes())}`;
     } else {
@@ -41,7 +41,7 @@ class TimeConverter {
     }
   }
 
-  static getMinutes(durationInSeconds) {
+  static getMinutes(durationInSeconds: moment.Duration): string {
     if (durationInSeconds.minutes() < 10) {
       return `0${durationInSeconds.minutes()}`;
     } else {
@@ -49,7 +49,7 @@ class TimeConverter {
     }
   }
 
-  static getSeconds(durationInSeconds) {
+  static getSeconds(durationInSeconds: moment.Duration): string {
     if (durationInSeconds.seconds() < 10 ) {
       return `0${durationInSeconds.seconds()}`;
     } else {

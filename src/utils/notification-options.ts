@@ -17,6 +17,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 class NotificationOptions {
+  notificationOptions: Map<string, Electron.NotificationConstructorOptions>
+
   constructor() {
     this.notificationOptions = new Map();
     this.notificationOptions.set(
@@ -76,7 +78,7 @@ class NotificationOptions {
       });
   }
 
-  getNotification(notificationName) {
+  getNotification(notificationName: string) {
     if (this.notificationOptions.has(notificationName)) {
       return this.notificationOptions.get(notificationName);
     } else {

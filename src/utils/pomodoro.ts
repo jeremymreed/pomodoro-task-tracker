@@ -22,28 +22,53 @@ import electronSettings from 'electron-settings';
 // The timer will ask this class for the 'next setting for the timer'.
 // This class determines what that should be.
 
+interface Phase {
+  type: string,
+  title: string,
+  length: number
+}
+
 // Definitions:
 // A Set has a number of Intervals.
 // An Interval is a number of phases.
 // A Phase is some duration of time. (number of seconds);
 class Pomodoro {
+  currentPhase: Phase | undefined
+  pomodoro: number
+  shortRest: number
+  longRest: number
+  intervalsInSet: number
+  currentInterval: number
+  intervalArray: Phase[]
+
   constructor() {
     // These are in seconds.
-    this.currentPhase = 0;
     // TODO: These should be in a settings file.  Something like settings.json.
-    this.pomodoro = electronSettings.getSync('pomodoro');
-    this.shortRest = electronSettings.getSync('shortRest');
-    this.longRest = electronSettings.getSync('longRest');
+    this.pomodoro = this.getNumber(electronSettings.getSync('pomodoro'));
+    this.shortRest = this.getNumber(electronSettings.getSync('shortRest'));
+    this.longRest = this.getNumber(electronSettings.getSync('longRest'));
 
-    this.intervalsInSet = electronSettings.getSync('intervalsInSet');
-    this.interval = 0;
+    this.intervalsInSet = this.getNumber(electronSettings.getSync('intervalsInSet'));
+    this.currentInterval = 0;
     this.intervalArray = [];
 
-    this.setupInterval();
+    this.setupIntervalArray();
   }
 
-  setupInterval() {
-    if (this.interval !== this.intervalsInSet - 1) {
+  getNumber(value: SettingsValue): number {
+    if (this.isNumberGuard(value)) {
+      return value as number;
+    } else {
+      throw new Error('getNumber: Could not convert value to Number!');
+    }
+  }
+
+  isNumberGuard(value: SettingsValue): boolean {
+    return (value as Number) !== undefined;
+  }
+
+  setupIntervalArray() {
+    if (this.currentInterval !== this.intervalsInSet - 1) {
       this.intervalArray.push({type: 'Rest', title: 'Short Rest', length: this.shortRest});
     } else {
       this.intervalArray.push({type: 'Rest', title: 'Long Rest', length: this.longRest});
@@ -61,16 +86,22 @@ class Pomodoro {
   // Goes to next phase, starts that phase.
   getNextTimerSetting() {
     if (this.intervalArray.length === 0) {
-      if (this.interval === this.intervalsInSet - 1) {
-        this.interval = 0;
+      if (this.currentInterval === this.intervalsInSet - 1) {
+        this.currentInterval = 0;
       } else {
-        this.interval = this.interval + 1;
+        this.currentInterval = this.currentInterval + 1;
       }
-      this.setupInterval();
+      this.setupIntervalArray();
     }
 
-    this.currentPhase = this.intervalArray.pop();
-    return (this.currentPhase);
+    const nextPhase = this.intervalArray.pop();
+
+    if (nextPhase != undefined) {
+      this.currentPhase = nextPhase;
+      return (this.currentPhase);
+    } else {
+      throw new Error('nextPhase is undefined!');
+    }
   }
 }
 

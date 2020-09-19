@@ -40,16 +40,20 @@ const themeMap = new Map([
   ['dark', darkTheme]
 ]);
 
-class ThemedApp extends React.Component {
-  constructor(props) {
+class ThemedApp extends React.Component<any, any> {
+  constructor(props: any) {
     super(props);
 
     this.changeTheme = this.changeTheme.bind(this);
 
     const themeName = this.getThemeName();
 
+    if (themeName == undefined || themeName == null) {
+      throw new Error('ThemedApp: themeName is null or undefined!');
+    }
+
     this.state = {
-      currentTheme: themeMap.get(themeName)
+      currentTheme: themeMap.get(themeName.toString())
     }
   }
 
@@ -61,7 +65,7 @@ class ThemedApp extends React.Component {
     }
   }
 
-  changeTheme(themeName) {
+  changeTheme(themeName: string) {
     if (themeName === 'light') {
       this.setState({currentTheme: lightTheme});
     } else if (themeName === 'dark') {

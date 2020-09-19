@@ -20,31 +20,35 @@ import moment from 'moment';
 import humanizeDuration from 'humanize-duration';
 
 class GhettoProfiler {
-  constructor(name) {
+  name: string
+  startMoment: moment.Moment | null
+  endMoment: moment.Moment | null
+
+  constructor(name: string) {
     this.name = name;
-    this.start = null;
-    this.end = null;
+    this.startMoment = null;
+    this.endMoment = null;
   }
 
   start() {
-    if (this.start === null) {
-      this.start = moment();
+    if (this.startMoment === null) {
+      this.startMoment = moment();
     } else {
       throw new Error('Cannot start running profiler when it has already been started!');
     }
   }
 
   stop() {
-    if (this.start !== null) {
-      this.end = moment();
+    if (this.startMoment !== null) {
+      this.endMoment = moment();
     } else {
       throw new Error('Cannot stop running profiler when it has not been started!');
     }
   }
 
   status() {
-    if (this.start !== null && this.stop !== null) {
-      console.log(`Profiler ${this.name} ran for ${humanizeDuration(this.stop.diff(this.start), {round: false, maxDecimalPoints: 0, units: ['h', 'm', 's', 'ms']})}`)
+    if (this.startMoment !== null && this.endMoment !== null) {
+      console.log(`Profiler ${this.name} ran for ${humanizeDuration(this.endMoment.diff(this.startMoment), {round: false, maxDecimalPoints: 0, units: ['h', 'm', 's', 'ms']})}`)
     }
   }
 }

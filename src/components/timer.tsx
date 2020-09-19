@@ -18,16 +18,34 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 import React from 'react';
 import moment from 'moment';
-import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import Pomodoro from '../utils/pomodoro';
 import TimeConverter from '../utils/time-converter';
 
-class Timer extends React.Component {
-  constructor(props) {
+interface Props {
+  shouldRun: boolean,
+  submitGetTotalTimeRan: Function,
+  submitGetCurrentPhaseType: Function,
+  handleTimerExpiration: Function
+}
+
+interface State {
+  numPomodoros: number,
+  time: moment.Duration,
+  type: string,
+  title: string
+}
+
+class Timer extends React.Component<Props, State> {
+  pomodoro: Pomodoro
+  totalTimeRan: number
+  interval: NodeJS.Timeout | null
+
+  constructor(props: Props) {
     super(props);
 
     this.pomodoro = new Pomodoro();
+    this.interval = null;
 
     this.updateDate = this.updateDate.bind(this);
     this.getTotalTimeRan = this.getTotalTimeRan.bind(this);
@@ -79,7 +97,9 @@ class Timer extends React.Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.interval);
+    if (this.interval != null) {
+      clearInterval(this.interval);
+    }
   }
 
   // Reset to zero when consumed.  We may continue running this timer.
@@ -108,13 +128,6 @@ class Timer extends React.Component {
       </div>
     );
   }
-}
-
-Timer.propTypes = {
-  shouldRun: PropTypes.bool,
-  submitGetTotalTimeRan: PropTypes.func,
-  submitGetCurrentPhaseType: PropTypes.func,
-  handleTimerExpiration: PropTypes.func
 }
 
 export default Timer;

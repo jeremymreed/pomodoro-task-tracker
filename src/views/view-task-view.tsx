@@ -17,13 +17,17 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import React from 'react';
-import PropTypes from 'prop-types';
+import electronSettings from 'electron-settings';
 import { withStyles } from '@material-ui/styles';
 import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import humanizeDuration from 'humanize-duration';
 import CancelIcon from '@material-ui/icons/Cancel';
+import Task from '../data-models/task';
 
 const styles = () => ({
   name: {
@@ -42,38 +46,63 @@ const styles = () => ({
   }
 });
 
-class ViewLabelView extends React.Component {
-  constructor(props) {
+interface Props {
+  classes: any,
+  task: Task,
+  closeViewTaskView: Function,
+  getLabelById: Function
+}
+
+interface State {
+  name: string,
+  description: string,
+  timeSpent: number,
+  label: string,
+  done: boolean
+}
+
+class ViewTaskView extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
-      name: this.props.label.name,
-      description: this.props.label.description,
-      label: this.props.label.label,
+      name: this.props.task.name,
+      description: this.props.task.description,
+      timeSpent: this.props.task.timeSpent,
+      label: this.props.task.label,
+      done: this.props.task.done
     }
   }
 
-  getLabelLabelName() {
-    if (this.props.label.label === '') {
+  getLabelName() {
+    if (this.props.task.label === '') {
       return '';
     }
 
-    let labelLabel = this.props.getLabelById(this.props.label.label);
+    let label = this.props.getLabelById(this.props.task.label);
 
-    return labelLabel.name;
+    return label.name;
   }
 
-  exit(event) {
+  getTimeString(timeInSeconds: number) {
+    if (electronSettings.getSync('shouldDisplaySeconds')) {
+      return humanizeDuration(timeInSeconds * 1000, {round: false, maxDecimalPoints: 0, units: ['d', 'h', 'm', 's']});
+    } else {
+      return humanizeDuration(timeInSeconds * 1000, {round: false, maxDecimalPoints: 0, units: ['d', 'h', 'm']});
+    }
+  }
+
+  exit(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     event.preventDefault();
 
-    this.props.closeViewLabelView();
+    this.props.closeViewTaskView();
   }
 
   render() {
     const { classes } = this.props;
     return (
       <div>
-        <Typography variant="h1" align="center">Label</Typography>
+        <Typography variant="h1" align="center">Task</Typography>
 
         <FormGroup>
           <TextField
@@ -88,7 +117,14 @@ class ViewLabelView extends React.Component {
           <TextField
             className="label"
             label="Label"
-            defaultValue={this.getLabelLabelName()}
+            defaultValue={this.getLabelName()}
+            inputProps={{readOnly: true}}
+          />
+
+          <TextField
+            className="name"
+            label="Time spent on task"
+            defaultValue={this.getTimeString(this.state.timeSpent)}
             inputProps={{readOnly: true}}
           />
 
@@ -99,6 +135,16 @@ class ViewLabelView extends React.Component {
             rows={4}
             defaultValue={ this.state.description }
             inputProps={{readOnly: true}}
+          />
+
+          <FormControlLabel
+            className="done"
+            control= {<Checkbox
+              checked={ this.state.done }
+              color="primary"
+              inputProps={{ readOnly: true, 'aria-label': 'task done checkbox' }}
+            />}
+            label="Done"
           />
 
           <span>
@@ -112,11 +158,4 @@ class ViewLabelView extends React.Component {
   }
 }
 
-ViewLabelView.propTypes = {
-  classes: PropTypes.object,
-  label: PropTypes.object,
-  closeViewLabelView: PropTypes.func,
-  getLabelById: PropTypes.func
-}
-
-export default withStyles(styles)(ViewLabelView);
+export default withStyles(styles)(ViewTaskView);

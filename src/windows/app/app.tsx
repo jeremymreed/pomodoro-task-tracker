@@ -19,7 +19,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import electron from 'electron';
 import {v4 as uuidv4} from 'uuid';
 import React from 'react';
-import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
 import Database from '../../database';
 import MainView from '../../views/main-view';
@@ -33,15 +32,49 @@ import TaskMapper from '../../mappers/task-mapper';
 import LabelMapper from '../../mappers/label-mapper';
 import Task from '../../data-models/task';
 import Label from '../../data-models/label';
+import CurrentListState from '../../enums/current-list-state-enum';
 
-class App extends React.Component {
+interface AppProps {
+  changeTheme: (themeName: string) => void
+}
 
-  constructor(props) {
+interface AppState {
+  dataMap: Map<string, Task>
+  data: Array<Task>
+  labelMap: Map<string, Label>
+  labels: Array<Label>
+  currentTask: string
+  currentLabel: string
+  stateVar: StateVars
+  currentList: CurrentListState
+}
+
+enum StateVars {
+  MainViewState,
+  EditTaskState,
+  AddNewTaskState,
+  TaskRunningState,
+  EditSettingsState,
+  ViewTaskState,
+  ViewLabelState,
+  AddNewLabelState,
+  EditLabelState,
+}
+
+class App extends React.Component<AppProps, AppState> {
+
+  _isMounted: boolean
+  db: Database
+
+  currentFilter: string
+
+  constructor(props: AppProps) {
     super(props);
 
     const databasePath = (electron.app || electron.remote.app).getPath('userData') + '/pomodoro-task-tracker-data';
     console.log('App constructor: databasePath', databasePath);
 
+    this._isMounted = false;
     this.db = new Database(databasePath);
     this.db.enableDebug();
 
@@ -71,49 +104,30 @@ class App extends React.Component {
     this.startTask = this.startTask.bind(this);
     this.stopTask = this.stopTask.bind(this);
 
-    // Place all App state variables here.
-    // stateVar:
-    //    0: MainView
-    //    1: EditTaskView
-    //    2: TaskRunningView
-    // Putting state var names here, we should use an enum here.
-    this.MainViewState = 0;
-    this.EditTaskState = 1;
-    this.AddNewTaskState = 2
-    this.TaskRunningState = 3;
-    this.EditSettingsState = 4;
-    this.ViewTaskState = 5;
-    this.ViewLabelState = 6;
-    this.AddNewLabelState = 7;
-    this.EditLabelState = 8;
-
     this.currentFilter = 'all';
-
-    this.taskListState = 0;
-    this.labelListState = 1;
 
     this.state = {
       dataMap: new Map(),             // Use for lookups only.
       data: [],                       // Data for TaskList.  Passed to TaskList via prop.
       labelMap: new Map(),            // Lookups only.
       labels: [],                     // Data for LabelList.  Passed to LabelList via prop.
-      currentTask: -1,
-      currentLabel: -1,
-      stateVar: this.MainViewState,
-      currentList: this.taskListState
+      currentTask: '',
+      currentLabel: '',
+      stateVar: StateVars.MainViewState,
+      currentList: CurrentListState.taskListState
     }
   }
 
   // TODO: Magic numbers, yay!  Will be obsolete when we convert code to TypeScript.
   validateState() {
-    return this.state.stateVar >= 0 && this.state.stateVar <= 8;
+    return true;
   }
 
   validateCurrentList() {
     return this.state.currentList >= 0 && this.state.currentList <= 1;
   }
 
-  validateFilter(filterName) {
+  validateFilter(filterName: string) {
     return (filterName === 'all' || filterName === 'tasksDone' || filterName === 'tasksNotDone');
   }
 
@@ -132,7 +146,7 @@ class App extends React.Component {
   }
 
   // This is a call back, and it is called when the main process has gotten the data we need.
-  handleDataReady(rawData) {
+  handleDataReady(rawData: Array<any>) {
     let data = [];
     let dataMap = new Map();
 
@@ -161,7 +175,7 @@ class App extends React.Component {
 
   async loadTasks() {
     try {
-      const docs = await this.db.filterTasks(this.currentFilter);
+      const docs: any = await this.db.filterTasks(this.currentFilter);
       this.handleDataReady(docs);
     } catch (error) {
       console.log('Caught error while loading data: ', error);
@@ -170,14 +184,14 @@ class App extends React.Component {
 
   async loadLabels() {
     try {
-      const rawLabels = await this.db.getLabels();
+      const rawLabels: any = await this.db.getLabels();
       this.processRawLabels(rawLabels);
     } catch (error) {
       console.log('Caught error: ', error);
     }
   }
 
-  processRawLabels(rawLabels) {
+  processRawLabels(rawLabels: Array<any>) {
     let labels = [];
     let labelMap = new Map();
 
@@ -193,27 +207,47 @@ class App extends React.Component {
     this.setState({labels: labels, labelMap: labelMap});
   }
 
-  getCurrentTask() {
-    if (this.state.currentTask === -1) {
+  getCurrentTask(): Task {
+    if (this.state.currentTask === '') {
       return new Task(uuidv4(), '', '');
     } else {
-      return this.state.dataMap.get(this.state.currentTask);
+      let task = this.state.dataMap.get(this.state.currentTask);
+      if (task != undefined) {
+        return task;
+      } else {
+        throw new Error('getCurrentTask: task was undefined!');
+      }
     }
   }
 
-  getCurrentLabel() {
-    if (this.state.currentLabel === -1) {
+  getCurrentLabel(): Label {
+    if (this.state.currentLabel === '') {
       return new Label(uuidv4());
     } else {
-      return this.state.labelMap.get(this.state.currentLabel);
+      let label = this.state.labelMap.get(this.state.currentLabel);
+      if (label != undefined) {
+        return label;
+      } else {
+        throw new Error('getCurrentLabel: label was undefined');
+      }
     }
   }
 
-  getLabelById(labelId) {
+  getTaskById(taskId: string): Task {
+    let task = this.state.dataMap.get(taskId);
+
+    if (task != undefined) {
+      return task;
+    } else {
+      throw new Error('getTaskById: task is undefined!');
+    }
+  }
+
+  getLabelById(labelId: string) {
     return this.state.labelMap.get(labelId);
   }
 
-  setCurrentList(newValue) {
+  setCurrentList(newValue: number) {
     if (this.validateCurrentList()) {
       this.setState({currentList: newValue});
     } else {
@@ -221,9 +255,9 @@ class App extends React.Component {
     }
   }
 
-  openEditTaskView(taskId) {
+  openEditTaskView(taskId: string) {
     if (this.validateState()) {
-      this.setState({currentTask: taskId, stateVar: this.EditTaskState});
+      this.setState({currentTask: taskId, stateVar: StateVars.EditTaskState});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -231,7 +265,7 @@ class App extends React.Component {
 
   closeEditTaskView() {
     if (this.validateState()) {
-      this.setState({currentTask: -1, stateVar: this.MainViewState});
+      this.setState({currentTask: '', stateVar: StateVars.MainViewState});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -239,7 +273,7 @@ class App extends React.Component {
 
   openAddTaskView() {
     if (this.validateState()) {
-      this.setState({currentTask: -1, stateVar: this.AddNewTaskState});
+      this.setState({currentTask: '', stateVar: StateVars.AddNewTaskState});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -247,7 +281,7 @@ class App extends React.Component {
 
   openEditSettingsView() {
     if (this.validateState()) {
-      this.setState({stateVar: this.EditSettingsState});
+      this.setState({stateVar: StateVars.EditSettingsState});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -255,15 +289,15 @@ class App extends React.Component {
 
   closeEditSettingsView() {
     if (this.validateState()) {
-      this.setState({currentTask: -1, stateVar: this.MainViewState});
+      this.setState({currentTask: '', stateVar: StateVars.MainViewState});
     } else {
       throw new Error('invalid state detected!');
     }
   }
 
-  openViewTaskView(taskId) {
+  openViewTaskView(taskId: string) {
     if (this.validateState()) {
-      this.setState({currentTask: taskId, stateVar: this.ViewTaskState});
+      this.setState({currentTask: taskId, stateVar: StateVars.ViewTaskState});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -271,15 +305,15 @@ class App extends React.Component {
 
   closeViewTaskView() {
     if (this.validateState()) {
-      this.setState({currentTask: -1, stateVar: this.MainViewState});
+      this.setState({currentTask: '', stateVar: StateVars.MainViewState});
     } else {
       throw new Error('invalid state detected!');
     }
   }
 
-  openViewLabelView(labelId) {
+  openViewLabelView(labelId: string) {
     if (this.validateState()) {
-      this.setState({currentLabel: labelId, stateVar: this.ViewLabelState});
+      this.setState({currentLabel: labelId, stateVar: StateVars.ViewLabelState});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -287,26 +321,30 @@ class App extends React.Component {
 
   closeViewLabelView() {
     if (this.validateState()) {
-      this.setState({currentLabel: -1, stateVar: this.MainViewState});
+      this.setState({currentLabel: '', stateVar: StateVars.MainViewState});
     } else {
       throw new Error('invalid state detected!');
     }
   }
 
-  startTask(taskId) {
+  startTask(taskId: string) {
     if (this.validateState()) {
-      this.setState({currentTask: taskId, stateVar: this.TaskRunningState});
+      this.setState({currentTask: taskId, stateVar: StateVars.TaskRunningState});
       ipcRenderer.send('setLuxaforWork');
     } else {
       throw new Error('invalid state detected!');
     }
   }
 
-  updateTaskTimeSpentOnTask(timeSpentOnTask) {
+  updateTaskTimeSpentOnTask(timeSpentOnTask: number) {
     if (this.validateState()) {
-      let task = this.getCurrentTask();
+      let task: Task = this.getCurrentTask();
       task.timeSpent = task.timeSpent + timeSpentOnTask;
       this.db.upsert(task).then((rev) => {
+        if (rev == undefined) {
+          throw new Error('updateTaskTimeSpentOnTask: rev is undefined!');
+        }
+
         task._rev = rev;
         ipcRenderer.send('showNotification', 'taskUpdated');
         this.loadState().catch((error) => {
@@ -329,6 +367,10 @@ class App extends React.Component {
       let task = this.getCurrentTask();
       task.done = true;
       this.db.upsert(task).then((rev) => {
+        if (rev == undefined) {
+          throw new Error('taskDone: rev is undefined!');
+        }
+
         task._rev = rev;
         ipcRenderer.send('showNotification', 'taskDone');
         this.loadState().catch((error) => {
@@ -343,13 +385,17 @@ class App extends React.Component {
   }
 
   // Called by EditTaskView: Must get task from dataMap, as there is no current task.
-  taskDoneById(taskId) {
+  taskDoneById(taskId: string) {
     if (this.validateState()) {
       ipcRenderer.send('setLuxaforOff');
       if (this.state.dataMap.has(taskId)) {
-        let task = this.state.dataMap.get(taskId);
+        let task = this.getTaskById(taskId);
         task.done = true;
         this.db.upsert(task).then((rev) => {
+          if (rev == undefined) {
+            throw new Error('taskDoneById: rev is undefined!');
+          }
+
           task._rev = rev;
           ipcRenderer.send('showNotification', 'taskDone');
           this.loadState().catch((error) => {
@@ -364,7 +410,7 @@ class App extends React.Component {
     }
   }
 
-  editTask(name, description, label, done) {
+  editTask(name: string, description: string, label: string, done: boolean) {
     if (this.validateState()) {
       let task = this.getCurrentTask();
       task.name = name;
@@ -372,6 +418,10 @@ class App extends React.Component {
       task.label = label;
       task.done = done;
       this.db.upsert(task).then((rev) => {
+        if (rev == undefined) {
+          throw new Error('editTask: rev is undefined!');
+        }
+
         task._rev = rev;
         ipcRenderer.send('showNotification', 'taskUpdated');
         this.loadState().catch((error) => {
@@ -385,13 +435,17 @@ class App extends React.Component {
     }
   }
 
-  editLabel(name, description, labelLabel) {
+  editLabel(name: string, description: string, labelLabel: string) {
     if (this.validateState()) {
       let label = this.getCurrentLabel();
       label.name = name;
       label.description = description;
       label.label = labelLabel;
       this.db.upsert(label).then((rev) => {
+        if (rev == undefined) {
+          throw new Error('editLabel: rev is undefined!');
+        }
+
         label._rev = rev;
         ipcRenderer.send('showNotification', 'labelUpdated');
         this.loadState().catch((error) => {
@@ -403,19 +457,26 @@ class App extends React.Component {
     }
   }
 
-  removeLabel(labelId) {
+  removeLabel(labelId: string) {
     let label = this.state.labelMap.get(labelId);
 
     // First let's make sure that any task / label with this label, has its label set to an empty string.
 
-    this.db.getByLabel(labelId).then((results) => {
+    this.db.getByLabel(labelId).then((results: any) => {
+      if (results == undefined) {
+        throw new Error('removeLabel: results is undefined!');
+      }
+
       for ( let i = 0 ; i < results.length ; i++) {
         results[i].label = '';
       }
 
       this.db.bulkUpsert(results).then((responses) => {
+        if (responses == undefined) {
+          throw new Error('removeLabel: responses is undefined!');
+        }
         // We throw exception at any error from bulkUpsert for debug purposes.
-        responses.map((response) => {
+        responses.map((response: any) => {
           if (!response.ok) {
             throw new Error('Failed to verify bulkUpsert');
           }
@@ -427,6 +488,9 @@ class App extends React.Component {
         this.loadState().then(() => {
           label = this.state.labelMap.get(labelId);
           this.db.remove(label).then((result) => {
+            if (result == undefined) {
+              throw new Error('removeLabel: result is undefined!');
+            }
             if (result.ok) {
               this.loadState().catch((error) => {
                 console.log('Caught error: ', error);
@@ -440,9 +504,9 @@ class App extends React.Component {
     });
   }
 
-  openEditLabelView(labelId) {
+  openEditLabelView(labelId: string) {
     if (this.validateState()) {
-      this.setState({currentLabel: labelId, stateVar: this.EditLabelState});
+      this.setState({currentLabel: labelId, stateVar: StateVars.EditLabelState});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -450,7 +514,7 @@ class App extends React.Component {
 
   closeEditLabelView() {
     if (this.validateState()) {
-      this.setState({currentLabel: -1, stateVar: this.MainViewState});
+      this.setState({currentLabel: '', stateVar: StateVars.MainViewState});
     } else {
       throw new Error('invalid state detected!');
     }
@@ -458,16 +522,19 @@ class App extends React.Component {
 
   openAddLabelView() {
     if (this.validateState()) {
-      this.setState({currentLabel: -1, stateVar: this.AddNewLabelState});
+      this.setState({currentLabel: '', stateVar: StateVars.AddNewLabelState});
     } else {
       throw new Error('invalid state detected!');
     }
   }
 
-  removeTask(taskId) {
+  removeTask(taskId: string) {
     let task = this.state.dataMap.get(taskId);
 
     this.db.remove(task).then((result) => {
+      if (result == undefined) {
+        throw new Error('removeTask: result is undefined');
+      }
       if (result.ok) {
         this.loadState().catch((error) => {
           console.log('Caught error: ', error);
@@ -480,14 +547,14 @@ class App extends React.Component {
 
   stopTask() {
     if (this.validateState()) {
-      this.setState({currentTask: -1, stateVar: this.MainViewState});
+      this.setState({currentTask: '', stateVar: StateVars.MainViewState});
       ipcRenderer.send('setLuxaforOff');
     } else {
       throw new Error('invalid state detected!');
     }
   }
 
-  setFilter(filterName) {
+  setFilter(filterName: string) {
     if (this.validateFilter(filterName)) {
       this.currentFilter = filterName;
 
@@ -501,19 +568,19 @@ class App extends React.Component {
   }
 
   render() {
-    if (this.state.stateVar === this.TaskRunningState) {
+    if (this.state.stateVar === StateVars.TaskRunningState) {
       return (
         <div>
           <TaskRunningView task={ this.getCurrentTask() } updateTaskTimeSpentOnTask={ this.updateTaskTimeSpentOnTask } taskDone={ this.taskDone } stopTask={ this.stopTask }/>
         </div>
       );
-    } else if (this.state.stateVar === this.EditSettingsState) {
+    } else if (this.state.stateVar === StateVars.EditSettingsState) {
       return (
           <div>
           <EditSettingsView closeEditSettingsView={ this.closeEditSettingsView } changeTheme={this.props.changeTheme} />
         </div>
       );
-    } else if (this.state.stateVar === this.EditTaskState) {
+    } else if (this.state.stateVar === StateVars.EditTaskState) {
       return (
         <div>
           <EditTaskView
@@ -526,7 +593,7 @@ class App extends React.Component {
           />
         </div>
       );
-    } else if (this.state.stateVar === this.AddNewTaskState) {
+    } else if (this.state.stateVar === StateVars.AddNewTaskState) {
       return (
         <div>
           <EditTaskView
@@ -539,7 +606,7 @@ class App extends React.Component {
           />
         </div>
       );
-    } else if (this.state.stateVar === this.MainViewState) {
+    } else if (this.state.stateVar === StateVars.MainViewState) {
       return (
         <div>
           <MainView
@@ -562,7 +629,7 @@ class App extends React.Component {
           />
         </div>
       );
-    } else if (this.state.stateVar === this.ViewTaskState) {
+    } else if (this.state.stateVar === StateVars.ViewTaskState) {
       return (
         <ViewTaskView
           task={ this.getCurrentTask() }
@@ -570,7 +637,7 @@ class App extends React.Component {
           closeViewTaskView={this.closeViewTaskView}
         />
       );
-    } else if (this.state.stateVar === this.ViewLabelState) {
+    } else if (this.state.stateVar === StateVars.ViewLabelState) {
       return (
         <ViewLabelView
           label={this.getCurrentLabel() }
@@ -578,7 +645,7 @@ class App extends React.Component {
           closeViewLabelView={this.closeViewLabelView}
         />
       );
-    } else if (this.state.stateVar === this.EditLabelState) {
+    } else if (this.state.stateVar === StateVars.EditLabelState) {
       return (
         <EditLabelView
           title="Edit Label"
@@ -588,7 +655,7 @@ class App extends React.Component {
           closeEditLabelView={ this.closeEditLabelView }
         />
       );
-    } else if (this.state.stateVar === this.AddNewLabelState) {
+    } else if (this.state.stateVar === StateVars.AddNewLabelState) {
       return (
         <EditLabelView
           title="Add New Label"
@@ -600,10 +667,6 @@ class App extends React.Component {
       );
     }
   }
-}
-
-App.propTypes = {
-  changeTheme: PropTypes.func
 }
 
 export default App;

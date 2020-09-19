@@ -16,13 +16,29 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import Task from '../data-models/task';
+import { v4 as uuidv4 } from 'uuid';
 
-// data is raw doc from PouchDB / CouchDB.
-class TaskMapper {
-  static mapDataToTask(data) {
-    return new Task(data._id, data._rev, data.name, data.description, data.label, data.timeSpent, data.done);
+// TODO: Should we consider adding getters/setters, and avoid directly accessing these data members directly from code?
+class Task {
+  _id: string
+  _rev: string
+  type: string
+  name: string
+  description: string
+  label: string
+  timeSpent: number
+  done: boolean
+
+  constructor(id = uuidv4(), rev = '', name = '', description = '', label = '', timeSpent = 0, done = false) {
+    this._id = id;
+    this._rev = rev;
+    this.type = 'task';
+    this.name = name;
+    this.description = description;
+    this.label = label;
+    this.timeSpent = timeSpent;  // In seconds.
+    this.done = done;
   }
 }
 
-export default TaskMapper;
+export default Task;

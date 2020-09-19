@@ -17,8 +17,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
+import Task from '../data-models/task';
 import { withStyles } from '@material-ui/styles';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
@@ -41,7 +41,7 @@ import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import AddIcon from '@material-ui/icons/Add';
 
-const styles = () => ({
+const styles = (): any => ({
   divTable: {
     overflowY: 'scroll',
     minWidth: 640,
@@ -70,8 +70,24 @@ const styles = () => ({
   }
 });
 
-class TaskList extends React.Component {
-  constructor(props) {
+interface Props {
+  classes: object,
+  data: Array<Task>,
+  openEditTaskView: Function,
+  openAddTaskView: Function,
+  openViewTaskView: Function,
+  startTask: Function,
+  taskDoneById: Function,
+  removeTask: Function,
+  setFilter: Function
+}
+
+interface State {
+  selectedFilter: string
+}
+
+class TaskList extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.startTask = this.startTask.bind(this);
@@ -83,7 +99,7 @@ class TaskList extends React.Component {
     }
   }
 
-  startTask(event, taskId, done) {
+  startTask(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, taskId: string, done: boolean) {
     event.preventDefault();
 
     if (!done) {
@@ -93,25 +109,25 @@ class TaskList extends React.Component {
     }
   }
 
-  addTask(event) {
+  addTask(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     event.preventDefault();
 
     this.props.openAddTaskView();
   }
 
-  viewTask(event, taskId) {
+  viewTask(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, taskId: string) {
     event.preventDefault();
 
     this.props.openViewTaskView(taskId);
   }
 
-  editTask(event, taskId) {
+  editTask(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, taskId: string) {
     event.preventDefault();
 
     this.props.openEditTaskView(taskId)
   }
 
-  taskDoneById(event, taskId, taskDone) {
+  taskDoneById(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, taskId: string, taskDone: boolean) {
     event.preventDefault();
 
     if (!taskDone) {
@@ -119,20 +135,22 @@ class TaskList extends React.Component {
     }
   }
 
-  removeTask(event, taskId) {
+  removeTask(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, taskId: string) {
     event.preventDefault();
 
     this.props.removeTask(taskId);
   }
 
-  handleFilterSelectionChange(event) {
+  // TODO: Use any here for now, the actual type is rather complex.
+  // TODO: We'll handle it properly later.
+  handleFilterSelectionChange(event: any) {
     event.preventDefault();
 
     this.setState({selectedFilter: event.target.value});
     this.props.setFilter(event.target.value);
   }
 
-  getDone(done) {
+  getDone(done: boolean) {
     if (done) {
       return (<CheckCircleIcon />);
     } else {
@@ -140,7 +158,7 @@ class TaskList extends React.Component {
     }
   }
 
-  getEmptyTaskList(classes) {
+  getEmptyTaskList(classes: any) {
     // No Tasks.
     const listTasks= (
       <TableRow>
@@ -180,7 +198,7 @@ class TaskList extends React.Component {
     );
   }
 
-  getFullTaskList(classes) {
+  getFullTaskList(classes: any) {
     // We have tasks.
     const listTasks = this.props.data.map((task) => {
       return (
@@ -246,7 +264,7 @@ class TaskList extends React.Component {
     );
   }
 
-  getTaskList(classes) {
+  getTaskList(classes: any) {
     if (this.props.data.length === 0) {
       return (this.getEmptyTaskList(classes));
     } else {
@@ -255,7 +273,8 @@ class TaskList extends React.Component {
   }
 
   render () {
-    const { classes } = this.props;
+    const { classes }: any = this.props;
+
     return (
       <div>
         { this.getTaskList(classes) }
@@ -266,17 +285,5 @@ class TaskList extends React.Component {
     );
   }
 }
-
-TaskList.propTypes = {
-  classes: PropTypes.object,
-  data: PropTypes.array,
-  openEditTaskView: PropTypes.func,
-  openAddTaskView: PropTypes.func,
-  openViewTaskView: PropTypes.func,
-  startTask: PropTypes.func,
-  taskDoneById: PropTypes.func,
-  removeTask: PropTypes.func,
-  setFilter: PropTypes.func
-};
 
 export default withStyles(styles)(TaskList);

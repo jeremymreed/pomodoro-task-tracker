@@ -16,9 +16,19 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+/*
+ * Note: We are ignoring this import.
+ * Visual Studio Code cannot load the d.ts file we created in src/types.
+ * The compiler handles the .d.ts file just fine, but VS Code will complain.
+ * Suppressing this error in VS Code until we find a better workaround.
+ */
+// @ts-ignore
 import {Luxafor} from 'node-luxafor2';
 
 class LuxaforUtils {
+  luxafor: Luxafor
+  active: boolean
+
   constructor() {
     this.luxafor = new Luxafor();
     this.active = false;
@@ -35,7 +45,7 @@ class LuxaforUtils {
     }
   }
 
-  color(ledGroup, red, green, blue) {
+  color(ledGroup: number, red: number, green: number, blue: number) {
     this.init();
 
     if (this.active) {
@@ -43,7 +53,7 @@ class LuxaforUtils {
     }
   }
 
-  strobe(ledGroup, red, green, blue, time, repeat) {
+  strobe(ledGroup: number, red: number, green: number, blue: number, time: number, repeat: number) {
     this.init();
 
     if (this.active) {

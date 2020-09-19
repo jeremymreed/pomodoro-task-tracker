@@ -18,7 +18,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 import React from 'react';
 import electronSettings from 'electron-settings';
-import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
 import { withStyles } from '@material-ui/styles';
 import Slider from '@material-ui/core/Slider';
@@ -48,8 +47,28 @@ const styles = () => ({
   }
 });
 
-class EditSettingsView extends React.Component {
-  constructor(props) {
+interface Props {
+  classes: any,
+  changeTheme: Function,
+  closeEditSettingsView: Function
+}
+
+interface State {
+  pomodoro: number,
+  shortRest: number,
+  longRest: number,
+  intervalsInSet: number,
+  shouldDisplaySeconds: boolean,
+  databaseFileName: string,
+  selectedTheme: string,
+  timeLengthMin: number,
+  timeLengthMax: number,
+  intervalsInSetMin: number,
+  intervalsInSetMax: number
+}
+
+class EditSettingsView extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.handlePomodoroSliderChange = this.handlePomodoroSliderChange.bind(this);
@@ -59,13 +78,13 @@ class EditSettingsView extends React.Component {
     this.handleThemeSelectionChange = this.handleThemeSelectionChange.bind(this);
 
     this.state = {
-      pomodoro: this.secondsToMinutes(electronSettings.getSync('pomodoro')),
-      shortRest: this.secondsToMinutes(electronSettings.getSync('shortRest')),
-      longRest: this.secondsToMinutes(electronSettings.getSync('longRest')),
-      intervalsInSet: electronSettings.getSync('intervalsInSet'),
-      shouldDisplaySeconds: electronSettings.getSync('shouldDisplaySeconds'),
-      databaseFileName: electronSettings.getSync('databaseFileName'),
-      selectedTheme: electronSettings.getSync('theme'),
+      pomodoro: this.secondsToMinutes(electronSettings.getSync('pomodoro') as number),
+      shortRest: this.secondsToMinutes(electronSettings.getSync('shortRest') as number),
+      longRest: this.secondsToMinutes(electronSettings.getSync('longRest') as number),
+      intervalsInSet: electronSettings.getSync('intervalsInSet') as number,
+      shouldDisplaySeconds: electronSettings.getSync('shouldDisplaySeconds') as boolean,
+      databaseFileName: electronSettings.getSync('databaseFileName') as string,
+      selectedTheme: electronSettings.getSync('theme') as string,
       timeLengthMin: 1,
       timeLengthMax: 60,
       intervalsInSetMin: 1,
@@ -73,20 +92,22 @@ class EditSettingsView extends React.Component {
     }
   }
 
-  secondsToMinutes(amount) {
+  secondsToMinutes(amount: number) {
     return Math.trunc(amount / 60);
   }
 
-  minutesToSeconds(amount) {
+  minutesToSeconds(amount: number) {
     return amount * 60;
   }
 
-  handleLongRestChange(event) {
+  // TODO: Not sure what kind of event this is.
+  handleLongRestChange(event: any) {
     const newLongRestChange = event.target.value;
     this.setState({longRest: newLongRestChange})
   }
 
-  handleIntervalsInSetChange(event) {
+  // TODO: Not sure what kind of event this is.
+  handleIntervalsInSetChange(event: any) {
     const newIntervalsInSet = event.target.value;
     this.setState({intervalsInSet: newIntervalsInSet});
   }
@@ -95,7 +116,7 @@ class EditSettingsView extends React.Component {
     this.setState({shouldDisplaySeconds: !this.state.shouldDisplaySeconds});
   }
 
-  formSubmit(event) {
+  formSubmit(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     event.preventDefault();
 
     electronSettings.setSync({
@@ -115,43 +136,44 @@ class EditSettingsView extends React.Component {
     this.props.closeEditSettingsView();
   }
 
-  cancelEdit(event) {
+  cancelEdit(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     event.preventDefault();
 
     this.props.closeEditSettingsView();
   }
 
-  handlePomodoroSliderChange(event, value) {
+  // TODO: Fix type name of this event.
+  handlePomodoroSliderChange(event: any, value: any) {
     event.preventDefault();
 
     this.setState({pomodoro: value});
   }
 
-  handleShortRestSliderChange(event, value) {
+  handleShortRestSliderChange(event: any, value: any) {
     event.preventDefault();
 
     this.setState({shortRest: value});
   }
 
-  handleLongRestSliderChange(event, value) {
+  handleLongRestSliderChange(event: any, value: any) {
     event.preventDefault();
 
     this.setState({longRest: value});
   }
 
-  handleIntervalsInSetSliderChange(event, value) {
+  handleIntervalsInSetSliderChange(event: any, value: any) {
     event.preventDefault();
 
     this.setState({intervalsInSet: value});
   }
 
-  handleThemeSelectionChange(event) {
+  handleThemeSelectionChange(event: any) {
     event.preventDefault();
 
     this.setState({selectedTheme: event.target.value});
   }
 
-  valueText(value) {
+  valueText(value: number) {
     return `${value}`
   }
 
@@ -255,12 +277,6 @@ class EditSettingsView extends React.Component {
       </div>
     );
   }
-}
-
-EditSettingsView.propTypes = {
-  classes: PropTypes.object,
-  changeTheme: PropTypes.func,
-  closeEditSettingsView: PropTypes.func
 }
 
 export default withStyles(styles)(EditSettingsView);
