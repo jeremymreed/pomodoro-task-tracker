@@ -144,7 +144,6 @@ class App extends React.Component<AppProps, AppState> {
     ipcRenderer.send('getDatabaseName');
 
     ipcRenderer.on('databaseName', (event, databaseName) => {
-      console.log('App: got databaseName response');
       const databasePath = (electron.app || electron.remote.app).getPath('userData') + '/' + databaseName;
 
       console.log('componentDidMount: databaseFullPath', databasePath);
@@ -225,9 +224,6 @@ class App extends React.Component<AppProps, AppState> {
       labels.push(label);
       labelMap.set(label._id, label);
     }
-
-    console.log('labels:', labels);
-    console.log('labelMap: ', labelMap);
 
     this.setState({labels: labels, labelMap: labelMap});
   }

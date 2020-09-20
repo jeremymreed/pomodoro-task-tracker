@@ -25,10 +25,6 @@ import NotificationOptions from './utils/notification-options';
 // Default to production database.
 let databaseName = 'pomodoro-task-tracker-data';
 
-console.log('process.argv.length:', process.argv.length);
-console.log('process.argv:', process.argv);
-
-
 if (process.argv.length === 3) {
   databaseName = process.argv[2];
 }
@@ -115,7 +111,6 @@ app.on('activate', () => {
 // You can also put them in separate files and require them here.
 
 ipcMain.on('getDatabaseName', (event) => {
-  console.log('main: got getDatabaseName message');
   event.reply('databaseName', databaseName);
 });
 
