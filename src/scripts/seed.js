@@ -21,7 +21,14 @@ import Database from '../database';
 import Task from '../data-models/task';
 import Label from '../data-models/label';
 
-const databasePath = os.homedir() + '/.config/pomodoro-task-tracker/pomodoro-task-tracker-data';
+// Default to production database.
+let databaseName = 'pomodoro-task-tracker-data';
+
+if (process.argv.length === 3) {
+  databaseName = process.argv[2];
+}
+
+const databasePath = os.homedir() + '/.config/pomodoro-task-tracker/' + databaseName;
 console.log('App constructor: databasePath', databasePath);
 
 const db = new Database(databasePath);

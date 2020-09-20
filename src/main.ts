@@ -22,6 +22,13 @@ import LuxaforUtils from './luxafor/luxafor-utils';
 import MenuGenerator from './menu-generator';
 import NotificationOptions from './utils/notification-options';
 
+// Default to production database.
+let databaseName = 'pomodoro-task-tracker-data';
+
+if (process.argv.length === 3) {
+  databaseName = process.argv[2];
+}
+
 // TODO: electron-settings is using the remote module, and this is going to be deprecated.
 // TODO: We may want to consider using a different system for settings management.
 import electronSettings from 'electron-settings';
@@ -102,6 +109,10 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process code.
 // You can also put them in separate files and require them here.
+
+ipcMain.on('getDatabaseName', (event) => {
+  event.reply('databaseName', databaseName);
+});
 
 ipcMain.on('getData', () => {
 });

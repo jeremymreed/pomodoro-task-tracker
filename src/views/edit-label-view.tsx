@@ -114,7 +114,9 @@ function EditLabelView(props: Props) {
     labelMenuItems.push(<MenuItem key={0} value='none'>None</MenuItem>);
 
     for ( let i = 0 ; i < props.labels.length ; i++ ) {
-      labelMenuItems.push(<MenuItem key={props.labels[i]._id} value={props.labels[i]._id}>{props.labels[i].name}</MenuItem>)
+      if (props.labels[i]._id !== props.label._id) {
+        labelMenuItems.push(<MenuItem key={props.labels[i]._id} value={props.labels[i]._id}>{props.labels[i].name}</MenuItem>);
+      }
     }
 
     return labelMenuItems;

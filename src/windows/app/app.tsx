@@ -64,19 +64,16 @@ enum StateVars {
 class App extends React.Component<AppProps, AppState> {
 
   _isMounted: boolean
-  db: Database
+  db: Database | undefined
 
   currentFilter: string
 
   constructor(props: AppProps) {
     super(props);
 
-    const databasePath = (electron.app || electron.remote.app).getPath('userData') + '/pomodoro-task-tracker-data';
-    console.log('App constructor: databasePath', databasePath);
+    this.db = undefined;
 
     this._isMounted = false;
-    this.db = new Database(databasePath);
-    this.db.enableDebug();
 
     this.handleDataReady = this.handleDataReady.bind(this);
     this.getLabelById = this.getLabelById.bind(this);
@@ -118,6 +115,14 @@ class App extends React.Component<AppProps, AppState> {
     }
   }
 
+  // Database can be undefined, until it is set componentDidMount.
+  // This function will handle the case of undefined database.
+  validateDatabase() {
+    if (this.db == undefined) {
+      throw new Error('this.db is undefined!');
+    }
+  }
+
   // TODO: Magic numbers, yay!  Will be obsolete when we convert code to TypeScript.
   validateState() {
     return true;
@@ -134,11 +139,22 @@ class App extends React.Component<AppProps, AppState> {
   componentDidMount() {
     this._isMounted = true;
 
-    this.loadState().catch((error) => {
-      console.log('Caught error: ', error);
-    });
-
     ipcRenderer.on('showEditSettingsView', this.openEditSettingsView);
+
+    ipcRenderer.send('getDatabaseName');
+
+    ipcRenderer.on('databaseName', (event, databaseName) => {
+      const databasePath = (electron.app || electron.remote.app).getPath('userData') + '/' + databaseName;
+
+      console.log('componentDidMount: databaseFullPath', databasePath);
+
+      this.db = new Database(databasePath);
+      this.db.enableDebug();
+
+      this.loadState().catch((error) => {
+        console.log('Caught error: ', error);
+      });
+    });
   }
 
   componentWillUnmount() {
@@ -174,6 +190,10 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   async loadTasks() {
+    if (this.db == undefined) {
+      throw new Error('this.db is undefined!');
+    }
+
     try {
       const docs: any = await this.db.filterTasks(this.currentFilter);
       this.handleDataReady(docs);
@@ -183,6 +203,10 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   async loadLabels() {
+    if (this.db == undefined) {
+      throw new Error('this.db is undefined!');
+    }
+
     try {
       const rawLabels: any = await this.db.getLabels();
       this.processRawLabels(rawLabels);
@@ -200,9 +224,6 @@ class App extends React.Component<AppProps, AppState> {
       labels.push(label);
       labelMap.set(label._id, label);
     }
-
-    console.log('labels:', labels);
-    console.log('labelMap: ', labelMap);
 
     this.setState({labels: labels, labelMap: labelMap});
   }
@@ -337,6 +358,10 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   updateTaskTimeSpentOnTask(timeSpentOnTask: number) {
+    if (this.db == undefined) {
+      throw new Error('this.db is undefined!');
+    }
+
     if (this.validateState()) {
       let task: Task = this.getCurrentTask();
       task.timeSpent = task.timeSpent + timeSpentOnTask;
@@ -362,6 +387,10 @@ class App extends React.Component<AppProps, AppState> {
 
   // Called by TaskRunningView: Assumes that there is a current task.
   taskDone() {
+    if (this.db == undefined) {
+      throw new Error('this.db is undefined!');
+    }
+
     if (this.validateState()) {
       ipcRenderer.send('setLuxaforOff');
       let task = this.getCurrentTask();
@@ -386,6 +415,10 @@ class App extends React.Component<AppProps, AppState> {
 
   // Called by EditTaskView: Must get task from dataMap, as there is no current task.
   taskDoneById(taskId: string) {
+    if (this.db == undefined) {
+      throw new Error('this.db is undefined!');
+    }
+
     if (this.validateState()) {
       ipcRenderer.send('setLuxaforOff');
       if (this.state.dataMap.has(taskId)) {
@@ -411,6 +444,10 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   editTask(name: string, description: string, label: string, done: boolean) {
+    if (this.db == undefined) {
+      throw new Error('this.db is undefined!');
+    }
+
     if (this.validateState()) {
       let task = this.getCurrentTask();
       task.name = name;
@@ -436,8 +473,17 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   editLabel(name: string, description: string, labelLabel: string) {
+    if (this.db == undefined) {
+      throw new Error('this.db is undefined!');
+    }
+
     if (this.validateState()) {
       let label = this.getCurrentLabel();
+
+      if (label.label === labelLabel) {
+        throw new Error('Cannot assign label to itself.');
+      }
+
       label.name = name;
       label.description = description;
       label.label = labelLabel;
@@ -458,11 +504,19 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   removeLabel(labelId: string) {
+    if (this.db == undefined) {
+      throw new Error('this.db is undefined!');
+    }
+
     let label = this.state.labelMap.get(labelId);
 
     // First let's make sure that any task / label with this label, has its label set to an empty string.
 
     this.db.getByLabel(labelId).then((results: any) => {
+      if (this.db == undefined) {
+        throw new Error('this.db is undefined!');
+      }
+
       if (results == undefined) {
         throw new Error('removeLabel: results is undefined!');
       }
@@ -486,6 +540,10 @@ class App extends React.Component<AppProps, AppState> {
         // In this case, we update the label by setting it's label to empty string, and upsert it.
         // Then the remove() call fails due to a document conflict.
         this.loadState().then(() => {
+          if (this.db == undefined) {
+            throw new Error('this.db is undefined!');
+          }
+
           label = this.state.labelMap.get(labelId);
           this.db.remove(label).then((result) => {
             if (result == undefined) {
@@ -529,6 +587,10 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   removeTask(taskId: string) {
+    if (this.db == undefined) {
+      throw new Error('this.db is undefined!');
+    }
+
     let task = this.state.dataMap.get(taskId);
 
     this.db.remove(task).then((result) => {
