@@ -37,17 +37,22 @@ Clone this repository. Go into the pomodoro-task-tracker directory.
 
 Run:
 ```
-npm install
+npm ci
 ```
 
 Once you run npm install, you will need to run this command once to avoid a segmentation fault.
+NOTE: If you have not done a build, and you don't have a build/ directory, this command will exit with an error.  This is ok!
+We run this command to rebuild the usb module, this step succeeds, the packaging of the software fails when build/ does not exist.
+I will be replacing this step with a better command that rebuilds the usb module, with no confusing error.
 ```
 npm run pack
 ```
 
+PRODUCTION:
+
 Build the software and install the database:
 ```
-npm run build && npm run installDB
+npm run build && npm run install
 ```
 
 For testing purposes, you might want to seed the database with some test data:
@@ -60,9 +65,21 @@ Then run:
 npm start
 ```
 
-To run tests: (test coverage sucks a bit.)
+DEVELOPMENT:
+
+Build the software and install the database:
 ```
-npm run test
+npm run build && npm run install-dev
+```
+
+For testing purposes, you might want to seed the database with some test data:
+```
+npm run seed-dev
+```
+
+Then run:
+```
+npm start-dev
 ```
 
 # Config:
