@@ -479,6 +479,11 @@ class App extends React.Component<AppProps, AppState> {
 
     if (this.validateState()) {
       let label = this.getCurrentLabel();
+
+      if (label.label === labelLabel) {
+        throw new Error('Cannot assign label to itself.');
+      }
+
       label.name = name;
       label.description = description;
       label.label = labelLabel;
