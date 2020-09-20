@@ -19,7 +19,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import os from 'os';
 import Database from '../database';
 
-const databasePath = os.homedir() + '/.config/pomodoro-task-tracker/pomodoro-task-tracker-data';
+// Default to production database.
+let databaseName = 'pomodoro-task-tracker-data';
+
+if (process.argv.length === 3) {
+  databaseName = process.argv[2];
+}
+
+const databasePath = os.homedir() + '/.config/pomodoro-task-tracker/' + databaseName;
 console.log('App constructor: databasePath', databasePath);
 
 const db = new Database(databasePath);
