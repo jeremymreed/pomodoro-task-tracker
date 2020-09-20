@@ -21,7 +21,7 @@
     "installDB-dev": "node build/scripts/install.js pomodoro-task-tracker-dev",
     "seed-dev": "node build/scripts/seed.js pomodoro-task-tracker-dev",
     "test": "mocha -r esm tests/**/*.spec.js",
-    "clean": "rm -rf dist/ build/ data/pomodoro-task-tracker*",
+    "clean": "rm -rf dist/ build/",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },
