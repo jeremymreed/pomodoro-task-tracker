@@ -22,6 +22,7 @@ import LuxaforUtils from './luxafor/luxafor-utils';
 import MenuGenerator from './menu-generator';
 import NotificationOptions from './utils/notification-options';
 
+// Default to production database.
 let databaseName = 'pomodoro-task-tracker-data';
 
 console.log('process.argv.length:', process.argv.length);
