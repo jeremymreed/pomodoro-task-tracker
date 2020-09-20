@@ -9,6 +9,7 @@
   },
   "main": "build/main.js",
   "scripts": {
+    "rebuild-usb": "electron-builder install-app-deps",
     "start": "electron ./",
     "start-dev": "electron ./ pomodoro-task-tracker-dev",
     "build": "npm run clean && npm run compile && npm run babel && npm run copy-static",
