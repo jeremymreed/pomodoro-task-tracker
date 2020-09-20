@@ -62,16 +62,16 @@ class ViewLabelView extends React.Component<Props, State> {
     this.state = {
       name: this.props.label.name,
       description: this.props.label.description,
-      label: this.props.label.label
+      label: this.props.label.labelId
     }
   }
 
   getLabelLabelName() {
-    if (this.props.label.label === '') {
+    if (this.props.label.labelId === '') {
       return '';
     }
 
-    let labelLabel = this.props.getLabelById(this.props.label.label);
+    let labelLabel = this.props.getLabelById(this.props.label.labelId);
 
     return labelLabel.name;
   }

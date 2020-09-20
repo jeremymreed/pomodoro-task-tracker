@@ -149,7 +149,7 @@ class App extends React.Component<AppProps, AppState> {
       console.log('componentDidMount: databaseFullPath', databasePath);
 
       this.db = new Database(databasePath);
-      this.db.enableDebug();
+      this.db.disableDebug();
 
       this.loadState().catch((error) => {
         console.log('Caught error: ', error);
@@ -472,7 +472,9 @@ class App extends React.Component<AppProps, AppState> {
     }
   }
 
-  editLabel(name: string, description: string, labelLabel: string) {
+  editLabel(name: string, description: string, labelLabelId: string) {
+    console.log(`name: ${name}, description: ${description}, labelLabelId: ${labelLabelId}`);
+
     if (this.db == undefined) {
       throw new Error('this.db is undefined!');
     }
@@ -480,13 +482,13 @@ class App extends React.Component<AppProps, AppState> {
     if (this.validateState()) {
       let label = this.getCurrentLabel();
 
-      if (label.label === labelLabel) {
+      if (label.labelId === labelLabelId) {
         throw new Error('Cannot assign label to itself.');
       }
 
       label.name = name;
       label.description = description;
-      label.label = labelLabel;
+      label.labelId = labelLabelId;
       this.db.upsert(label).then((rev) => {
         if (rev == undefined) {
           throw new Error('editLabel: rev is undefined!');
