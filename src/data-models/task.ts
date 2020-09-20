@@ -25,7 +25,7 @@ class Task {
   type: string
   name: string
   description: string
-  label: string
+  labelId: string
   timeSpent: number
   done: boolean
 
@@ -35,7 +35,7 @@ class Task {
     this.type = 'task';
     this.name = name;
     this.description = description;
-    this.label = label;
+    this.labelId = label;
     this.timeSpent = timeSpent;  // In seconds.
     this.done = done;
   }

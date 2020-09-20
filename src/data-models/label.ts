@@ -25,7 +25,7 @@ class Label {
   type: string
   name: string
   description: string
-  label: string
+  labelId: string
 
   constructor(id = uuidv4(), rev = '', name = '', description = '', label = '') {
     this._id = id;
@@ -33,7 +33,7 @@ class Label {
     this.type = 'label';
     this.name = name;
     this.description = description;
-    this.label = label;
+    this.labelId = label;
   }
 }
 

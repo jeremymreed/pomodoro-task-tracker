@@ -99,11 +99,11 @@ function EditLabelView(props: Props) {
     initialValues: {
       name: props.label.name,
       description: props.label.description,
-      labelLabel: mapLabelLabelIdToValue(props.label.label)
+      labelLabelId: mapLabelLabelIdToValue(props.label.labelId)
     },
     validate,
     onSubmit: (values) => {
-      props.editLabel(values.name, values.description, mapValueToLabelLabelId(values.labelLabel));
+      props.editLabel(values.name, values.description, mapValueToLabelLabelId(values.labelLabelId));
       props.closeEditLabelView();
     }
   });
@@ -168,10 +168,10 @@ function EditLabelView(props: Props) {
           <FormControl className={classes.labelSelectFormControl} variant="outlined">
             <InputLabel>Label</InputLabel>
             <Select
-              id="labelLabel"
-              name="labelLabel"
+              id="labelLabelId"
+              name="labelLabelId"
               label="Label"
-              value={formik.values.labelLabel}
+              value={formik.values.labelLabelId}
               onChange={formik.handleChange}
             >
               { getLabelMenuItems() }
