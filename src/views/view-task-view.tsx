@@ -69,17 +69,17 @@ class ViewTaskView extends React.Component<Props, State> {
       name: this.props.task.name,
       description: this.props.task.description,
       timeSpent: this.props.task.timeSpent,
-      label: this.props.task.label,
+      label: this.props.task.labelId,
       done: this.props.task.done
     }
   }
 
   getLabelName() {
-    if (this.props.task.label === '') {
+    if (this.props.task.labelId === '') {
       return '';
     }
 
-    let label = this.props.getLabelById(this.props.task.label);
+    let label = this.props.getLabelById(this.props.task.labelId);
 
     return label.name;
   }

@@ -104,7 +104,7 @@ function EditTaskView(props: Props) {
     initialValues: {
       name: props.task.name,
       description: props.task.description,
-      label: mapLabelIdToValue(props.task.label),
+      labelId: mapLabelIdToValue(props.task.labelId),
       done: props.task.done
     },
     validate,
@@ -112,7 +112,7 @@ function EditTaskView(props: Props) {
       props.editTask(
         values.name,
         values.description,
-        mapValueToLabelId(values.label),
+        mapValueToLabelId(values.labelId),
         values.done
       );
       ipcRenderer.send('showNotification', 'taskUpdated');
@@ -199,10 +199,10 @@ function EditTaskView(props: Props) {
           <FormControl className={classes.labelSelectFormControl} variant="outlined">
             <InputLabel>Label</InputLabel>
             <Select
-              id="label"
-              name="label"
+              id="labelId"
+              name="labelId"
               label="Label"
-              value={formik.values.label}
+              value={formik.values.labelId}
               onChange={formik.handleChange}
             >
               { getLabelMenuItems() }

@@ -452,7 +452,7 @@ class App extends React.Component<AppProps, AppState> {
       let task = this.getCurrentTask();
       task.name = name;
       task.description = description;
-      task.label = label;
+      task.labelId = label;
       task.done = done;
       this.db.upsert(task).then((rev) => {
         if (rev == undefined) {
