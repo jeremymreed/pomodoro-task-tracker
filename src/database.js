@@ -56,16 +56,9 @@ class Database {
 
       await this.db.createIndex({
         index: {
-          fields: ['label'],
-          ddoc: 'index-by-label'
+          fields: ['labelId'],
+          ddoc: 'index-by-labelId'
         }
-      });
-
-      await this.db.createIndex({
-        index: {
-          fields: ['type', 'label'],
-        },
-        ddoc: 'index-by-type-label'
       });
     }
   }
@@ -129,13 +122,13 @@ class Database {
     }
   }
 
-  async getByLabel(labelId) {
+  async getByLabelId(labelId) {
     try {
       let findResult = await this.db.find({
         selector: {
-          label: labelId
+          labelId: labelId
         },
-        use_index: 'index-by-label'
+        use_index: 'index-by-labelId'
       });
 
       return findResult.docs;
