@@ -16,28 +16,28 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import electronSettings from 'electron-settings';
-import App from './windows/app/app';
+import React from "react";
+import ReactDOM from "react-dom";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import electronSettings from "electron-settings";
+import App from "./windows/app/app";
 
 const lightTheme = createMuiTheme({
   palette: {
-    type: 'light',
-  }
+    type: "light",
+  },
 });
 
 const darkTheme = createMuiTheme({
   palette: {
-    type: 'dark',
-  }
+    type: "dark",
+  },
 });
 
 const themeMap = new Map([
-  ['light', lightTheme],
-  ['dark', darkTheme]
+  ["light", lightTheme],
+  ["dark", darkTheme],
 ]);
 
 class ThemedApp extends React.Component<any, any> {
@@ -49,29 +49,29 @@ class ThemedApp extends React.Component<any, any> {
     const themeName = this.getThemeName();
 
     if (themeName == undefined || themeName == null) {
-      throw new Error('ThemedApp: themeName is null or undefined!');
+      throw new Error("ThemedApp: themeName is null or undefined!");
     }
 
     this.state = {
-      currentTheme: themeMap.get(themeName.toString())
-    }
+      currentTheme: themeMap.get(themeName.toString()),
+    };
   }
 
   getThemeName() {
-    if (!electronSettings.has('theme')) {
-      return 'light';
+    if (!electronSettings.has("theme")) {
+      return "light";
     } else {
-      return electronSettings.getSync('theme');
+      return electronSettings.getSync("theme");
     }
   }
 
   changeTheme(themeName: string) {
-    if (themeName === 'light') {
-      this.setState({currentTheme: lightTheme});
-    } else if (themeName === 'dark') {
-      this.setState({currentTheme: darkTheme});
+    if (themeName === "light") {
+      this.setState({ currentTheme: lightTheme });
+    } else if (themeName === "dark") {
+      this.setState({ currentTheme: darkTheme });
     } else {
-      throw Error('Invalid theme name!')
+      throw Error("Invalid theme name!");
     }
   }
 
@@ -87,7 +87,4 @@ class ThemedApp extends React.Component<any, any> {
   }
 }
 
-ReactDOM.render(
-  <ThemedApp />,
-  document.getElementById('root')
-);
+ReactDOM.render(<ThemedApp />, document.getElementById("root"));

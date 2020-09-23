@@ -1,5 +1,11 @@
-type SettingsValue = null | boolean | string | number | SettingsObject | SettingsValue[];
+type SettingsValue =
+  | null
+  | boolean
+  | string
+  | number
+  | SettingsObject
+  | SettingsValue[];
 
 type SettingsObject = {
-  [key: string]: SettingsValue
-}
+  [key: string]: SettingsValue;
+};

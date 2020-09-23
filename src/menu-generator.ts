@@ -16,50 +16,47 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import { Menu, dialog } from 'electron';
+import { Menu, dialog } from "electron";
 
 class MenuGenerator {
   static getMenu(window: any, version: any) {
     const template: any = [
       {
-        label: 'File',
-        submenu: [
-          {role: 'quit'}
-        ]
+        label: "File",
+        submenu: [{ role: "quit" }],
       },
       {
-        label: 'Settings',
+        label: "Settings",
         submenu: [
           {
-            label: 'Edit Settings',
+            label: "Edit Settings",
             click: () => {
-              window.webContents.send('showEditSettingsView');
-            }
-          }
-        ]
+              window.webContents.send("showEditSettingsView");
+            },
+          },
+        ],
       },
       {
-        role: 'help',
+        role: "help",
         submenu: [
           {
-            label: 'About',
+            label: "About",
             click: () => {
-              dialog.showMessageBoxSync(
-                {
-                  title: 'About this app',
-                  message: `This application is a task tracker, using the pomodoro technique to track time spent on tasks. \n See https://en.wikipedia.org/wiki/Pomodoro_Technique\n Version: ${version}`,
-                  buttons: ['Close'],
-                });
-            }
+              dialog.showMessageBoxSync({
+                title: "About this app",
+                message: `This application is a task tracker, using the pomodoro technique to track time spent on tasks. \n See https://en.wikipedia.org/wiki/Pomodoro_Technique\n Version: ${version}`,
+                buttons: ["Close"],
+              });
+            },
           },
           {
-            label: 'Toggle Developer Tools',
+            label: "Toggle Developer Tools",
             click: () => {
               window.webContents.openDevTools();
-            }
-          }
-        ]
-      }
+            },
+          },
+        ],
+      },
     ];
 
     return Menu.buildFromTemplate(template);

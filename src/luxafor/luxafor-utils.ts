@@ -23,11 +23,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
  * Suppressing this error in VS Code until we find a better workaround.
  */
 // @ts-ignore
-import {Luxafor} from 'node-luxafor2';
+import { Luxafor } from "node-luxafor2";
 
 class LuxaforUtils {
-  luxafor: Luxafor
-  active: boolean
+  luxafor: Luxafor;
+  active: boolean;
 
   constructor() {
     this.luxafor = new Luxafor();
@@ -40,7 +40,7 @@ class LuxaforUtils {
       this.luxafor.init();
       this.active = true;
     } catch (error) {
-      console.log('Failed to init luxafor, disabling!')
+      console.log("Failed to init luxafor, disabling!");
       this.active = false;
     }
   }
@@ -53,7 +53,14 @@ class LuxaforUtils {
     }
   }
 
-  strobe(ledGroup: number, red: number, green: number, blue: number, time: number, repeat: number) {
+  strobe(
+    ledGroup: number,
+    red: number,
+    green: number,
+    blue: number,
+    time: number,
+    repeat: number
+  ) {
     this.init();
 
     if (this.active) {

@@ -1,7 +1,7 @@
 interface UpsertResponse {
-  id: string
-  ok: boolean
-  rev: string
+  id: string;
+  ok: boolean;
+  rev: string;
 }
 
 export default UpsertResponse;

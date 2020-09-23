@@ -16,106 +16,117 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import { useFormik } from 'formik';
-import { withStyles } from '@material-ui/styles';
-import FormGroup from '@material-ui/core/FormGroup';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import SaveIcon from '@material-ui/icons/Save';
-import CancelIcon from '@material-ui/icons/Cancel';
-import Label from '../data-models/label';
-
+import React from "react";
+import PropTypes from "prop-types";
+import { useFormik } from "formik";
+import { withStyles } from "@material-ui/styles";
+import FormGroup from "@material-ui/core/FormGroup";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import InputLabel from "@material-ui/core/InputLabel";
+import SaveIcon from "@material-ui/icons/Save";
+import CancelIcon from "@material-ui/icons/Cancel";
+import Label from "../data-models/label";
 
 const styles = () => ({
   labelSelectFormControl: {
     maxWidth: 150,
-    marginTop: '15px'
+    marginTop: "15px",
   },
   name: {
-    marginBottom: '5px'
+    marginBottom: "5px",
   },
   description: {
-    marginTop: '5px',
-    marginBottom: '5px'
+    marginTop: "5px",
+    marginBottom: "5px",
   },
   done: {
-    marginTop: '5px',
-    marginBottom: '5px'
+    marginTop: "5px",
+    marginBottom: "5px",
   },
   saveButton: {
-    marginTop: '5px',
-    marginRight: '5px'
+    marginTop: "5px",
+    marginRight: "5px",
   },
   cancelButton: {
-    marginTop: '5px',
-    marginLeft: '5px'
-  }
+    marginTop: "5px",
+    marginLeft: "5px",
+  },
 });
 
 const validate = (values: any) => {
   const errors: any = {};
 
-  if (!values.name || values.name === '') {
-    errors.name = 'The name is required';
+  if (!values.name || values.name === "") {
+    errors.name = "The name is required";
   }
 
   return errors;
-}
+};
 
 const mapLabelLabelIdToValue = (labelLabelId: string) => {
-  if (labelLabelId === '') {
-    return 'none';
+  if (labelLabelId === "") {
+    return "none";
   }
 
   return labelLabelId;
-}
+};
 
 const mapValueToLabelLabelId = (value: string) => {
-  if (value === 'none') {
-    return '';
+  if (value === "none") {
+    return "";
   }
 
   return value;
-}
+};
 
 interface Props {
-  classes: any,
-  title: string,
-  label: Label,
-  labels: Label[],
-  editLabel: Function,
-  closeEditLabelView: Function
+  classes: any;
+  title: string;
+  label: Label;
+  labels: Label[];
+  editLabel: Function;
+  closeEditLabelView: Function;
 }
 
 function EditLabelView(props: Props) {
-    const formik = useFormik({
+  const formik = useFormik({
     initialValues: {
       name: props.label.name,
       description: props.label.description,
-      labelLabelId: mapLabelLabelIdToValue(props.label.labelId)
+      labelLabelId: mapLabelLabelIdToValue(props.label.labelId),
     },
     validate,
     onSubmit: (values) => {
-      props.editLabel(values.name, values.description, mapValueToLabelLabelId(values.labelLabelId));
+      props.editLabel(
+        values.name,
+        values.description,
+        mapValueToLabelLabelId(values.labelLabelId)
+      );
       props.closeEditLabelView();
-    }
+    },
   });
 
   const getLabelMenuItems = () => {
     let labelMenuItems = Array();
 
-    labelMenuItems.push(<MenuItem key={0} value='none'>None</MenuItem>);
+    labelMenuItems.push(
+      <MenuItem key={0} value="none">
+        None
+      </MenuItem>
+    );
 
-    for ( let i = 0 ; i < props.labels.length ; i++ ) {
+    for (let i = 0; i < props.labels.length; i++) {
       if (props.labels[i]._id !== props.label._id) {
-        labelMenuItems.push(<MenuItem key={props.labels[i]._id} value={props.labels[i]._id}>{props.labels[i].name}</MenuItem>);
+        labelMenuItems.push(
+          <MenuItem key={props.labels[i]._id} value={props.labels[i]._id}>
+            {props.labels[i].name}
+          </MenuItem>
+        );
       }
     }
 
@@ -124,18 +135,20 @@ function EditLabelView(props: Props) {
 
   const cancel = () => {
     props.closeEditLabelView();
-  }
+  };
 
   // TODO: See if there's a better way to do this.  The save button must be disabled while the form is not fully filled out.
   const disableSaveButton = () => {
-    return Object.keys(formik.errors).length !== 0 || formik.values.name === '';
-  }
+    return Object.keys(formik.errors).length !== 0 || formik.values.name === "";
+  };
 
   const { classes } = props;
 
   return (
     <div>
-      <Typography variant="h1" align="center">{props.title}</Typography>
+      <Typography variant="h1" align="center">
+        {props.title}
+      </Typography>
 
       <form onSubmit={formik.handleSubmit}>
         <FormGroup>
@@ -148,9 +161,9 @@ function EditLabelView(props: Props) {
             multiline
             rows={4}
             value={formik.values.name}
-            onChange={formik.handleChange }
+            onChange={formik.handleChange}
             error={formik.errors.name ? true : false}
-            helperText={formik.errors.name ? formik.errors.name : ''}
+            helperText={formik.errors.name ? formik.errors.name : ""}
           />
 
           <TextField
@@ -165,7 +178,10 @@ function EditLabelView(props: Props) {
             onChange={formik.handleChange}
           />
 
-          <FormControl className={classes.labelSelectFormControl} variant="outlined">
+          <FormControl
+            className={classes.labelSelectFormControl}
+            variant="outlined"
+          >
             <InputLabel>Label</InputLabel>
             <Select
               id="labelLabelId"
@@ -174,9 +190,8 @@ function EditLabelView(props: Props) {
               value={formik.values.labelLabelId}
               onChange={formik.handleChange}
             >
-              { getLabelMenuItems() }
+              {getLabelMenuItems()}
             </Select>
-
           </FormControl>
 
           <span>
@@ -189,7 +204,14 @@ function EditLabelView(props: Props) {
             >
               <SaveIcon />
             </Button>
-            <Button className={classes.cancelButton} variant="contained" color="primary" onClick={() => {cancel()}}>
+            <Button
+              className={classes.cancelButton}
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                cancel();
+              }}
+            >
               <CancelIcon />
             </Button>
           </span>

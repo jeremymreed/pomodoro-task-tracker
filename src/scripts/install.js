@@ -16,18 +16,19 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import os from 'os';
-import Database from '../database';
+import os from "os";
+import Database from "../database";
 
 // Default to production database.
-let databaseName = 'pomodoro-task-tracker-data';
+let databaseName = "pomodoro-task-tracker-data";
 
 if (process.argv.length === 3) {
   databaseName = process.argv[2];
 }
 
-const databasePath = os.homedir() + '/.config/pomodoro-task-tracker/' + databaseName;
-console.log('App constructor: databasePath', databasePath);
+const databasePath =
+  os.homedir() + "/.config/pomodoro-task-tracker/" + databaseName;
+console.log("App constructor: databasePath", databasePath);
 
 const db = new Database(databasePath);
 
@@ -36,11 +37,17 @@ const db = new Database(databasePath);
  */
 
 const installDB = async () => {
-  console.log('--- installDB() ---------------------------------');
+  console.log("--- installDB() ---------------------------------");
 
   await db.createIndexes();
 
-  console.log('---------------------------------------------');
-}
+  console.log("---------------------------------------------");
+};
 
-installDB().then(() => { console.log('Installed the database!'); }).catch((error) => { console.log('Caught error: ', error); });
+installDB()
+  .then(() => {
+    console.log("Installed the database!");
+  })
+  .catch((error) => {
+    console.log("Caught error: ", error);
+  });

@@ -16,80 +16,98 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import React from 'react';
-import electronSettings from 'electron-settings';
-import { ipcRenderer } from 'electron';
-import { withStyles } from '@material-ui/styles';
-import Slider from '@material-ui/core/Slider';
-import Typography from '@material-ui/core/Typography';
-import Checkbox from '@material-ui/core/Checkbox';
-import Button from '@material-ui/core/Button';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import SaveIcon from '@material-ui/icons/Save';
-import CancelIcon from '@material-ui/icons/Cancel';
+import React from "react";
+import electronSettings from "electron-settings";
+import { ipcRenderer } from "electron";
+import { withStyles } from "@material-ui/styles";
+import Slider from "@material-ui/core/Slider";
+import Typography from "@material-ui/core/Typography";
+import Checkbox from "@material-ui/core/Checkbox";
+import Button from "@material-ui/core/Button";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import InputLabel from "@material-ui/core/InputLabel";
+import SaveIcon from "@material-ui/icons/Save";
+import CancelIcon from "@material-ui/icons/Cancel";
 
 const styles = () => ({
   themeFormControl: {
     maxWidth: 150,
   },
   saveButton: {
-    marginTop: '5px',
-    marginRight: '5px'
+    marginTop: "5px",
+    marginRight: "5px",
   },
   cancelButton: {
-    marginTop: '5px',
-    marginLeft: '5px'
-  }
+    marginTop: "5px",
+    marginLeft: "5px",
+  },
 });
 
 interface Props {
-  classes: any,
-  changeTheme: Function,
-  closeEditSettingsView: Function
+  classes: any;
+  changeTheme: Function;
+  closeEditSettingsView: Function;
 }
 
 interface State {
-  pomodoro: number,
-  shortRest: number,
-  longRest: number,
-  intervalsInSet: number,
-  shouldDisplaySeconds: boolean,
-  databaseFileName: string,
-  selectedTheme: string,
-  timeLengthMin: number,
-  timeLengthMax: number,
-  intervalsInSetMin: number,
-  intervalsInSetMax: number
+  pomodoro: number;
+  shortRest: number;
+  longRest: number;
+  intervalsInSet: number;
+  shouldDisplaySeconds: boolean;
+  databaseFileName: string;
+  selectedTheme: string;
+  timeLengthMin: number;
+  timeLengthMax: number;
+  intervalsInSetMin: number;
+  intervalsInSetMax: number;
 }
 
 class EditSettingsView extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    this.handlePomodoroSliderChange = this.handlePomodoroSliderChange.bind(this);
-    this.handleShortRestSliderChange = this.handleShortRestSliderChange.bind(this);
-    this.handleLongRestSliderChange = this.handleLongRestSliderChange.bind(this);
-    this.handleIntervalsInSetSliderChange = this.handleIntervalsInSetSliderChange.bind(this);
-    this.handleThemeSelectionChange = this.handleThemeSelectionChange.bind(this);
+    this.handlePomodoroSliderChange = this.handlePomodoroSliderChange.bind(
+      this
+    );
+    this.handleShortRestSliderChange = this.handleShortRestSliderChange.bind(
+      this
+    );
+    this.handleLongRestSliderChange = this.handleLongRestSliderChange.bind(
+      this
+    );
+    this.handleIntervalsInSetSliderChange = this.handleIntervalsInSetSliderChange.bind(
+      this
+    );
+    this.handleThemeSelectionChange = this.handleThemeSelectionChange.bind(
+      this
+    );
 
     this.state = {
-      pomodoro: this.secondsToMinutes(electronSettings.getSync('pomodoro') as number),
-      shortRest: this.secondsToMinutes(electronSettings.getSync('shortRest') as number),
-      longRest: this.secondsToMinutes(electronSettings.getSync('longRest') as number),
-      intervalsInSet: electronSettings.getSync('intervalsInSet') as number,
-      shouldDisplaySeconds: electronSettings.getSync('shouldDisplaySeconds') as boolean,
-      databaseFileName: electronSettings.getSync('databaseFileName') as string,
-      selectedTheme: electronSettings.getSync('theme') as string,
+      pomodoro: this.secondsToMinutes(
+        electronSettings.getSync("pomodoro") as number
+      ),
+      shortRest: this.secondsToMinutes(
+        electronSettings.getSync("shortRest") as number
+      ),
+      longRest: this.secondsToMinutes(
+        electronSettings.getSync("longRest") as number
+      ),
+      intervalsInSet: electronSettings.getSync("intervalsInSet") as number,
+      shouldDisplaySeconds: electronSettings.getSync(
+        "shouldDisplaySeconds"
+      ) as boolean,
+      databaseFileName: electronSettings.getSync("databaseFileName") as string,
+      selectedTheme: electronSettings.getSync("theme") as string,
       timeLengthMin: 1,
       timeLengthMax: 60,
       intervalsInSetMin: 1,
-      intervalsInSetMax: 10
-    }
+      intervalsInSetMax: 10,
+    };
   }
 
   secondsToMinutes(amount: number) {
@@ -103,17 +121,17 @@ class EditSettingsView extends React.Component<Props, State> {
   // TODO: Not sure what kind of event this is.
   handleLongRestChange(event: any) {
     const newLongRestChange = event.target.value;
-    this.setState({longRest: newLongRestChange})
+    this.setState({ longRest: newLongRestChange });
   }
 
   // TODO: Not sure what kind of event this is.
   handleIntervalsInSetChange(event: any) {
     const newIntervalsInSet = event.target.value;
-    this.setState({intervalsInSet: newIntervalsInSet});
+    this.setState({ intervalsInSet: newIntervalsInSet });
   }
 
   handleShouldDisplaySecondsChange() {
-    this.setState({shouldDisplaySeconds: !this.state.shouldDisplaySeconds});
+    this.setState({ shouldDisplaySeconds: !this.state.shouldDisplaySeconds });
   }
 
   formSubmit(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -131,7 +149,7 @@ class EditSettingsView extends React.Component<Props, State> {
 
     this.props.changeTheme(this.state.selectedTheme);
 
-    ipcRenderer.send('showNotification', 'settingsUpdated');
+    ipcRenderer.send("showNotification", "settingsUpdated");
 
     this.props.closeEditSettingsView();
   }
@@ -146,35 +164,35 @@ class EditSettingsView extends React.Component<Props, State> {
   handlePomodoroSliderChange(event: any, value: any) {
     event.preventDefault();
 
-    this.setState({pomodoro: value});
+    this.setState({ pomodoro: value });
   }
 
   handleShortRestSliderChange(event: any, value: any) {
     event.preventDefault();
 
-    this.setState({shortRest: value});
+    this.setState({ shortRest: value });
   }
 
   handleLongRestSliderChange(event: any, value: any) {
     event.preventDefault();
 
-    this.setState({longRest: value});
+    this.setState({ longRest: value });
   }
 
   handleIntervalsInSetSliderChange(event: any, value: any) {
     event.preventDefault();
 
-    this.setState({intervalsInSet: value});
+    this.setState({ intervalsInSet: value });
   }
 
   handleThemeSelectionChange(event: any) {
     event.preventDefault();
 
-    this.setState({selectedTheme: event.target.value});
+    this.setState({ selectedTheme: event.target.value });
   }
 
   valueText(value: number) {
-    return `${value}`
+    return `${value}`;
   }
 
   render() {
@@ -189,11 +207,21 @@ class EditSettingsView extends React.Component<Props, State> {
           <Typography>
             Pomodoro Length (in minutes): {this.state.pomodoro}
           </Typography>
-          <Slider defaultValue={this.state.pomodoro}
+          <Slider
+            defaultValue={this.state.pomodoro}
             getAriaValueText={this.valueText}
             aria-labelledby="discrete-slider-small-steps"
             step={1}
-            marks={[{value: this.state.timeLengthMin, label: `${this.state.timeLengthMin}`}, {value: this.state.timeLengthMax, label: `${this.state.timeLengthMax}`}]}
+            marks={[
+              {
+                value: this.state.timeLengthMin,
+                label: `${this.state.timeLengthMin}`,
+              },
+              {
+                value: this.state.timeLengthMax,
+                label: `${this.state.timeLengthMax}`,
+              },
+            ]}
             min={this.state.timeLengthMin}
             max={this.state.timeLengthMax}
             valueLabelDisplay="auto"
@@ -203,11 +231,21 @@ class EditSettingsView extends React.Component<Props, State> {
           <Typography>
             Short Rest Length (in minutes): {this.state.shortRest}
           </Typography>
-          <Slider defaultValue={this.state.shortRest}
+          <Slider
+            defaultValue={this.state.shortRest}
             getAriaValueText={this.valueText}
             aria-labelledby="discrete-slider-small-steps"
             step={1}
-            marks={[{value: this.state.timeLengthMin, label: `${this.state.timeLengthMin}`}, {value: this.state.timeLengthMax, label: `${this.state.timeLengthMax}`}]}
+            marks={[
+              {
+                value: this.state.timeLengthMin,
+                label: `${this.state.timeLengthMin}`,
+              },
+              {
+                value: this.state.timeLengthMax,
+                label: `${this.state.timeLengthMax}`,
+              },
+            ]}
             min={this.state.timeLengthMin}
             max={this.state.timeLengthMax}
             valueLabelDisplay="auto"
@@ -217,11 +255,21 @@ class EditSettingsView extends React.Component<Props, State> {
           <Typography>
             Long Rest Length (in minutes): {this.state.longRest}
           </Typography>
-          <Slider defaultValue={this.state.longRest}
+          <Slider
+            defaultValue={this.state.longRest}
             getAriaValueText={this.valueText}
             aria-labelledby="discrete-slider-small-steps"
             step={1}
-            marks={[{value: this.state.timeLengthMin, label: `${this.state.timeLengthMin}`}, {value: this.state.timeLengthMax, label: `${this.state.timeLengthMax}`}]}
+            marks={[
+              {
+                value: this.state.timeLengthMin,
+                label: `${this.state.timeLengthMin}`,
+              },
+              {
+                value: this.state.timeLengthMax,
+                label: `${this.state.timeLengthMax}`,
+              },
+            ]}
             min={this.state.timeLengthMin}
             max={this.state.timeLengthMax}
             valueLabelDisplay="auto"
@@ -231,11 +279,21 @@ class EditSettingsView extends React.Component<Props, State> {
           <Typography>
             How many Pomodoros before a long rest? {this.state.intervalsInSet}
           </Typography>
-          <Slider defaultValue={this.state.intervalsInSet}
+          <Slider
+            defaultValue={this.state.intervalsInSet}
             getAriaValueText={this.valueText}
             aria-labelledby="discrete-slider-small-steps"
             step={1}
-            marks={[{value: this.state.intervalsInSetMin, label: `${this.state.intervalsInSetMin}`}, {value: this.state.intervalsInSetMax, label: `${this.state.intervalsInSetMax}`}]}
+            marks={[
+              {
+                value: this.state.intervalsInSetMin,
+                label: `${this.state.intervalsInSetMin}`,
+              },
+              {
+                value: this.state.intervalsInSetMax,
+                label: `${this.state.intervalsInSetMax}`,
+              },
+            ]}
             min={this.state.intervalsInSetMin}
             max={this.state.intervalsInSetMax}
             valueLabelDisplay="auto"
@@ -243,12 +301,14 @@ class EditSettingsView extends React.Component<Props, State> {
           />
 
           <FormControlLabel
-            control= {<Checkbox
-              checked={ this.state.shouldDisplaySeconds }
-              onChange={() => this.handleShouldDisplaySecondsChange()}
-              color="primary"
-              inputProps={{ 'aria-label': 'should display seconds checkbox' }}
-            />}
+            control={
+              <Checkbox
+                checked={this.state.shouldDisplaySeconds}
+                onChange={() => this.handleShouldDisplaySecondsChange()}
+                color="primary"
+                inputProps={{ "aria-label": "should display seconds checkbox" }}
+              />
+            }
             label="Display Seconds?"
           />
 
@@ -259,17 +319,26 @@ class EditSettingsView extends React.Component<Props, State> {
               value={this.state.selectedTheme}
               onChange={this.handleThemeSelectionChange}
             >
-              <MenuItem value={'light'}>Light</MenuItem>
-              <MenuItem value={'dark'}>Dark</MenuItem>
+              <MenuItem value={"light"}>Light</MenuItem>
+              <MenuItem value={"dark"}>Dark</MenuItem>
             </Select>
-
           </FormControl>
 
           <span>
-            <Button className={classes.saveButton} variant="contained" color="primary" onClick={(e) => this.formSubmit(e)}>
+            <Button
+              className={classes.saveButton}
+              variant="contained"
+              color="primary"
+              onClick={(e) => this.formSubmit(e)}
+            >
               <SaveIcon />
             </Button>
-            <Button className={classes.cancelButton} variant="contained" color="primary" onClick={(e) => this.cancelEdit(e)}>
+            <Button
+              className={classes.cancelButton}
+              variant="contained"
+              color="primary"
+              onClick={(e) => this.cancelEdit(e)}
+            >
               <CancelIcon />
             </Button>
           </span>

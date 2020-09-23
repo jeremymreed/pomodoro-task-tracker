@@ -34,7 +34,7 @@ class TimeConverter {
   }
 
   static getAsMinutes(durationInSeconds: moment.Duration): string {
-    if (Math.trunc(durationInSeconds.asMinutes()) < 10 ) {
+    if (Math.trunc(durationInSeconds.asMinutes()) < 10) {
       return `0${Math.trunc(durationInSeconds.asMinutes())}`;
     } else {
       return `${Math.trunc(durationInSeconds.asMinutes())}`;
@@ -50,7 +50,7 @@ class TimeConverter {
   }
 
   static getSeconds(durationInSeconds: moment.Duration): string {
-    if (durationInSeconds.seconds() < 10 ) {
+    if (durationInSeconds.seconds() < 10) {
       return `0${durationInSeconds.seconds()}`;
     } else {
       return `${durationInSeconds.seconds()}`;

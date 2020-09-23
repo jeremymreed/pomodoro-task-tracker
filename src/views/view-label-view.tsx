@@ -16,43 +16,43 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import React from 'react';
-import { withStyles } from '@material-ui/styles';
-import FormGroup from '@material-ui/core/FormGroup';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import CancelIcon from '@material-ui/icons/Cancel';
-import Label from '../data-models/label';
+import React from "react";
+import { withStyles } from "@material-ui/styles";
+import FormGroup from "@material-ui/core/FormGroup";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import CancelIcon from "@material-ui/icons/Cancel";
+import Label from "../data-models/label";
 
 const styles = () => ({
   name: {
-    marginBottom: '5px'
+    marginBottom: "5px",
   },
   description: {
-    marginTop: '5px',
-    marginBottom: '5px'
+    marginTop: "5px",
+    marginBottom: "5px",
   },
   done: {
-    marginTop: '5px',
-    marginBottom: '5px'
+    marginTop: "5px",
+    marginBottom: "5px",
   },
   exitButton: {
-    marginTop: '5px',
-  }
+    marginTop: "5px",
+  },
 });
 
 interface Props {
-  classes: any,
-  label: Label,
-  closeViewLabelView: Function,
-  getLabelById: Function
+  classes: any;
+  label: Label;
+  closeViewLabelView: Function;
+  getLabelById: Function;
 }
 
 interface State {
-  name: string,
-  description: string,
-  label: string
+  name: string;
+  description: string;
+  label: string;
 }
 
 class ViewLabelView extends React.Component<Props, State> {
@@ -62,13 +62,13 @@ class ViewLabelView extends React.Component<Props, State> {
     this.state = {
       name: this.props.label.name,
       description: this.props.label.description,
-      label: this.props.label.labelId
-    }
+      label: this.props.label.labelId,
+    };
   }
 
   getLabelLabelName() {
-    if (this.props.label.labelId === '') {
-      return '';
+    if (this.props.label.labelId === "") {
+      return "";
     }
 
     let labelLabel = this.props.getLabelById(this.props.label.labelId);
@@ -86,7 +86,9 @@ class ViewLabelView extends React.Component<Props, State> {
     const { classes } = this.props;
     return (
       <div>
-        <Typography variant="h1" align="center">Label</Typography>
+        <Typography variant="h1" align="center">
+          Label
+        </Typography>
 
         <FormGroup>
           <TextField
@@ -95,14 +97,14 @@ class ViewLabelView extends React.Component<Props, State> {
             multiline
             rows={4}
             defaultValue={this.state.name}
-            inputProps={{readOnly: true}}
+            inputProps={{ readOnly: true }}
           />
 
           <TextField
             className="label"
             label="Label"
             defaultValue={this.getLabelLabelName()}
-            inputProps={{readOnly: true}}
+            inputProps={{ readOnly: true }}
           />
 
           <TextField
@@ -110,12 +112,17 @@ class ViewLabelView extends React.Component<Props, State> {
             label="Description"
             multiline
             rows={4}
-            defaultValue={ this.state.description }
-            inputProps={{readOnly: true}}
+            defaultValue={this.state.description}
+            inputProps={{ readOnly: true }}
           />
 
           <span>
-            <Button className={classes.exitButton} variant="contained" color="primary" onClick={(e) => this.exit(e)}>
+            <Button
+              className={classes.exitButton}
+              variant="contained"
+              color="primary"
+              onClick={(e) => this.exit(e)}
+            >
               <CancelIcon />
             </Button>
           </span>

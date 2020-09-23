@@ -16,37 +16,37 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import React from 'react';
-import TaskList from '../components/task-list';
-import LabelList from '../components/label-list';
-import CurrentListState from '../enums/current-list-state-enum';
-import Task from '../data-models/task';
-import Label from '../data-models/label';
-import Typography from '@material-ui/core/Typography';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import React from "react";
+import TaskList from "../components/task-list";
+import LabelList from "../components/label-list";
+import CurrentListState from "../enums/current-list-state-enum";
+import Task from "../data-models/task";
+import Label from "../data-models/label";
+import Typography from "@material-ui/core/Typography";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 
 interface Props {
-  tasks: Array<Task>,
-  labels: Array<Label>,
-  currentList: CurrentListState,
-  setCurrentList: Function,
-  openEditTaskView: Function,
-  openAddTaskView: Function,
-  openEditSettingsView: Function,
-  openViewTaskView: Function,
-  openViewLabelView: Function,
-  openEditLabelView: Function,
-  openAddLabelView: Function,
-  startTask: Function,
-  taskDoneById: Function,
-  removeTask: Function,
-  removeLabel: Function,
-  setFilter: Function,
+  tasks: Array<Task>;
+  labels: Array<Label>;
+  currentList: CurrentListState;
+  setCurrentList: Function;
+  openEditTaskView: Function;
+  openAddTaskView: Function;
+  openEditSettingsView: Function;
+  openViewTaskView: Function;
+  openViewLabelView: Function;
+  openEditLabelView: Function;
+  openAddLabelView: Function;
+  startTask: Function;
+  taskDoneById: Function;
+  removeTask: Function;
+  removeLabel: Function;
+  setFilter: Function;
 }
 
 class MainView extends React.Component<Props, any> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props);
 
     this.handleTabChange = this.handleTabChange.bind(this);
@@ -61,23 +61,23 @@ class MainView extends React.Component<Props, any> {
       return (
         <TaskList
           tasks={this.props.tasks}
-          startTask={ this.props.startTask }
-          taskDoneById={ this.props.taskDoneById }
-          openEditTaskView={ this.props.openEditTaskView }
-          openAddTaskView={ this.props.openAddTaskView }
-          openViewTaskView={ this.props.openViewTaskView }
-          removeTask={ this.props.removeTask }
-          setFilter={ this.props.setFilter }
+          startTask={this.props.startTask}
+          taskDoneById={this.props.taskDoneById}
+          openEditTaskView={this.props.openEditTaskView}
+          openAddTaskView={this.props.openAddTaskView}
+          openViewTaskView={this.props.openViewTaskView}
+          removeTask={this.props.removeTask}
+          setFilter={this.props.setFilter}
         />
       );
     } else if (this.props.currentList === CurrentListState.labelListState) {
       return (
-        <LabelList 
-          labels={ this.props.labels }
-          openViewLabelView={ this.props.openViewLabelView }
-          openEditLabelView={ this.props.openEditLabelView }
-          openAddLabelView={ this.props.openAddLabelView }
-          removeLabel={ this.props.removeLabel }
+        <LabelList
+          labels={this.props.labels}
+          openViewLabelView={this.props.openViewLabelView}
+          openEditLabelView={this.props.openEditLabelView}
+          openAddLabelView={this.props.openAddLabelView}
+          removeLabel={this.props.removeLabel}
         />
       );
     }
@@ -86,12 +86,14 @@ class MainView extends React.Component<Props, any> {
   render() {
     return (
       <div>
-        <Typography variant="h3" align="center">Pomodoro Task Tracker</Typography>
+        <Typography variant="h3" align="center">
+          Pomodoro Task Tracker
+        </Typography>
         <Tabs value={this.props.currentList} onChange={this.handleTabChange}>
           <Tab label="Tasks" />
           <Tab label="Labels" />
         </Tabs>
-        { this.renderList() }
+        {this.renderList()}
       </div>
     );
   }

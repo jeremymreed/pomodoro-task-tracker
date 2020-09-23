@@ -16,19 +16,19 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import React from 'react';
-import { ipcRenderer } from 'electron';
-import { withStyles } from '@material-ui/styles';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Timer from '../components/timer';
-import PauseIcon from '@material-ui/icons/Pause';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import StopIcon from '@material-ui/icons/Stop';
-import CheckIcon from '@material-ui/icons/Check';
-import Task from '../data-models/task';
+import React from "react";
+import { ipcRenderer } from "electron";
+import { withStyles } from "@material-ui/styles";
+import Box from "@material-ui/core/Box";
+import Typography from "@material-ui/core/Typography";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Timer from "../components/timer";
+import PauseIcon from "@material-ui/icons/Pause";
+import PlayArrowIcon from "@material-ui/icons/PlayArrow";
+import StopIcon from "@material-ui/icons/Stop";
+import CheckIcon from "@material-ui/icons/Check";
+import Task from "../data-models/task";
 
 /*
   We create custom TextField component with 'disabled' text styling overridden.
@@ -38,41 +38,41 @@ import Task from '../data-models/task';
 
 const styles = () => ({
   activeTask: {
-    display: 'inline-block'
+    display: "inline-block",
   },
   pauseResumeButton: {
-    marginTop: '5px',
-    marginRight: '5px'
+    marginTop: "5px",
+    marginRight: "5px",
   },
   stopButton: {
-    marginTop: '5px',
-    marginLeft: '5px',
-    marginRight: '5px'
+    marginTop: "5px",
+    marginLeft: "5px",
+    marginRight: "5px",
   },
   doneButton: {
-    marginTop: '5px',
-    marginLeft: '5px'
+    marginTop: "5px",
+    marginLeft: "5px",
   },
   containerCenter: {
-    alignContent: "center"
-  }
+    alignContent: "center",
+  },
 });
 
 interface Props {
-  classes: any,
-  task: Task,
-  updateTaskTimeSpentOnTask: Function,
-  taskDone: Function,
-  stopTask: Function
+  classes: any;
+  task: Task;
+  updateTaskTimeSpentOnTask: Function;
+  taskDone: Function;
+  stopTask: Function;
 }
 
 interface State {
-  shouldRun: boolean
+  shouldRun: boolean;
 }
 
 class TaskRunningView extends React.Component<Props, State> {
-  getTotalTimeRan: Function
-  getCurrentPhaseType: Function
+  getTotalTimeRan: Function;
+  getCurrentPhaseType: Function;
 
   constructor(props: Props) {
     super(props);
@@ -86,15 +86,15 @@ class TaskRunningView extends React.Component<Props, State> {
 
     this.state = {
       shouldRun: true,
-    }
+    };
   }
 
   _startTimer() {
-    this.setState({shouldRun: true});
+    this.setState({ shouldRun: true });
   }
 
   _stopTimer() {
-    this.setState({shouldRun: false});
+    this.setState({ shouldRun: false });
   }
 
   // Called by Timer, to pass in its getTotalTimeRan function, so we can call it here.
@@ -110,14 +110,14 @@ class TaskRunningView extends React.Component<Props, State> {
   handleTimerExpiration(type: string) {
     this._stopTimer();
     this.props.updateTaskTimeSpentOnTask(this.getTotalTimeRan());
-    if (this.getCurrentPhaseType() === 'Work') {
-      ipcRenderer.send('setLuxaforRestStrobe');
-      ipcRenderer.send('showNotification', 'timeToRest');
-    } else if (type === 'Rest') {
-      ipcRenderer.send('setLuxaforWorkStrobe');
-      ipcRenderer.send('showNotification', 'timeToWork');
+    if (this.getCurrentPhaseType() === "Work") {
+      ipcRenderer.send("setLuxaforRestStrobe");
+      ipcRenderer.send("showNotification", "timeToRest");
+    } else if (type === "Rest") {
+      ipcRenderer.send("setLuxaforWorkStrobe");
+      ipcRenderer.send("showNotification", "timeToWork");
     } else {
-      throw new Error('Invalid type detected!');
+      throw new Error("Invalid type detected!");
     }
   }
 
@@ -137,12 +137,12 @@ class TaskRunningView extends React.Component<Props, State> {
 
     const currentPhase = this.getCurrentPhaseType();
 
-    if (currentPhase === 'Work') {
-      ipcRenderer.send('setLuxaforWork');
-    } else if (currentPhase === 'Rest') {
-      ipcRenderer.send('setLuxaforRest');
+    if (currentPhase === "Work") {
+      ipcRenderer.send("setLuxaforWork");
+    } else if (currentPhase === "Rest") {
+      ipcRenderer.send("setLuxaforRest");
     } else {
-      throw new Error('Invalid Phase Type detected!');
+      throw new Error("Invalid Phase Type detected!");
     }
   }
 
@@ -155,7 +155,7 @@ class TaskRunningView extends React.Component<Props, State> {
     this.props.updateTaskTimeSpentOnTask(this.getTotalTimeRan());
     this.props.stopTask();
 
-    ipcRenderer.send('showNotification', 'taskStopped');
+    ipcRenderer.send("showNotification", "taskStopped");
   }
 
   // User is done with this task.
@@ -174,13 +174,23 @@ class TaskRunningView extends React.Component<Props, State> {
 
     if (this.state.shouldRun) {
       pauseResumeButton = (
-        <Button className={classes.pauseResumeButton} variant="contained" color="primary" onClick={(e) => this.handlePause(e)}>
+        <Button
+          className={classes.pauseResumeButton}
+          variant="contained"
+          color="primary"
+          onClick={(e) => this.handlePause(e)}
+        >
           <PauseIcon />
         </Button>
       );
     } else {
       pauseResumeButton = (
-        <Button className={classes.pauseResumeButton} variant="contained" color="primary" onClick={(e) => this.handleResume(e)}>
+        <Button
+          className={classes.pauseResumeButton}
+          variant="contained"
+          color="primary"
+          onClick={(e) => this.handleResume(e)}
+        >
           <PlayArrowIcon />
         </Button>
       );
@@ -188,15 +198,17 @@ class TaskRunningView extends React.Component<Props, State> {
     return (
       <div>
         <Box display="flex" justifyContent="center">
-          <Typography className={classes.activeTask} variant="h6">Active Task: { this.props.task.name }</Typography>
+          <Typography className={classes.activeTask} variant="h6">
+            Active Task: {this.props.task.name}
+          </Typography>
         </Box>
 
         <Box display="flex" justifyContent="center">
           <Timer
-            shouldRun={ this.state.shouldRun }
-            handleTimerExpiration={ this.handleTimerExpiration }
-            submitGetTotalTimeRan={ this.submitGetTotalTimeRan }
-            submitGetCurrentPhaseType={ this.submitGetCurrentPhaseType }
+            shouldRun={this.state.shouldRun}
+            handleTimerExpiration={this.handleTimerExpiration}
+            submitGetTotalTimeRan={this.submitGetTotalTimeRan}
+            submitGetCurrentPhaseType={this.submitGetCurrentPhaseType}
           />
         </Box>
 
@@ -205,18 +217,28 @@ class TaskRunningView extends React.Component<Props, State> {
             label="Description"
             multiline
             rows={4}
-            defaultValue={ this.props.task.description }
-            inputProps={{readOnly: true}}
+            defaultValue={this.props.task.description}
+            inputProps={{ readOnly: true }}
           />
         </Box>
 
         <Box display="flex" justifyContent="center">
           <p>
-            { pauseResumeButton }
-            <Button className={classes.stopButton} variant="contained" color="primary" onClick={(e) => this.stopTask(e)}>
+            {pauseResumeButton}
+            <Button
+              className={classes.stopButton}
+              variant="contained"
+              color="primary"
+              onClick={(e) => this.stopTask(e)}
+            >
               <StopIcon />
             </Button>
-            <Button className={classes.doneButton} variant="contained" color="primary" onClick={(e) => this.taskDone(e)}>
+            <Button
+              className={classes.doneButton}
+              variant="contained"
+              color="primary"
+              onClick={(e) => this.taskDone(e)}
+            >
               <CheckIcon />
             </Button>
           </p>

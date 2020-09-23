@@ -16,28 +16,28 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import React from 'react';
-import Label from '../data-models/label';
-import { withStyles } from '@material-ui/styles';
-import Container from '@material-ui/core/Container';
-import Button from '@material-ui/core/Button';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import AddIcon from '@material-ui/icons/Add';
+import React from "react";
+import Label from "../data-models/label";
+import { withStyles } from "@material-ui/styles";
+import Container from "@material-ui/core/Container";
+import Button from "@material-ui/core/Button";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
+import AddIcon from "@material-ui/icons/Add";
 
 const styles = (): any => ({
   divTable: {
-    overflowY: 'scroll',
+    overflowY: "scroll",
     minWidth: 640,
-    maxHeight: 425
+    maxHeight: 425,
   },
   table: {
     minWidth: 640,
@@ -46,45 +46,54 @@ const styles = (): any => ({
     maxWidth: 200,
   },
   labelName: {
-    textDecoration: 'underline',
-    textTransform: 'none'
+    textDecoration: "underline",
+    textTransform: "none",
   },
   labelActionButtons: {
-    marginLeft: '5px',
-    marginRight: '5px'
+    marginLeft: "5px",
+    marginRight: "5px",
   },
   addLabelButton: {
-    marginTop: '15px',
-  }
+    marginTop: "15px",
+  },
 });
 
 interface Props {
-  classes: any,
-  labels: Array<Label>,
-  openViewLabelView: Function,
-  openEditLabelView: Function,
-  openAddLabelView: Function,
-  removeLabel: Function
+  classes: any;
+  labels: Array<Label>;
+  openViewLabelView: Function;
+  openEditLabelView: Function;
+  openAddLabelView: Function;
+  removeLabel: Function;
 }
 
-class LabelList extends React.Component<Props>{
+class LabelList extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
   }
 
-  viewLabel(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, labelId: string) {
+  viewLabel(
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    labelId: string
+  ) {
     event.preventDefault();
 
     this.props.openViewLabelView(labelId);
   }
 
-  editLabel(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, labelId:string) {
+  editLabel(
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    labelId: string
+  ) {
     event.preventDefault();
 
     this.props.openEditLabelView(labelId);
   }
 
-  removeLabel(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, labelId: string) {
+  removeLabel(
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    labelId: string
+  ) {
     event.preventDefault();
 
     this.props.removeLabel(labelId);
@@ -98,10 +107,12 @@ class LabelList extends React.Component<Props>{
 
   getEmptyLabelList(classes: any) {
     // No Labels.
-    const listLabels= (
+    const listLabels = (
       <TableRow>
         <TableCell>
-          <Typography variant="h6" align="center">You have no labels.</Typography>
+          <Typography variant="h6" align="center">
+            You have no labels.
+          </Typography>
         </TableCell>
       </TableRow>
     );
@@ -114,9 +125,7 @@ class LabelList extends React.Component<Props>{
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            { listLabels }
-          </TableBody>
+          <TableBody>{listLabels}</TableBody>
         </Table>
       </TableContainer>
     );
@@ -126,21 +135,41 @@ class LabelList extends React.Component<Props>{
     // We have tasks.
     const listsLabels = this.props.labels.map((label) => {
       return (
-        <TableRow key={ label._id }>
+        <TableRow key={label._id}>
           <TableCell>
             <Container className={classes.labelNameContainer}>
-              <Button className={ classes.taskButtons } size="small" onClick={(e) => this.viewLabel(e, label._id)}>
-                <Typography className={ classes.labelName } variant="button" noWrap={true}>
-                  { label.name }
+              <Button
+                className={classes.taskButtons}
+                size="small"
+                onClick={(e) => this.viewLabel(e, label._id)}
+              >
+                <Typography
+                  className={classes.labelName}
+                  variant="button"
+                  noWrap={true}
+                >
+                  {label.name}
                 </Typography>
               </Button>
             </Container>
           </TableCell>
           <TableCell>
-            <Button className={ classes.labelActionButtons } size="small" variant="contained" color="primary" onClick={(e) => this.editLabel(e, label._id)}>
+            <Button
+              className={classes.labelActionButtons}
+              size="small"
+              variant="contained"
+              color="primary"
+              onClick={(e) => this.editLabel(e, label._id)}
+            >
               <EditIcon />
             </Button>
-            <Button className={ classes.labelActionButtons } size="small" variant="contained" color="secondary" onClick={(e) => this.removeLabel(e, label._id)}>
+            <Button
+              className={classes.labelActionButtons}
+              size="small"
+              variant="contained"
+              color="secondary"
+              onClick={(e) => this.removeLabel(e, label._id)}
+            >
               <DeleteIcon />
             </Button>
           </TableCell>
@@ -154,14 +183,14 @@ class LabelList extends React.Component<Props>{
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell><Typography variant="h6">Name</Typography></TableCell>
+              <TableCell>
+                <Typography variant="h6">Name</Typography>
+              </TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            { listsLabels }
-          </TableBody>
+          <TableBody>{listsLabels}</TableBody>
         </Table>
       </TableContainer>
     );
@@ -169,18 +198,23 @@ class LabelList extends React.Component<Props>{
 
   getLabelList(classes: any) {
     if (this.props.labels.length === 0) {
-      return (this.getEmptyLabelList(classes));
+      return this.getEmptyLabelList(classes);
     } else {
-      return (this.getFullLabelList(classes))
+      return this.getFullLabelList(classes);
     }
   }
 
-  render () {
+  render() {
     const { classes }: any = this.props;
     return (
       <div>
-        { this.getLabelList(classes) }
-        <Button className={classes.addLabelButton} variant="contained" color="primary" onClick={(e) => this.addLabel(e)}>
+        {this.getLabelList(classes)}
+        <Button
+          className={classes.addLabelButton}
+          variant="contained"
+          color="primary"
+          onClick={(e) => this.addLabel(e)}
+        >
           <AddIcon />
         </Button>
       </div>

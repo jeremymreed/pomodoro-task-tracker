@@ -16,54 +16,54 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import PouchDB from 'pouchdb';
-import TaskMapper from './mappers/task-mapper';
+import PouchDB from "pouchdb";
+import TaskMapper from "./mappers/task-mapper";
 
-PouchDB.plugin(require('pouchdb-find'));
+PouchDB.plugin(require("pouchdb-find"));
 
-const db = new PouchDB('data/pomodoro-task-tracker-test');
+const db = new PouchDB("data/pomodoro-task-tracker-test");
 
 let tasks = new Map();
 
 // Create indexes
 const createIndexes = async () => {
-  console.log('--- findByName() ------------------------------');
+  console.log("--- findByName() ------------------------------");
 
   let indexes = await db.getIndexes();
 
-  console.log('indexes: ', indexes);
+  console.log("indexes: ", indexes);
 
   if (indexes.indexes.length === 1) {
-    console.log('Creating indexes!');
+    console.log("Creating indexes!");
 
     let indexByName = await db.createIndex({
       index: {
-        fields: ['name'],
-        ddoc: 'index-by-name'
-      }
+        fields: ["name"],
+        ddoc: "index-by-name",
+      },
     });
 
     let indexByType = await db.createIndex({
       index: {
-        fields: ['type'],
-        ddoc: 'index-by-type'
-      }
+        fields: ["type"],
+        ddoc: "index-by-type",
+      },
     });
 
     let indexByDone = await db.createIndex({
       index: {
-        fields: ['done'],
-        ddoc: 'index-by-done'
-      }
+        fields: ["done"],
+        ddoc: "index-by-done",
+      },
     });
 
-    console.log('indexByName: ', indexByName);
-    console.log('indexByType: ', indexByType);
-    console.log('indexByDone: ', indexByDone);
+    console.log("indexByName: ", indexByName);
+    console.log("indexByType: ", indexByType);
+    console.log("indexByDone: ", indexByDone);
   }
 
-  console.log('---------------------------------------------');
-}
+  console.log("---------------------------------------------");
+};
 
 // Restore database from disk.
 
@@ -72,196 +72,199 @@ const createIndexes = async () => {
 // Queries using find()
 // Name
 const findByName = async (taskName) => {
-  console.log('--- findByName() ------------------------------');
+  console.log("--- findByName() ------------------------------");
 
   try {
     let findResult = await db.find({
       selector: {
-        name: taskName
+        name: taskName,
       },
-      use_index: 'index-by-name'
+      use_index: "index-by-name",
     });
 
-    console.log('findResult: ', findResult);
+    console.log("findResult: ", findResult);
   } catch (error) {
-    console.log('Caught error', error);
+    console.log("Caught error", error);
   }
 
-  console.log('taskName: ', taskName);
+  console.log("taskName: ", taskName);
 
-  console.log('---------------------------------------------');
-}
+  console.log("---------------------------------------------");
+};
 
 // Type
 const findByType = async (typeName) => {
-  console.log('--- findByType() ------------------------------');
+  console.log("--- findByType() ------------------------------");
 
   try {
     let findResult = await db.find({
       selector: {
-        type: typeName
+        type: typeName,
       },
-      use_index: 'index-by-type'
+      use_index: "index-by-type",
     });
 
-    console.log('findResult: ', findResult);
+    console.log("findResult: ", findResult);
   } catch (error) {
-    console.log('Caught error', error);
+    console.log("Caught error", error);
   }
 
-  console.log('typeName: ', typeName);
+  console.log("typeName: ", typeName);
 
-  console.log('---------------------------------------------');
-}
+  console.log("---------------------------------------------");
+};
 
 // Done
 const findByDone = async (done) => {
-  console.log('--- findByDone() ------------------------------');
+  console.log("--- findByDone() ------------------------------");
 
   try {
     let findResult = await db.find({
       selector: {
-        done: done
+        done: done,
       },
-      use_index: 'index-by-done'
+      use_index: "index-by-done",
     });
 
-    console.log('findResult: ', findResult);
+    console.log("findResult: ", findResult);
   } catch (error) {
-    console.log('Caught error', error);
+    console.log("Caught error", error);
   }
 
-  console.log('done: ', done);
+  console.log("done: ", done);
 
-  console.log('---------------------------------------------');
-}
+  console.log("---------------------------------------------");
+};
 
 // Paging via allDocs.  Kind of like skip/take pattern.
 
 // Get all docs via allDocs.
 const getAllDocs = async () => {
-  console.log('--- getAllDocs() ------------------------------');
+  console.log("--- getAllDocs() ------------------------------");
 
   let docs = null;
 
   try {
     docs = await db.allDocs({ include_docs: true });
-    console.log('docs: ', docs);
+    console.log("docs: ", docs);
   } catch (error) {
-    console.log('error: ', error);
+    console.log("error: ", error);
   }
-  console.log('---------------------------------------------');
+  console.log("---------------------------------------------");
   return docs;
-}
+};
 
 // Remove document.
 const remove = async (task) => {
-  console.log('--- remove() ------------------------------');
+  console.log("--- remove() ------------------------------");
 
-  let result =  null;
+  let result = null;
 
   try {
     result = await db.remove(task._id, task._rev);
-    console.log('result: ', result);
+    console.log("result: ", result);
     if (result.ok) {
       tasks.delete(task._id);
     }
   } catch (error) {
-    console.log('error: ', error);
+    console.log("error: ", error);
   }
 
-  console.log('---------------------------------------------');
-}
+  console.log("---------------------------------------------");
+};
 
 // Upsert document.
 const upsert = async (task) => {
-  console.log('--- upsert() ---------------------------------');
+  console.log("--- upsert() ---------------------------------");
 
   try {
     const response = await db.put(task);
-    console.log('response: ', response);
+    console.log("response: ", response);
     if (response.ok) {
       return response.rev;
     } else {
-      console.log('response.ok was false!');
+      console.log("response.ok was false!");
       return null;
     }
   } catch (error) {
-    console.log('error:', error);
+    console.log("error:", error);
   }
 
-  console.log('---------------------------------------------');
-}
+  console.log("---------------------------------------------");
+};
 
 // Get document by id.
 const getById = async (id) => {
-  console.log('--- getById() ---------------------------------');
+  console.log("--- getById() ---------------------------------");
 
   try {
     const response = await db.get(id);
-    console.log('response: ', response);
+    console.log("response: ", response);
   } catch (error) {
-    console.log('error: ', error);
+    console.log("error: ", error);
   }
 
-  console.log('---------------------------------------------');
-}
+  console.log("---------------------------------------------");
+};
 
 /*
   Functions to exercise the PouchDB API.
  */
 
 const testFindByName = async () => {
-  console.log('--- testFindByName() ---------------------------------');
+  console.log("--- testFindByName() ---------------------------------");
 
-  const task = tasks.get('251d9a36-a0b6-43d3-8bb5-16cc6e825c3c');
+  const task = tasks.get("251d9a36-a0b6-43d3-8bb5-16cc6e825c3c");
 
-  console.log('task: ', task);
+  console.log("task: ", task);
 
   await findByName(task.name);
 
-  console.log('---------------------------------------------');
-}
+  console.log("---------------------------------------------");
+};
 
 const testRemove = async () => {
-  console.log('--- testRemove() ---------------------------------');
+  console.log("--- testRemove() ---------------------------------");
 
-  await remove(tasks.get('2085beaf-03eb-4ef8-95af-27193e16845b'));
+  await remove(tasks.get("2085beaf-03eb-4ef8-95af-27193e16845b"));
 
-  console.log('tasks: ', tasks);
+  console.log("tasks: ", tasks);
 
-  console.log('---------------------------------------------');
-}
+  console.log("---------------------------------------------");
+};
 
 const testGetAllDocs = async () => {
-  console.log('--- testGetAllDocs() ---------------------------------');
+  console.log("--- testGetAllDocs() ---------------------------------");
 
   let docs = await getAllDocs();
 
-  for ( let i = 0 ; i < docs.rows.length ; i++ ) {
+  for (let i = 0; i < docs.rows.length; i++) {
     console.log(`docs.rows[${i}]: `, docs.rows[i]);
 
     // The design document for the index will be in the results from allDocs().
     // If it gets processed here, and we upsert the task as design doc, we will overwrite the index!
     // We shouldn't be treating the design document as a Task, so we filter only for documents with the type === 'task'
-    if (docs.rows[i].doc.type !== undefined && docs.rows[i].doc.type === 'task') {
+    if (
+      docs.rows[i].doc.type !== undefined &&
+      docs.rows[i].doc.type === "task"
+    ) {
       tasks.set(docs.rows[i].id, TaskMapper.mapDataToTask(docs.rows[i].doc));
     }
   }
 
-  console.log('tasks: ', tasks);
+  console.log("tasks: ", tasks);
 
-  console.log('---------------------------------------------');
-}
+  console.log("---------------------------------------------");
+};
 
 const testUpsert = async () => {
-  console.log('--- testUpsert() ---------------------------------');
+  console.log("--- testUpsert() ---------------------------------");
 
   const iter = tasks.keys();
 
   let item = iter.next();
   let index = 0;
-  while ( !item.done ) {
+  while (!item.done) {
     let task = tasks.get(item.value);
     task.name = `Task 1${index}`;
     tasks.set(item.value, task);
@@ -270,34 +273,40 @@ const testUpsert = async () => {
     item = iter.next();
   }
 
-  console.log('tasks', tasks);
+  console.log("tasks", tasks);
 
-  console.log('---------------------------------------------');
-}
+  console.log("---------------------------------------------");
+};
 
 const testGetById = async () => {
-  console.log('--- testGetById() ---------------------------------');
+  console.log("--- testGetById() ---------------------------------");
 
-  const testId = '2085beaf-03eb-4ef8-95af-27193e16845b';
+  const testId = "2085beaf-03eb-4ef8-95af-27193e16845b";
 
   await getById(testId);
-  console.log('---------------------------------------------');
-}
+  console.log("---------------------------------------------");
+};
 
 const doItAll = async () => {
-  console.log('--- doItAll() ---------------------------------');
+  console.log("--- doItAll() ---------------------------------");
   await createIndexes();
   await testGetAllDocs();
   await testUpsert();
   await testFindByName();
-  await findByType('task');
-  await findByType('BS');
+  await findByType("task");
+  await findByType("BS");
   await findByDone(true);
   await findByDone(false);
   await testGetById();
   await testRemove();
-  await testGetById();  // Getting a deleted document.
-  console.log('---------------------------------------------');
-}
+  await testGetById(); // Getting a deleted document.
+  console.log("---------------------------------------------");
+};
 
-doItAll().then(() => {console.log('Completed tests');}).catch((error) => {console.log('Caught error: ', error);});
+doItAll()
+  .then(() => {
+    console.log("Completed tests");
+  })
+  .catch((error) => {
+    console.log("Caught error: ", error);
+  });
