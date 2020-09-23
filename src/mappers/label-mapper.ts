@@ -17,10 +17,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import Label from '../data-models/label';
+import RawLabel from '../interfaces/raw-label-interface';
 
 // data is raw doc from PouchDB / CouchDB.
 class LabelMapper {
-  static mapDataToLabel(rawLabel: any) {
+  static mapDataToLabel(rawLabel: RawLabel) {
     return new Label(rawLabel._id, rawLabel._rev, rawLabel.name, rawLabel.description, rawLabel.labelId);
   }
 }

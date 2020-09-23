@@ -33,6 +33,8 @@ import LabelMapper from '../../mappers/label-mapper';
 import Task from '../../data-models/task';
 import Label from '../../data-models/label';
 import CurrentListState from '../../enums/current-list-state-enum';
+import RawTask from '../../interfaces/raw-task-interface';
+import RawLabel from '../../interfaces/raw-label-interface';
 
 interface AppProps {
   changeTheme: (themeName: string) => void
@@ -162,9 +164,11 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   // This is a call back, and it is called when the main process has gotten the data we need.
-  processRawTasks(rawTasks: Array<any>) {
+  processRawTasks(rawTasks: Array<RawTask>) {
     let tasks = [];
     let taskMap = new Map();
+
+    console.log('processRawTasks: rawTasks: ', rawTasks);
 
     for ( let i = 0 ; i < rawTasks.length ; i++ ) {
       if (rawTasks[i].type === 'task') {
@@ -195,7 +199,7 @@ class App extends React.Component<AppProps, AppState> {
     }
 
     try {
-      const rawTasks: any = await this.db.filterTasks(this.currentFilter);
+      const rawTasks: Array<RawTask> = await this.db.filterTasks(this.currentFilter);
       this.processRawTasks(rawTasks);
     } catch (error) {
       console.log('Caught error while loading data: ', error);
@@ -208,16 +212,18 @@ class App extends React.Component<AppProps, AppState> {
     }
 
     try {
-      const rawLabels: any = await this.db.getLabels();
+      const rawLabels: Array<RawLabel> = await this.db.getLabels();
       this.processRawLabels(rawLabels);
     } catch (error) {
       console.log('Caught error: ', error);
     }
   }
 
-  processRawLabels(rawLabels: Array<any>) {
+  processRawLabels(rawLabels: Array<RawLabel>) {
     let labels = [];
     let labelMap = new Map();
+
+    console.log('processRawLabels: rawLabels: ', rawLabels);
 
     for (let i = 0 ; i < rawLabels.length ; i++) {
       let label = LabelMapper.mapDataToLabel(rawLabels[i]);
