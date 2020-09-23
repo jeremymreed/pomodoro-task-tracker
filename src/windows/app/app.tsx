@@ -524,7 +524,7 @@ class App extends React.Component<AppProps, AppState> {
 
     // First let's make sure that any task / label with this label, has its label set to an empty string.
 
-    this.db.getByLabelId(labelId).then((results: any) => {
+    this.db.getByLabelId(labelId).then((results: Array<RawTask | RawLabel>) => {
       if (this.db == undefined) {
         throw new Error('this.db is undefined!');
       }
