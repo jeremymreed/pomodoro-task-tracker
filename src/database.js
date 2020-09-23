@@ -17,6 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import PouchDB from 'pouchdb';
+import TaskFilter from './enums/task-filter-enum';
 
 PouchDB.plugin(require('pouchdb-find'));
 PouchDB.plugin(require('pouchdb-debug'));
@@ -95,11 +96,11 @@ class Database {
 
   async filterTasks(filterName) {
     try {
-      if (filterName === 'all') {
+      if (filterName === TaskFilter.All) {
         return this.getTasks();
-      } else if (filterName === 'tasksDone') {
+      } else if (filterName === TaskFilter.Done) {
         return this.filterTasksByDone(true);
-      } else if (filterName === 'tasksNotDone') {
+      } else if (filterName === TaskFilter.NotDone) {
         return this.filterTasksByDone(false);
       }
     } catch (error) {

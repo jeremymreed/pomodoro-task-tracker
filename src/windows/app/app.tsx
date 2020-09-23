@@ -33,6 +33,7 @@ import LabelMapper from '../../mappers/label-mapper';
 import Task from '../../data-models/task';
 import Label from '../../data-models/label';
 import CurrentListState from '../../enums/current-list-state-enum';
+import TaskFilter from '../../enums/task-filter-enum';
 import UpsertResponse from '../../interfaces/upsert-response-interface';
 import UpsertError from '../../interfaces/upsert-error-interface';
 import RawTask from '../../interfaces/raw-task-interface';
@@ -70,7 +71,7 @@ class App extends React.Component<AppProps, AppState> {
   _isMounted: boolean
   db: Database | undefined
 
-  currentFilter: string
+  currentFilter: TaskFilter
 
   constructor(props: AppProps) {
     super(props);
@@ -105,7 +106,7 @@ class App extends React.Component<AppProps, AppState> {
     this.startTask = this.startTask.bind(this);
     this.stopTask = this.stopTask.bind(this);
 
-    this.currentFilter = 'all';
+    this.currentFilter = TaskFilter.All;
 
     this.state = {
       taskMap: new Map(),             // Use for lookups only.
@@ -134,10 +135,6 @@ class App extends React.Component<AppProps, AppState> {
 
   validateCurrentList() {
     return this.state.currentList >= 0 && this.state.currentList <= 1;
-  }
-
-  validateFilter(filterName: string) {
-    return (filterName === 'all' || filterName === 'tasksDone' || filterName === 'tasksNotDone');
   }
 
   componentDidMount() {
@@ -625,17 +622,13 @@ class App extends React.Component<AppProps, AppState> {
     }
   }
 
-  setFilter(filterName: string) {
-    if (this.validateFilter(filterName)) {
-      this.currentFilter = filterName;
+  setFilter(filterName: TaskFilter) {
+    this.currentFilter = filterName;
 
-      this.loadState().then(() => {
-      }).catch((error) => {
-        console.log('Caught error: ', error);
-      })
-    } else {
-      throw new Error('invalid filter detected!');
-    }
+    this.loadState().then(() => {
+    }).catch((error) => {
+      console.log('Caught error: ', error);
+    })
   }
 
   render() {
