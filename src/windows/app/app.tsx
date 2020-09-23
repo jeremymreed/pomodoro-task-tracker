@@ -75,7 +75,7 @@ class App extends React.Component<AppProps, AppState> {
 
     this._isMounted = false;
 
-    this.handleDataReady = this.handleDataReady.bind(this);
+    this.processRawTasks = this.processRawTasks.bind(this);
     this.getLabelById = this.getLabelById.bind(this);
     this.setCurrentList = this.setCurrentList.bind(this);
     this.openEditTaskView = this.openEditTaskView.bind(this);
@@ -162,7 +162,7 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   // This is a call back, and it is called when the main process has gotten the data we need.
-  handleDataReady(rawTasks: Array<any>) {
+  processRawTasks(rawTasks: Array<any>) {
     let tasks = [];
     let taskMap = new Map();
 
@@ -196,7 +196,7 @@ class App extends React.Component<AppProps, AppState> {
 
     try {
       const docs: any = await this.db.filterTasks(this.currentFilter);
-      this.handleDataReady(docs);
+      this.processRawTasks(docs);
     } catch (error) {
       console.log('Caught error while loading data: ', error);
     }
