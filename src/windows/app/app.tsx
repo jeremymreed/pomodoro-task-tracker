@@ -170,8 +170,6 @@ class App extends React.Component<AppProps, AppState> {
     let tasks = [];
     let taskMap = new Map();
 
-    console.log('processRawTasks: rawTasks: ', rawTasks);
-
     for ( let i = 0 ; i < rawTasks.length ; i++ ) {
       if (rawTasks[i].type === 'task') {
         let task = TaskMapper.mapDataToTask(rawTasks[i]);
@@ -224,8 +222,6 @@ class App extends React.Component<AppProps, AppState> {
   processRawLabels(rawLabels: Array<RawLabel>) {
     let labels = [];
     let labelMap = new Map();
-
-    console.log('processRawLabels: rawLabels: ', rawLabels);
 
     for (let i = 0 ; i < rawLabels.length ; i++) {
       let label = LabelMapper.mapDataToLabel(rawLabels[i]);
