@@ -162,13 +162,13 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   // This is a call back, and it is called when the main process has gotten the data we need.
-  handleDataReady(rawData: Array<any>) {
+  handleDataReady(rawTasks: Array<any>) {
     let tasks = [];
     let taskMap = new Map();
 
-    for ( let i = 0 ; i < rawData.length ; i++ ) {
-      if (rawData[i].type === 'task') {
-        let task = TaskMapper.mapDataToTask(rawData[i]);
+    for ( let i = 0 ; i < rawTasks.length ; i++ ) {
+      if (rawTasks[i].type === 'task') {
+        let task = TaskMapper.mapDataToTask(rawTasks[i]);
 
         tasks.push(task);
         taskMap.set(task._id, task);
