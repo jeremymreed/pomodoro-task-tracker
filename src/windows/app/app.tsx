@@ -477,8 +477,6 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   editLabel(name: string, description: string, labelLabelId: string) {
-    console.log(`name: ${name}, description: ${description}, labelLabelId: ${labelLabelId}`);
-
     if (this.db == undefined) {
       throw new Error('this.db is undefined!');
     }
