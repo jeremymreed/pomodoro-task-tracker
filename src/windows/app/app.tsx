@@ -516,11 +516,15 @@ class App extends React.Component<AppProps, AppState> {
       throw new Error('this.db is undefined!');
     }
 
-    let label = this.state.labelMap.get(labelId);
+    let label: Label | undefined = this.state.labelMap.get(labelId);
+
+    if (label == undefined) {
+      throw new Error('removeLabel: label is undefined!');
+    }
 
     // First let's make sure that any task / label with this label, has its label set to an empty string.
 
-    this.db.getByLabel(labelId).then((results: any) => {
+    this.db.getByLabelId(labelId).then((results: any) => {
       if (this.db == undefined) {
         throw new Error('this.db is undefined!');
       }
@@ -530,7 +534,7 @@ class App extends React.Component<AppProps, AppState> {
       }
 
       for ( let i = 0 ; i < results.length ; i++) {
-        results[i].label = '';
+        results[i].labelId = '';
       }
 
       this.db.bulkUpsert(results).then((responses) => {
