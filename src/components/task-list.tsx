@@ -19,6 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import React from 'react';
 import { ipcRenderer } from 'electron';
 import Task from '../data-models/task';
+import TaskFilter from '../enums/task-filter-enum';
 import { withStyles } from '@material-ui/styles';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
@@ -83,7 +84,7 @@ interface Props {
 }
 
 interface State {
-  selectedFilter: string
+  selectedFilter: TaskFilter
 }
 
 class TaskList extends React.Component<Props, State> {
@@ -95,7 +96,7 @@ class TaskList extends React.Component<Props, State> {
     this.handleFilterSelectionChange = this.handleFilterSelectionChange.bind(this);
 
     this.state = {
-      selectedFilter: 'all'
+      selectedFilter: TaskFilter.All
     }
   }
 
@@ -181,9 +182,9 @@ class TaskList extends React.Component<Props, State> {
                     value={this.state.selectedFilter}
                     onChange={this.handleFilterSelectionChange}
                   >
-                    <MenuItem value={'all'}>All</MenuItem>
-                    <MenuItem value={'tasksDone'}>Complete</MenuItem>
-                    <MenuItem value={'tasksNotDone'}>Incomplete</MenuItem>
+                    <MenuItem value={TaskFilter.All}>All</MenuItem>
+                    <MenuItem value={TaskFilter.Done}>Complete</MenuItem>
+                    <MenuItem value={TaskFilter.NotDone}>Incomplete</MenuItem>
                   </Select>
 
                 </FormControl>
@@ -247,9 +248,9 @@ class TaskList extends React.Component<Props, State> {
                     value={this.state.selectedFilter}
                     onChange={this.handleFilterSelectionChange}
                   >
-                    <MenuItem value={'all'}>All</MenuItem>
-                    <MenuItem value={'tasksDone'}>Complete</MenuItem>
-                    <MenuItem value={'tasksNotDone'}>Incomplete</MenuItem>
+                    <MenuItem value={TaskFilter.All}>All</MenuItem>
+                    <MenuItem value={TaskFilter.Done}>Complete</MenuItem>
+                    <MenuItem value={TaskFilter.NotDone}>Incomplete</MenuItem>
                   </Select>
 
                 </FormControl>
