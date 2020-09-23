@@ -195,8 +195,8 @@ class App extends React.Component<AppProps, AppState> {
     }
 
     try {
-      const docs: any = await this.db.filterTasks(this.currentFilter);
-      this.processRawTasks(docs);
+      const rawTasks: any = await this.db.filterTasks(this.currentFilter);
+      this.processRawTasks(rawTasks);
     } catch (error) {
       console.log('Caught error while loading data: ', error);
     }
