@@ -20,8 +20,8 @@ import Label from '../data-models/label';
 
 // data is raw doc from PouchDB / CouchDB.
 class LabelMapper {
-  static mapDataToLabel(data: any) {
-    return new Label(data._id, data._rev, data.name, data.description, data.labelId);
+  static mapDataToLabel(rawLabel: any) {
+    return new Label(rawLabel._id, rawLabel._rev, rawLabel.name, rawLabel.description, rawLabel.labelId);
   }
 }
 

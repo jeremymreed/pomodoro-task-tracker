@@ -20,8 +20,8 @@ import Task from '../data-models/task';
 
 // data is raw doc from PouchDB / CouchDB.
 class TaskMapper {
-  static mapDataToTask(data: any) {
-    return new Task(data._id, data._rev, data.name, data.description, data.labelId, data.timeSpent, data.done);
+  static mapDataToTask(rawTask: any) {
+    return new Task(rawTask._id, rawTask._rev, rawTask.name, rawTask.description, rawTask.labelId, rawTask.timeSpent, rawTask.done);
   }
 }
 
