@@ -39,8 +39,8 @@ interface AppProps {
 }
 
 interface AppState {
-  dataMap: Map<string, Task>
-  data: Array<Task>
+  taskMap: Map<string, Task>
+  tasks: Array<Task>
   labelMap: Map<string, Label>
   labels: Array<Label>
   currentTask: string
@@ -104,8 +104,8 @@ class App extends React.Component<AppProps, AppState> {
     this.currentFilter = 'all';
 
     this.state = {
-      dataMap: new Map(),             // Use for lookups only.
-      data: [],                       // Data for TaskList.  Passed to TaskList via prop.
+      taskMap: new Map(),             // Use for lookups only.
+      tasks: [],                       // Data for TaskList.  Passed to TaskList via prop.
       labelMap: new Map(),            // Lookups only.
       labels: [],                     // Data for LabelList.  Passed to LabelList via prop.
       currentTask: '',
@@ -163,20 +163,20 @@ class App extends React.Component<AppProps, AppState> {
 
   // This is a call back, and it is called when the main process has gotten the data we need.
   handleDataReady(rawData: Array<any>) {
-    let data = [];
-    let dataMap = new Map();
+    let tasks = [];
+    let taskMap = new Map();
 
     for ( let i = 0 ; i < rawData.length ; i++ ) {
       if (rawData[i].type === 'task') {
         let task = TaskMapper.mapDataToTask(rawData[i]);
 
-        data.push(task);
-        dataMap.set(task._id, task);
+        tasks.push(task);
+        taskMap.set(task._id, task);
       }
     }
 
     if (this._isMounted) {
-      this.setState({dataMap: dataMap, data: data});
+      this.setState({taskMap: taskMap, tasks: tasks});
     }
   }
 
@@ -232,7 +232,7 @@ class App extends React.Component<AppProps, AppState> {
     if (this.state.currentTask === '') {
       return new Task(uuidv4(), '', '');
     } else {
-      let task = this.state.dataMap.get(this.state.currentTask);
+      let task = this.state.taskMap.get(this.state.currentTask);
       if (task != undefined) {
         return task;
       } else {
@@ -255,7 +255,7 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   getTaskById(taskId: string): Task {
-    let task = this.state.dataMap.get(taskId);
+    let task = this.state.taskMap.get(taskId);
 
     if (task != undefined) {
       return task;
@@ -421,7 +421,7 @@ class App extends React.Component<AppProps, AppState> {
 
     if (this.validateState()) {
       ipcRenderer.send('setLuxaforOff');
-      if (this.state.dataMap.has(taskId)) {
+      if (this.state.taskMap.has(taskId)) {
         let task = this.getTaskById(taskId);
         task.done = true;
         this.db.upsert(task).then((rev) => {
@@ -593,7 +593,7 @@ class App extends React.Component<AppProps, AppState> {
       throw new Error('this.db is undefined!');
     }
 
-    let task = this.state.dataMap.get(taskId);
+    let task = this.state.taskMap.get(taskId);
 
     this.db.remove(task).then((result) => {
       if (result == undefined) {
@@ -674,7 +674,7 @@ class App extends React.Component<AppProps, AppState> {
       return (
         <div>
           <MainView
-            data={ this.state.data }
+            tasks={ this.state.tasks }
             labels={ this.state.labels }
             currentList={ this.state.currentList }
             startTask={ this.startTask }

@@ -72,7 +72,7 @@ const styles = (): any => ({
 
 interface Props {
   classes: object,
-  data: Array<Task>,
+  tasks: Array<Task>,
   openEditTaskView: Function,
   openAddTaskView: Function,
   openViewTaskView: Function,
@@ -200,7 +200,7 @@ class TaskList extends React.Component<Props, State> {
 
   getFullTaskList(classes: any) {
     // We have tasks.
-    const listTasks = this.props.data.map((task) => {
+    const listTasks = this.props.tasks.map((task) => {
       return (
         <TableRow key={ task._id }>
           <TableCell>
@@ -265,7 +265,7 @@ class TaskList extends React.Component<Props, State> {
   }
 
   getTaskList(classes: any) {
-    if (this.props.data.length === 0) {
+    if (this.props.tasks.length === 0) {
       return (this.getEmptyTaskList(classes));
     } else {
       return (this.getFullTaskList(classes))

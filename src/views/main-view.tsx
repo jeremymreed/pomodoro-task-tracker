@@ -27,7 +27,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
 interface Props {
-  data: Array<Task>,
+  tasks: Array<Task>,
   labels: Array<Label>,
   currentList: CurrentListState,
   setCurrentList: Function,
@@ -60,7 +60,7 @@ class MainView extends React.Component<Props, any> {
     if (this.props.currentList === CurrentListState.taskListState) {
       return (
         <TaskList
-          data={this.props.data}
+          tasks={this.props.tasks}
           startTask={ this.props.startTask }
           taskDoneById={ this.props.taskDoneById }
           openEditTaskView={ this.props.openEditTaskView }
