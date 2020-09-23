@@ -33,6 +33,8 @@ import LabelMapper from '../../mappers/label-mapper';
 import Task from '../../data-models/task';
 import Label from '../../data-models/label';
 import CurrentListState from '../../enums/current-list-state-enum';
+import UpsertResponse from '../../interfaces/upsert-response-interface';
+import UpsertError from '../../interfaces/upsert-error-interface';
 import RawTask from '../../interfaces/raw-task-interface';
 import RawLabel from '../../interfaces/raw-label-interface';
 
@@ -537,10 +539,11 @@ class App extends React.Component<AppProps, AppState> {
         results[i].labelId = '';
       }
 
-      this.db.bulkUpsert(results).then((responses) => {
+      this.db.bulkUpsert(results).then((responses: Array<UpsertResponse | UpsertError>) => {
         if (responses == undefined) {
           throw new Error('removeLabel: responses is undefined!');
         }
+
         // We throw exception at any error from bulkUpsert for debug purposes.
         responses.map((response: any) => {
           if (!response.ok) {
