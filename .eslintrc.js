@@ -40,9 +40,11 @@ module.exports = {
     ],
     "prettier/prettier": ["error"],
     "react/jsx-filename-extension": [1, { extensions: [".jsx", ".tsx"] }],
-    "no-use-before-define": [0],
-    "@typescript-eslint/no-use-before-define": [1],
+    "no-use-before-define": "off",
+    "@typescript-eslint/no-use-before-define": "error",
     "no-useless-constructor": "off",
     "@typescript-eslint/no-useless-constructor": "error",
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": "error",
   },
 };
