@@ -66,17 +66,18 @@ enum StateVars {
 }
 
 class App extends React.Component<AppProps, AppState> {
-  _isMounted: boolean;
-  db: Database | undefined;
+  private isMounted: boolean;
 
-  currentFilter: TaskFilter;
+  private db: Database | undefined;
+
+  private currentFilter: TaskFilter;
 
   constructor(props: AppProps) {
     super(props);
 
     this.db = undefined;
 
-    this._isMounted = false;
+    this.isMounted = false;
 
     this.processRawTasks = this.processRawTasks.bind(this);
     this.getLabelById = this.getLabelById.bind(this);
@@ -118,81 +119,349 @@ class App extends React.Component<AppProps, AppState> {
     };
   }
 
-  // Database can be undefined, until it is set componentDidMount.
-  // This function will handle the case of undefined database.
-  validateDatabase() {
-    if (this.db == undefined) {
-      throw new Error("this.db is undefined!");
-    }
-  }
-
-  // TODO: Magic numbers, yay!  Will be obsolete when we convert code to TypeScript.
-  validateState() {
-    return true;
-  }
-
-  validateCurrentList() {
-    return this.state.currentList >= 0 && this.state.currentList <= 1;
-  }
-
-  componentDidMount() {
-    this._isMounted = true;
+  componentDidMount(): void {
+    this.isMounted = true;
 
     ipcRenderer.on("showEditSettingsView", this.openEditSettingsView);
 
     ipcRenderer.send("getDatabaseName");
 
     ipcRenderer.on("databaseName", (event, databaseName) => {
-      const databasePath =
-        (electron.app || electron.remote.app).getPath("userData") +
-        "/" +
-        databaseName;
+      const databasePath = `${(electron.app || electron.remote.app).getPath(
+        "userData"
+      )}/${databaseName}`;
 
+      // eslint-disable-next-line no-console
       console.log("componentDidMount: databaseFullPath", databasePath);
 
       this.db = new Database(databasePath);
       this.db.disableDebug();
 
       this.loadState().catch((error) => {
+        // eslint-disable-next-line no-console
         console.log("Caught error: ", error);
       });
     });
   }
 
-  componentWillUnmount() {
-    this._isMounted = false;
+  componentWillUnmount(): void {
+    this.isMounted = false;
   }
 
-  // This is a call back, and it is called when the main process has gotten the data we need.
-  processRawTasks(rawTasks: Array<RawTask>) {
-    let tasks = [];
-    let taskMap = new Map();
+  getCurrentTask(): Task {
+    const { currentTask, taskMap } = this.state;
 
-    for (let i = 0; i < rawTasks.length; i++) {
-      if (rawTasks[i].type === "task") {
-        let task = TaskMapper.mapDataToTask(rawTasks[i]);
+    if (currentTask === "") {
+      return new Task(uuidv4(), "", "");
+    }
 
-        tasks.push(task);
-        taskMap.set(task._id, task);
+    const task = taskMap.get(currentTask);
+
+    if (task === undefined) {
+      throw new Error("getCurrentTask: task was undefined!");
+    }
+
+    return task;
+  }
+
+  getCurrentLabel(): Label {
+    const { currentLabel, labelMap } = this.state;
+
+    if (currentLabel === "") {
+      return new Label(uuidv4());
+    }
+
+    const label = labelMap.get(currentLabel);
+
+    if (label === undefined) {
+      throw new Error("getCurrentLabel: label was undefined");
+    }
+
+    return label;
+  }
+
+  getTaskById(taskId: string): Task {
+    const { taskMap } = this.state;
+
+    const task = taskMap.get(taskId);
+
+    if (task === undefined) {
+      throw new Error("getTaskById: task is undefined!");
+    }
+
+    return task;
+  }
+
+  getLabelById(labelId: string): Label {
+    const { labelMap } = this.state;
+
+    const label = labelMap.get(labelId);
+
+    if (label === undefined) {
+      throw new Error("getLabelById: label is undefined!");
+    }
+
+    return label;
+  }
+
+  setCurrentList(newValue: number): void {
+    if (this.validateCurrentList()) {
+      this.setState({ currentList: newValue });
+    } else {
+      throw new Error("invalid current list detected!");
+    }
+  }
+
+  setFilter(filterName: TaskFilter): void {
+    this.currentFilter = filterName;
+
+    this.loadState().catch((error) => {
+      // eslint-disable-next-line no-console
+      console.log("Caught error: ", error);
+    });
+  }
+
+  editTask(
+    name: string,
+    description: string,
+    label: string,
+    done: boolean
+  ): void {
+    if (this.db === undefined) {
+      throw new Error("this.db is undefined!");
+    }
+
+    if (this.validateState()) {
+      const task = this.getCurrentTask();
+      task.name = name;
+      task.description = description;
+      task.labelId = label;
+      task.done = done;
+      this.db
+        .upsert(task)
+        .then((rev) => {
+          if (rev === undefined) {
+            throw new Error("editTask: rev is undefined!");
+          }
+
+          task._rev = rev;
+          ipcRenderer.send("showNotification", "taskUpdated");
+          this.loadState().catch((error) => {
+            // eslint-disable-next-line no-console
+            console.log("Caught error: ", error);
+          });
+        })
+        .catch((error) => {
+          // eslint-disable-next-line no-console
+          console.log("error: ", error);
+        });
+    } else {
+      throw new Error("invalid state detected!");
+    }
+  }
+
+  editLabel(name: string, description: string, labelLabelId: string): void {
+    if (this.db === undefined) {
+      throw new Error("this.db is undefined!");
+    }
+
+    if (this.validateState()) {
+      const label = this.getCurrentLabel();
+
+      if (label.labelId === labelLabelId) {
+        throw new Error("Cannot assign label to itself.");
       }
-    }
 
-    if (this._isMounted) {
-      this.setState({ taskMap: taskMap, tasks: tasks });
+      label.name = name;
+      label.description = description;
+      label.labelId = labelLabelId;
+      this.db.upsert(label).then((rev) => {
+        if (rev === undefined) {
+          throw new Error("editLabel: rev is undefined!");
+        }
+
+        label._rev = rev;
+        ipcRenderer.send("showNotification", "labelUpdated");
+        this.loadState().catch((error) => {
+          // eslint-disable-next-line no-console
+          console.log("Caught error: ", error);
+        });
+      });
+    } else {
+      throw new Error("invalid state detected");
     }
   }
 
-  async loadState() {
+  removeLabel(labelId: string): void {
+    const { labelMap } = this.state;
+
+    if (this.db === undefined) {
+      throw new Error("this.db is undefined!");
+    }
+
+    let label: Label | undefined = labelMap.get(labelId);
+
+    if (label === undefined) {
+      throw new Error("removeLabel: label is undefined!");
+    }
+
+    // First let's make sure that any task / label with this label, has its label set to an empty string.
+
+    this.db
+      .getByLabelId(labelId)
+      .then((results: Array<RawTask | RawLabel>) => {
+        if (this.db === undefined) {
+          throw new Error("this.db is undefined!");
+        }
+
+        if (results === undefined) {
+          throw new Error("removeLabel: results is undefined!");
+        }
+
+        for (let i = 0; i < results.length; i += 1) {
+          // results[i].labelId = "";
+          const result = results[i];
+          result.labelId = "";
+        }
+
+        this.db.bulkUpsert(results).then((responses: Array<UpsertResponse>) => {
+          if (responses === undefined) {
+            throw new Error("removeLabel: responses is undefined!");
+          }
+
+          // We throw exception at any error from bulkUpsert for debug purposes.
+          for (let i = 0; i < responses.length; i += 1) {
+            if (responses[i].ok === undefined) {
+              throw new Error("Failed to verify bulkUpsert");
+            }
+          }
+
+          // Load state here, to prevent the case where a label is it's own label.
+          // In this case, we update the label by setting it's label to empty string, and upsert it.
+          // Then the remove() call fails due to a document conflict.
+          this.loadState().then(() => {
+            if (this.db === undefined) {
+              throw new Error("this.db is undefined!");
+            }
+
+            label = labelMap.get(labelId);
+            this.db.remove(label).then((result) => {
+              if (result === undefined) {
+                throw new Error("removeLabel: result is undefined!");
+              }
+              if (result.ok) {
+                this.loadState().catch((error) => {
+                  // eslint-disable-next-line no-console
+                  console.log("Caught error: ", error);
+                });
+              }
+            });
+          });
+        });
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.log("Could not remove the label! error: ", error);
+      });
+  }
+
+  openEditLabelView(labelId: string): void {
+    if (this.validateState()) {
+      this.setState({
+        currentLabel: labelId,
+        stateVar: StateVars.EditLabelState,
+      });
+    } else {
+      throw new Error("invalid state detected!");
+    }
+  }
+
+  closeEditLabelView(): void {
+    if (this.validateState()) {
+      this.setState({ currentLabel: "", stateVar: StateVars.MainViewState });
+    } else {
+      throw new Error("invalid state detected!");
+    }
+  }
+
+  openAddLabelView(): void {
+    if (this.validateState()) {
+      this.setState({ currentLabel: "", stateVar: StateVars.AddNewLabelState });
+    } else {
+      throw new Error("invalid state detected!");
+    }
+  }
+
+  removeTask(taskId: string): void {
+    const { taskMap } = this.state;
+
+    if (this.db === undefined) {
+      throw new Error("this.db is undefined!");
+    }
+
+    const task = taskMap.get(taskId);
+
+    if (task === undefined) {
+      throw new Error("removeTask: task is undefined!");
+    }
+
+    this.db
+      .remove(task)
+      .then((result) => {
+        if (result === undefined) {
+          throw new Error("removeTask: result is undefined");
+        }
+        if (result.ok) {
+          this.loadState().catch((error) => {
+            // eslint-disable-next-line no-console
+            console.log("Caught error: ", error);
+          });
+        }
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.log("Could not remove the task! error: ", error);
+      });
+  }
+
+  stopTask(): void {
+    if (this.validateState()) {
+      this.setState({ currentTask: "", stateVar: StateVars.MainViewState });
+      ipcRenderer.send("setLuxaforOff");
+    } else {
+      throw new Error("invalid state detected!");
+    }
+  }
+
+  processRawLabels(rawLabels: Array<RawLabel>): void {
+    const labels: Array<Label> = [];
+    const labelMap: Map<string, Label> = new Map();
+
+    for (let i = 0; i < rawLabels.length; i += 1) {
+      const label = LabelMapper.mapDataToLabel(rawLabels[i]);
+      labels.push(label);
+      labelMap.set(label._id, label);
+    }
+
+    this.setState({ labels, labelMap });
+  }
+
+  async loadLabels(): Promise<void> {
+    if (this.db === undefined) {
+      throw new Error("this.db is undefined!");
+    }
+
     try {
-      await this.loadTasks();
-      await this.loadLabels();
+      const rawLabels: Array<RawLabel> = await this.db.getLabels();
+      this.processRawLabels(rawLabels);
     } catch (error) {
-      console.log("Caught error while loading state: error: ", error);
+      // eslint-disable-next-line no-console
+      console.log("Caught error: ", error);
     }
   }
 
-  async loadTasks() {
-    if (this.db == undefined) {
+  async loadTasks(): Promise<void> {
+    if (this.db === undefined) {
       throw new Error("this.db is undefined!");
     }
 
@@ -202,85 +471,61 @@ class App extends React.Component<AppProps, AppState> {
       );
       this.processRawTasks(rawTasks);
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.log("Caught error while loading data: ", error);
     }
   }
 
-  async loadLabels() {
-    if (this.db == undefined) {
+  async loadState(): Promise<void> {
+    try {
+      await this.loadTasks();
+      await this.loadLabels();
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log("Caught error while loading state: error: ", error);
+    }
+  }
+
+  // This is a call back, and it is called when the main process has gotten the data we need.
+  processRawTasks(rawTasks: Array<RawTask>): void {
+    const tasks = [];
+    const taskMap = new Map();
+
+    for (let i = 0; i < rawTasks.length; i += 1) {
+      if (rawTasks[i].type === "task") {
+        const task = TaskMapper.mapDataToTask(rawTasks[i]);
+
+        tasks.push(task);
+        taskMap.set(task._id, task);
+      }
+    }
+
+    if (this.isMounted) {
+      this.setState({ taskMap, tasks });
+    }
+  }
+
+  // Database can be undefined, until it is set componentDidMount.
+  // This function will handle the case of undefined database.
+  validateDatabase(): void {
+    if (this.db === undefined) {
       throw new Error("this.db is undefined!");
     }
-
-    try {
-      const rawLabels: Array<RawLabel> = await this.db.getLabels();
-      this.processRawLabels(rawLabels);
-    } catch (error) {
-      console.log("Caught error: ", error);
-    }
   }
 
-  processRawLabels(rawLabels: Array<RawLabel>) {
-    let labels = [];
-    let labelMap = new Map();
-
-    for (let i = 0; i < rawLabels.length; i++) {
-      let label = LabelMapper.mapDataToLabel(rawLabels[i]);
-      labels.push(label);
-      labelMap.set(label._id, label);
-    }
-
-    this.setState({ labels: labels, labelMap: labelMap });
+  // Kind of bullshit function at the moment.
+  validateState(): boolean {
+    return true;
   }
 
-  getCurrentTask(): Task {
-    if (this.state.currentTask === "") {
-      return new Task(uuidv4(), "", "");
-    } else {
-      let task = this.state.taskMap.get(this.state.currentTask);
-      if (task != undefined) {
-        return task;
-      } else {
-        throw new Error("getCurrentTask: task was undefined!");
-      }
-    }
+  // TODO: This could be an enum.
+  validateCurrentList(): boolean {
+    const { currentList } = this.state;
+
+    return currentList >= 0 && currentList <= 1;
   }
 
-  getCurrentLabel(): Label {
-    if (this.state.currentLabel === "") {
-      return new Label(uuidv4());
-    } else {
-      let label = this.state.labelMap.get(this.state.currentLabel);
-      if (label != undefined) {
-        return label;
-      } else {
-        throw new Error("getCurrentLabel: label was undefined");
-      }
-    }
-  }
-
-  getTaskById(taskId: string): Task {
-    let task = this.state.taskMap.get(taskId);
-
-    if (task != undefined) {
-      return task;
-    } else {
-      throw new Error("getTaskById: task is undefined!");
-    }
-  }
-
-  getLabelById(labelId: string) {
-    return this.state.labelMap.get(labelId);
-  }
-
-  setCurrentList(newValue: number) {
-    if (this.validateCurrentList()) {
-      this.setState({ currentList: newValue });
-    } else {
-      throw new Error("invalid current list detected!");
-    }
-  }
-
-  openEditTaskView(taskId: string) {
+  openEditTaskView(taskId: string): void {
     if (this.validateState()) {
       this.setState({ currentTask: taskId, stateVar: StateVars.EditTaskState });
     } else {
@@ -288,7 +533,7 @@ class App extends React.Component<AppProps, AppState> {
     }
   }
 
-  closeEditTaskView() {
+  closeEditTaskView(): void {
     if (this.validateState()) {
       this.setState({ currentTask: "", stateVar: StateVars.MainViewState });
     } else {
@@ -296,7 +541,7 @@ class App extends React.Component<AppProps, AppState> {
     }
   }
 
-  openAddTaskView() {
+  openAddTaskView(): void {
     if (this.validateState()) {
       this.setState({ currentTask: "", stateVar: StateVars.AddNewTaskState });
     } else {
@@ -304,7 +549,7 @@ class App extends React.Component<AppProps, AppState> {
     }
   }
 
-  openEditSettingsView() {
+  openEditSettingsView(): void {
     if (this.validateState()) {
       this.setState({ stateVar: StateVars.EditSettingsState });
     } else {
@@ -312,7 +557,7 @@ class App extends React.Component<AppProps, AppState> {
     }
   }
 
-  closeEditSettingsView() {
+  closeEditSettingsView(): void {
     if (this.validateState()) {
       this.setState({ currentTask: "", stateVar: StateVars.MainViewState });
     } else {
@@ -320,7 +565,7 @@ class App extends React.Component<AppProps, AppState> {
     }
   }
 
-  openViewTaskView(taskId: string) {
+  openViewTaskView(taskId: string): void {
     if (this.validateState()) {
       this.setState({ currentTask: taskId, stateVar: StateVars.ViewTaskState });
     } else {
@@ -328,7 +573,7 @@ class App extends React.Component<AppProps, AppState> {
     }
   }
 
-  closeViewTaskView() {
+  closeViewTaskView(): void {
     if (this.validateState()) {
       this.setState({ currentTask: "", stateVar: StateVars.MainViewState });
     } else {
@@ -336,7 +581,7 @@ class App extends React.Component<AppProps, AppState> {
     }
   }
 
-  openViewLabelView(labelId: string) {
+  openViewLabelView(labelId: string): void {
     if (this.validateState()) {
       this.setState({
         currentLabel: labelId,
@@ -347,7 +592,7 @@ class App extends React.Component<AppProps, AppState> {
     }
   }
 
-  closeViewLabelView() {
+  closeViewLabelView(): void {
     if (this.validateState()) {
       this.setState({ currentLabel: "", stateVar: StateVars.MainViewState });
     } else {
@@ -355,7 +600,7 @@ class App extends React.Component<AppProps, AppState> {
     }
   }
 
-  startTask(taskId: string) {
+  startTask(taskId: string): void {
     if (this.validateState()) {
       this.setState({
         currentTask: taskId,
@@ -367,28 +612,30 @@ class App extends React.Component<AppProps, AppState> {
     }
   }
 
-  updateTaskTimeSpentOnTask(timeSpentOnTask: number) {
-    if (this.db == undefined) {
+  updateTaskTimeSpentOnTask(timeSpentOnTask: number): void {
+    if (this.db === undefined) {
       throw new Error("this.db is undefined!");
     }
 
     if (this.validateState()) {
-      let task: Task = this.getCurrentTask();
-      task.timeSpent = task.timeSpent + timeSpentOnTask;
+      const task: Task = this.getCurrentTask();
+      task.timeSpent += timeSpentOnTask;
       this.db
         .upsert(task)
         .then((rev) => {
-          if (rev == undefined) {
+          if (rev === undefined) {
             throw new Error("updateTaskTimeSpentOnTask: rev is undefined!");
           }
 
           task._rev = rev;
           ipcRenderer.send("showNotification", "taskUpdated");
           this.loadState().catch((error) => {
+            // eslint-disable-next-line no-console
             console.log("Caught error: ", error);
           });
         })
         .catch((error) => {
+          // eslint-disable-next-line no-console
           console.log("error: ", error);
         });
     } else {
@@ -399,29 +646,31 @@ class App extends React.Component<AppProps, AppState> {
   // TODO: There is some duplicated code in these two methods, consider extracting the common code.
 
   // Called by TaskRunningView: Assumes that there is a current task.
-  taskDone() {
-    if (this.db == undefined) {
+  taskDone(): void {
+    if (this.db === undefined) {
       throw new Error("this.db is undefined!");
     }
 
     if (this.validateState()) {
       ipcRenderer.send("setLuxaforOff");
-      let task = this.getCurrentTask();
+      const task = this.getCurrentTask();
       task.done = true;
       this.db
         .upsert(task)
         .then((rev) => {
-          if (rev == undefined) {
+          if (rev === undefined) {
             throw new Error("taskDone: rev is undefined!");
           }
 
           task._rev = rev;
           ipcRenderer.send("showNotification", "taskDone");
           this.loadState().catch((error) => {
+            // eslint-disable-next-line no-console
             console.log("Caught error: ", error);
           });
         })
         .catch((error) => {
+          // eslint-disable-next-line no-console
           console.log("error: ", error);
         });
     } else {
@@ -430,30 +679,34 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   // Called by EditTaskView: Must get task from dataMap, as there is no current task.
-  taskDoneById(taskId: string) {
-    if (this.db == undefined) {
+  taskDoneById(taskId: string): void {
+    const { taskMap } = this.state;
+
+    if (this.db === undefined) {
       throw new Error("this.db is undefined!");
     }
 
     if (this.validateState()) {
       ipcRenderer.send("setLuxaforOff");
-      if (this.state.taskMap.has(taskId)) {
-        let task = this.getTaskById(taskId);
+      if (taskMap.has(taskId)) {
+        const task = this.getTaskById(taskId);
         task.done = true;
         this.db
           .upsert(task)
           .then((rev) => {
-            if (rev == undefined) {
+            if (rev === undefined) {
               throw new Error("taskDoneById: rev is undefined!");
             }
 
             task._rev = rev;
             ipcRenderer.send("showNotification", "taskDone");
             this.loadState().catch((error) => {
+              // eslint-disable-next-line no-console
               console.log("Caught error: ", error);
             });
           })
           .catch((error) => {
+            // eslint-disable-next-line no-console
             console.log("error: ", error);
           });
       }
@@ -462,314 +715,119 @@ class App extends React.Component<AppProps, AppState> {
     }
   }
 
-  editTask(name: string, description: string, label: string, done: boolean) {
-    if (this.db == undefined) {
-      throw new Error("this.db is undefined!");
-    }
+  render(): React.ReactNode {
+    const { stateVar, labels, tasks, currentList } = this.state;
+    const { changeTheme } = this.props;
 
-    if (this.validateState()) {
-      let task = this.getCurrentTask();
-      task.name = name;
-      task.description = description;
-      task.labelId = label;
-      task.done = done;
-      this.db
-        .upsert(task)
-        .then((rev) => {
-          if (rev == undefined) {
-            throw new Error("editTask: rev is undefined!");
-          }
-
-          task._rev = rev;
-          ipcRenderer.send("showNotification", "taskUpdated");
-          this.loadState().catch((error) => {
-            console.log("Caught error: ", error);
-          });
-        })
-        .catch((error) => {
-          console.log("error: ", error);
-        });
-    } else {
-      throw new Error("invalid state detected!");
-    }
-  }
-
-  editLabel(name: string, description: string, labelLabelId: string) {
-    if (this.db == undefined) {
-      throw new Error("this.db is undefined!");
-    }
-
-    if (this.validateState()) {
-      let label = this.getCurrentLabel();
-
-      if (label.labelId === labelLabelId) {
-        throw new Error("Cannot assign label to itself.");
-      }
-
-      label.name = name;
-      label.description = description;
-      label.labelId = labelLabelId;
-      this.db.upsert(label).then((rev) => {
-        if (rev == undefined) {
-          throw new Error("editLabel: rev is undefined!");
-        }
-
-        label._rev = rev;
-        ipcRenderer.send("showNotification", "labelUpdated");
-        this.loadState().catch((error) => {
-          console.log("Caught error: ", error);
-        });
-      });
-    } else {
-      throw new Error("invalid state detected");
-    }
-  }
-
-  removeLabel(labelId: string) {
-    if (this.db == undefined) {
-      throw new Error("this.db is undefined!");
-    }
-
-    let label: Label | undefined = this.state.labelMap.get(labelId);
-
-    if (label == undefined) {
-      throw new Error("removeLabel: label is undefined!");
-    }
-
-    // First let's make sure that any task / label with this label, has its label set to an empty string.
-
-    this.db
-      .getByLabelId(labelId)
-      .then((results: Array<RawTask | RawLabel>) => {
-        if (this.db == undefined) {
-          throw new Error("this.db is undefined!");
-        }
-
-        if (results == undefined) {
-          throw new Error("removeLabel: results is undefined!");
-        }
-
-        for (let i = 0; i < results.length; i++) {
-          results[i].labelId = "";
-        }
-
-        this.db
-          .bulkUpsert(results)
-          .then((responses: Array<UpsertResponse | UpsertError>) => {
-            if (responses == undefined) {
-              throw new Error("removeLabel: responses is undefined!");
-            }
-
-            // We throw exception at any error from bulkUpsert for debug purposes.
-            responses.map((response: any) => {
-              if (!response.ok) {
-                throw new Error("Failed to verify bulkUpsert");
-              }
-            });
-
-            // Load state here, to prevent the case where a label is it's own label.
-            // In this case, we update the label by setting it's label to empty string, and upsert it.
-            // Then the remove() call fails due to a document conflict.
-            this.loadState().then(() => {
-              if (this.db == undefined) {
-                throw new Error("this.db is undefined!");
-              }
-
-              label = this.state.labelMap.get(labelId);
-              this.db.remove(label).then((result) => {
-                if (result == undefined) {
-                  throw new Error("removeLabel: result is undefined!");
-                }
-                if (result.ok) {
-                  this.loadState().catch((error) => {
-                    console.log("Caught error: ", error);
-                  });
-                }
-              });
-            });
-          });
-      })
-      .catch((error) => {
-        console.log("Could not remove the label! error: ", error);
-      });
-  }
-
-  openEditLabelView(labelId: string) {
-    if (this.validateState()) {
-      this.setState({
-        currentLabel: labelId,
-        stateVar: StateVars.EditLabelState,
-      });
-    } else {
-      throw new Error("invalid state detected!");
-    }
-  }
-
-  closeEditLabelView() {
-    if (this.validateState()) {
-      this.setState({ currentLabel: "", stateVar: StateVars.MainViewState });
-    } else {
-      throw new Error("invalid state detected!");
-    }
-  }
-
-  openAddLabelView() {
-    if (this.validateState()) {
-      this.setState({ currentLabel: "", stateVar: StateVars.AddNewLabelState });
-    } else {
-      throw new Error("invalid state detected!");
-    }
-  }
-
-  removeTask(taskId: string) {
-    if (this.db == undefined) {
-      throw new Error("this.db is undefined!");
-    }
-
-    let task = this.state.taskMap.get(taskId);
-
-    this.db
-      .remove(task)
-      .then((result) => {
-        if (result == undefined) {
-          throw new Error("removeTask: result is undefined");
-        }
-        if (result.ok) {
-          this.loadState().catch((error) => {
-            console.log("Caught error: ", error);
-          });
-        }
-      })
-      .catch((error) => {
-        console.log("Could not remove the task! error: ", error);
-      });
-  }
-
-  stopTask() {
-    if (this.validateState()) {
-      this.setState({ currentTask: "", stateVar: StateVars.MainViewState });
-      ipcRenderer.send("setLuxaforOff");
-    } else {
-      throw new Error("invalid state detected!");
-    }
-  }
-
-  setFilter(filterName: TaskFilter) {
-    this.currentFilter = filterName;
-
-    this.loadState()
-      .then(() => {})
-      .catch((error) => {
-        console.log("Caught error: ", error);
-      });
-  }
-
-  render() {
-    if (this.state.stateVar === StateVars.TaskRunningState) {
-      return (
-        <div>
-          <TaskRunningView
+    switch (stateVar) {
+      case StateVars.TaskRunningState:
+        return (
+          <div>
+            <TaskRunningView
+              task={this.getCurrentTask()}
+              updateTaskTimeSpentOnTask={this.updateTaskTimeSpentOnTask}
+              taskDone={this.taskDone}
+              stopTask={this.stopTask}
+            />
+          </div>
+        );
+      case StateVars.EditSettingsState:
+        return (
+          <div>
+            <EditSettingsView
+              closeEditSettingsView={this.closeEditSettingsView}
+              changeTheme={changeTheme}
+            />
+          </div>
+        );
+      case StateVars.EditTaskState:
+        return (
+          <div>
+            <EditTaskView
+              newTask={false}
+              title="Task Editor"
+              task={this.getCurrentTask()}
+              labels={labels}
+              editTask={this.editTask}
+              closeEditTaskView={this.closeEditTaskView}
+            />
+          </div>
+        );
+      case StateVars.AddNewTaskState:
+        return (
+          <div>
+            <EditTaskView
+              newTask
+              title="Add New Task"
+              task={this.getCurrentTask()}
+              labels={labels}
+              editTask={this.editTask}
+              closeEditTaskView={this.closeEditTaskView}
+            />
+          </div>
+        );
+      case StateVars.MainViewState:
+        return (
+          <div>
+            <MainView
+              tasks={tasks}
+              labels={labels}
+              currentList={currentList}
+              startTask={this.startTask}
+              taskDoneById={this.taskDoneById}
+              setCurrentList={this.setCurrentList}
+              openEditTaskView={this.openEditTaskView}
+              openAddTaskView={this.openAddTaskView}
+              openViewTaskView={this.openViewTaskView}
+              openEditSettingsView={this.openEditSettingsView}
+              openViewLabelView={this.openViewLabelView}
+              openEditLabelView={this.openEditLabelView}
+              openAddLabelView={this.openAddLabelView}
+              removeTask={this.removeTask}
+              removeLabel={this.removeLabel}
+              setFilter={this.setFilter}
+            />
+          </div>
+        );
+      case StateVars.ViewTaskState:
+        return (
+          <ViewTaskView
             task={this.getCurrentTask()}
-            updateTaskTimeSpentOnTask={this.updateTaskTimeSpentOnTask}
-            taskDone={this.taskDone}
-            stopTask={this.stopTask}
+            getLabelById={this.getLabelById}
+            closeViewTaskView={this.closeViewTaskView}
           />
-        </div>
-      );
-    } else if (this.state.stateVar === StateVars.EditSettingsState) {
-      return (
-        <div>
-          <EditSettingsView
-            closeEditSettingsView={this.closeEditSettingsView}
-            changeTheme={this.props.changeTheme}
+        );
+      case StateVars.ViewLabelState:
+        return (
+          <ViewLabelView
+            label={this.getCurrentLabel()}
+            getLabelById={this.getLabelById}
+            closeViewLabelView={this.closeViewLabelView}
           />
-        </div>
-      );
-    } else if (this.state.stateVar === StateVars.EditTaskState) {
-      return (
-        <div>
-          <EditTaskView
-            newTask={false}
-            title="Task Editor"
-            task={this.getCurrentTask()}
-            labels={this.state.labels}
-            editTask={this.editTask}
-            closeEditTaskView={this.closeEditTaskView}
+        );
+      case StateVars.EditLabelState:
+        return (
+          <EditLabelView
+            title="Edit Label"
+            label={this.getCurrentLabel()}
+            labels={labels}
+            editLabel={this.editLabel}
+            closeEditLabelView={this.closeEditLabelView}
           />
-        </div>
-      );
-    } else if (this.state.stateVar === StateVars.AddNewTaskState) {
-      return (
-        <div>
-          <EditTaskView
-            newTask={true}
-            title="Add New Task"
-            task={this.getCurrentTask()}
-            labels={this.state.labels}
-            editTask={this.editTask}
-            closeEditTaskView={this.closeEditTaskView}
+        );
+      case StateVars.AddNewLabelState:
+        return (
+          <EditLabelView
+            title="Add New Label"
+            label={this.getCurrentLabel()}
+            labels={labels}
+            editLabel={this.editLabel}
+            closeEditLabelView={this.closeEditLabelView}
           />
-        </div>
-      );
-    } else if (this.state.stateVar === StateVars.MainViewState) {
-      return (
-        <div>
-          <MainView
-            tasks={this.state.tasks}
-            labels={this.state.labels}
-            currentList={this.state.currentList}
-            startTask={this.startTask}
-            taskDoneById={this.taskDoneById}
-            setCurrentList={this.setCurrentList}
-            openEditTaskView={this.openEditTaskView}
-            openAddTaskView={this.openAddTaskView}
-            openViewTaskView={this.openViewTaskView}
-            openEditSettingsView={this.openEditSettingsView}
-            openViewLabelView={this.openViewLabelView}
-            openEditLabelView={this.openEditLabelView}
-            openAddLabelView={this.openAddLabelView}
-            removeTask={this.removeTask}
-            removeLabel={this.removeLabel}
-            setFilter={this.setFilter}
-          />
-        </div>
-      );
-    } else if (this.state.stateVar === StateVars.ViewTaskState) {
-      return (
-        <ViewTaskView
-          task={this.getCurrentTask()}
-          getLabelById={this.getLabelById}
-          closeViewTaskView={this.closeViewTaskView}
-        />
-      );
-    } else if (this.state.stateVar === StateVars.ViewLabelState) {
-      return (
-        <ViewLabelView
-          label={this.getCurrentLabel()}
-          getLabelById={this.getLabelById}
-          closeViewLabelView={this.closeViewLabelView}
-        />
-      );
-    } else if (this.state.stateVar === StateVars.EditLabelState) {
-      return (
-        <EditLabelView
-          title="Edit Label"
-          label={this.getCurrentLabel()}
-          labels={this.state.labels}
-          editLabel={this.editLabel}
-          closeEditLabelView={this.closeEditLabelView}
-        />
-      );
-    } else if (this.state.stateVar === StateVars.AddNewLabelState) {
-      return (
-        <EditLabelView
-          title="Add New Label"
-          label={this.getCurrentLabel()}
-          labels={this.state.labels}
-          editLabel={this.editLabel}
-          closeEditLabelView={this.closeEditLabelView}
-        />
-      );
+        );
+
+      default:
+        return "";
     }
   }
 }
