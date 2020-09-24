@@ -16,10 +16,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import electron from "electron";
+import electron, { ipcRenderer } from "electron";
 import { v4 as uuidv4 } from "uuid";
 import React from "react";
-import { ipcRenderer } from "electron";
 import Database from "../../database";
 import MainView from "../../views/main-view";
 import EditTaskView from "../../views/edit-task-view";
