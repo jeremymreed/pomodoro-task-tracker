@@ -46,5 +46,6 @@ module.exports = {
     "@typescript-eslint/no-useless-constructor": "error",
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": "error",
+    "no-underscore-dangle": "off",
   },
 };
