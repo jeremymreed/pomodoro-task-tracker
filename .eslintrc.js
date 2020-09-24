@@ -19,7 +19,25 @@ module.exports = {
     sourceType: "module",
   },
   plugins: ["react", "@typescript-eslint", "prettier"],
+  settings: {
+    "import/core-modules": ["electron"],
+    "import/resolver": {
+      node: {
+        extensions: [".js", ".jsx", ".ts", ".tsx"],
+      },
+    },
+  },
   rules: {
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        js: "never",
+        jsx: "never",
+        ts: "never",
+        tsx: "never",
+      },
+    ],
     "prettier/prettier": ["error"],
     "react/jsx-filename-extension": [1, { extensions: [".jsx", ".tsx"] }],
     "no-use-before-define": [0],
