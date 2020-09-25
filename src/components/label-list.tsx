@@ -17,8 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import React from "react";
-import Label from "../data-models/label";
-import { withStyles } from "@material-ui/styles";
+import { withStyles, createStyles, WithStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
 import Table from "@material-ui/core/Table";
@@ -32,8 +31,9 @@ import Typography from "@material-ui/core/Typography";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
+import Label from "../data-models/label";
 
-const styles = (): any => ({
+const styles = createStyles({
   divTable: {
     overflowY: "scroll",
     minWidth: 640,
@@ -56,56 +56,64 @@ const styles = (): any => ({
   addLabelButton: {
     marginTop: "15px",
   },
+  taskButtons: {
+    marginLeft: "5px",
+    marginRight: "5px",
+  },
 });
 
-interface Props {
-  classes: any;
+interface Props extends WithStyles<typeof styles> {
   labels: Array<Label>;
-  openViewLabelView: Function;
-  openEditLabelView: Function;
-  openAddLabelView: Function;
-  removeLabel: Function;
+  openViewLabelView: (labelId: string) => void;
+  openEditLabelView: (labelId: string) => void;
+  openAddLabelView: () => void;
+  removeLabel: (labelId: string) => void;
 }
 
-class LabelList extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props);
-  }
+function LabelList(props: Props) {
+  const { classes } = props;
 
-  viewLabel(
+  const viewLabel = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     labelId: string
-  ) {
+  ) => {
+    const { openViewLabelView } = props;
+
     event.preventDefault();
 
-    this.props.openViewLabelView(labelId);
-  }
+    openViewLabelView(labelId);
+  };
 
-  editLabel(
+  const editLabel = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     labelId: string
-  ) {
+  ) => {
+    const { openEditLabelView } = props;
+
     event.preventDefault();
 
-    this.props.openEditLabelView(labelId);
-  }
+    openEditLabelView(labelId);
+  };
 
-  removeLabel(
+  const handleRemoveLabel = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     labelId: string
-  ) {
+  ) => {
+    const { removeLabel } = props;
     event.preventDefault();
 
-    this.props.removeLabel(labelId);
-  }
+    removeLabel(labelId);
+  };
 
-  addLabel(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  const addLabel = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const { openAddLabelView } = props;
+
     event.preventDefault();
 
-    this.props.openAddLabelView();
-  }
+    openAddLabelView();
+  };
 
-  getEmptyLabelList(classes: any) {
+  const getEmptyLabelList = () => {
     // No Labels.
     const listLabels = (
       <TableRow>
@@ -122,18 +130,20 @@ class LabelList extends React.Component<Props> {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell></TableCell>
+              <TableCell />
             </TableRow>
           </TableHead>
           <TableBody>{listLabels}</TableBody>
         </Table>
       </TableContainer>
     );
-  }
+  };
 
-  getFullLabelList(classes: any) {
+  const getFullLabelList = () => {
+    const { labels } = props;
+
     // We have tasks.
-    const listsLabels = this.props.labels.map((label) => {
+    const listsLabels = labels.map((label) => {
       return (
         <TableRow key={label._id}>
           <TableCell>
@@ -141,12 +151,12 @@ class LabelList extends React.Component<Props> {
               <Button
                 className={classes.taskButtons}
                 size="small"
-                onClick={(e) => this.viewLabel(e, label._id)}
+                onClick={(e) => viewLabel(e, label._id)}
               >
                 <Typography
                   className={classes.labelName}
                   variant="button"
-                  noWrap={true}
+                  noWrap
                 >
                   {label.name}
                 </Typography>
@@ -159,7 +169,7 @@ class LabelList extends React.Component<Props> {
               size="small"
               variant="contained"
               color="primary"
-              onClick={(e) => this.editLabel(e, label._id)}
+              onClick={(e) => editLabel(e, label._id)}
             >
               <EditIcon />
             </Button>
@@ -168,12 +178,12 @@ class LabelList extends React.Component<Props> {
               size="small"
               variant="contained"
               color="secondary"
-              onClick={(e) => this.removeLabel(e, label._id)}
+              onClick={(e) => handleRemoveLabel(e, label._id)}
             >
               <DeleteIcon />
             </Button>
           </TableCell>
-          <TableCell></TableCell>
+          <TableCell />
         </TableRow>
       );
     });
@@ -186,40 +196,39 @@ class LabelList extends React.Component<Props> {
               <TableCell>
                 <Typography variant="h6">Name</Typography>
               </TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
+              <TableCell />
+              <TableCell />
             </TableRow>
           </TableHead>
           <TableBody>{listsLabels}</TableBody>
         </Table>
       </TableContainer>
     );
-  }
+  };
 
-  getLabelList(classes: any) {
-    if (this.props.labels.length === 0) {
-      return this.getEmptyLabelList(classes);
-    } else {
-      return this.getFullLabelList(classes);
+  const getLabelList = () => {
+    const { labels } = props;
+
+    if (labels.length === 0) {
+      return getEmptyLabelList();
     }
-  }
 
-  render() {
-    const { classes }: any = this.props;
-    return (
-      <div>
-        {this.getLabelList(classes)}
-        <Button
-          className={classes.addLabelButton}
-          variant="contained"
-          color="primary"
-          onClick={(e) => this.addLabel(e)}
-        >
-          <AddIcon />
-        </Button>
-      </div>
-    );
-  }
+    return getFullLabelList();
+  };
+
+  return (
+    <div>
+      {getLabelList()}
+      <Button
+        className={classes.addLabelButton}
+        variant="contained"
+        color="primary"
+        onClick={(e) => addLabel(e)}
+      >
+        <AddIcon />
+      </Button>
+    </div>
+  );
 }
 
 export default withStyles(styles)(LabelList);
