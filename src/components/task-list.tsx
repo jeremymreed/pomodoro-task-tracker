@@ -18,9 +18,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 import React from "react";
 import { ipcRenderer } from "electron";
-import Task from "../data-models/task";
-import TaskFilter from "../enums/task-filter-enum";
-import { withStyles } from "@material-ui/styles";
+import { withStyles, createStyles, WithStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
 import Table from "@material-ui/core/Table";
@@ -41,8 +39,10 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import AddIcon from "@material-ui/icons/Add";
+import Task from "../data-models/task";
+import TaskFilter from "../enums/task-filter-enum";
 
-const styles = (): any => ({
+const styles = createStyles({
   divTable: {
     overflowY: "scroll",
     minWidth: 640,
@@ -71,21 +71,28 @@ const styles = (): any => ({
   },
 });
 
-interface Props {
-  classes: object;
+interface Props extends WithStyles<typeof styles> {
   tasks: Array<Task>;
-  openEditTaskView: Function;
-  openAddTaskView: Function;
-  openViewTaskView: Function;
-  startTask: Function;
-  taskDoneById: Function;
-  removeTask: Function;
-  setFilter: Function;
+  openEditTaskView: (taskId: string) => void;
+  openAddTaskView: () => void;
+  openViewTaskView: (taskId: string) => void;
+  startTask: (taskId: string) => void;
+  taskDoneById: (taskId: string) => void;
+  removeTask: (taskId: string) => void;
+  setFilter: (filterName: TaskFilter) => void;
 }
 
 interface State {
   selectedFilter: TaskFilter;
 }
+
+const getDone = (done: boolean) => {
+  if (done) {
+    return <CheckCircleIcon />;
+  }
+
+  return <RadioButtonUncheckedIcon />;
+};
 
 class TaskList extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -102,83 +109,10 @@ class TaskList extends React.Component<Props, State> {
     };
   }
 
-  startTask(
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    taskId: string,
-    done: boolean
-  ) {
-    event.preventDefault();
+  getEmptyTaskList() {
+    const { classes } = this.props;
+    const { selectedFilter } = this.state;
 
-    if (!done) {
-      this.props.startTask(taskId);
-    } else {
-      ipcRenderer.send("showNotification", "disallow-start-task-when-done");
-    }
-  }
-
-  addTask(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    event.preventDefault();
-
-    this.props.openAddTaskView();
-  }
-
-  viewTask(
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    taskId: string
-  ) {
-    event.preventDefault();
-
-    this.props.openViewTaskView(taskId);
-  }
-
-  editTask(
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    taskId: string
-  ) {
-    event.preventDefault();
-
-    this.props.openEditTaskView(taskId);
-  }
-
-  taskDoneById(
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    taskId: string,
-    taskDone: boolean
-  ) {
-    event.preventDefault();
-
-    if (!taskDone) {
-      this.props.taskDoneById(taskId);
-    }
-  }
-
-  removeTask(
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    taskId: string
-  ) {
-    event.preventDefault();
-
-    this.props.removeTask(taskId);
-  }
-
-  // TODO: Use any here for now, the actual type is rather complex.
-  // TODO: We'll handle it properly later.
-  handleFilterSelectionChange(event: any) {
-    event.preventDefault();
-
-    this.setState({ selectedFilter: event.target.value });
-    this.props.setFilter(event.target.value);
-  }
-
-  getDone(done: boolean) {
-    if (done) {
-      return <CheckCircleIcon />;
-    } else {
-      return <RadioButtonUncheckedIcon />;
-    }
-  }
-
-  getEmptyTaskList(classes: any) {
     // No Tasks.
     const listTasks = (
       <TableRow>
@@ -200,7 +134,7 @@ class TaskList extends React.Component<Props, State> {
                   <InputLabel>Filter</InputLabel>
                   <Select
                     label="Filter"
-                    value={this.state.selectedFilter}
+                    value={selectedFilter}
                     onChange={this.handleFilterSelectionChange}
                   >
                     <MenuItem value={TaskFilter.All}>All</MenuItem>
@@ -217,9 +151,12 @@ class TaskList extends React.Component<Props, State> {
     );
   }
 
-  getFullTaskList(classes: any) {
+  getFullTaskList() {
+    const { classes, tasks } = this.props;
+    const { selectedFilter } = this.state;
+
     // We have tasks.
-    const listTasks = this.props.tasks.map((task) => {
+    const listTasks = tasks.map((task) => {
       return (
         <TableRow key={task._id}>
           <TableCell>
@@ -227,7 +164,7 @@ class TaskList extends React.Component<Props, State> {
               size="small"
               onClick={(e) => this.taskDoneById(e, task._id, task.done)}
             >
-              {this.getDone(task.done)}
+              {getDone(task.done)}
             </Button>
           </TableCell>
           <TableCell>
@@ -240,7 +177,7 @@ class TaskList extends React.Component<Props, State> {
                 <Typography
                   className={classes.taskName}
                   variant="button"
-                  noWrap={true}
+                  noWrap
                 >
                   {task.name}
                 </Typography>
@@ -285,7 +222,7 @@ class TaskList extends React.Component<Props, State> {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell></TableCell>
+              <TableCell />
               <TableCell>
                 <Typography variant="h6">Name</Typography>
               </TableCell>
@@ -294,7 +231,7 @@ class TaskList extends React.Component<Props, State> {
                   <InputLabel>Filter</InputLabel>
                   <Select
                     label="Filter"
-                    value={this.state.selectedFilter}
+                    value={selectedFilter}
                     onChange={this.handleFilterSelectionChange}
                   >
                     <MenuItem value={TaskFilter.All}>All</MenuItem>
@@ -311,20 +248,104 @@ class TaskList extends React.Component<Props, State> {
     );
   }
 
-  getTaskList(classes: any) {
-    if (this.props.tasks.length === 0) {
-      return this.getEmptyTaskList(classes);
+  getTaskList() {
+    const { tasks } = this.props;
+
+    if (tasks.length === 0) {
+      return this.getEmptyTaskList();
+    }
+
+    return this.getFullTaskList();
+  }
+
+  startTask(
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    taskId: string,
+    done: boolean
+  ) {
+    const { startTask } = this.props;
+
+    event.preventDefault();
+
+    if (!done) {
+      startTask(taskId);
     } else {
-      return this.getFullTaskList(classes);
+      ipcRenderer.send("showNotification", "disallow-start-task-when-done");
     }
   }
 
+  addTask(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    const { openAddTaskView } = this.props;
+
+    event.preventDefault();
+
+    openAddTaskView();
+  }
+
+  viewTask(
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    taskId: string
+  ) {
+    const { openViewTaskView } = this.props;
+    event.preventDefault();
+
+    openViewTaskView(taskId);
+  }
+
+  editTask(
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    taskId: string
+  ) {
+    const { openEditTaskView } = this.props;
+
+    event.preventDefault();
+
+    openEditTaskView(taskId);
+  }
+
+  taskDoneById(
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    taskId: string,
+    taskDone: boolean
+  ) {
+    const { taskDoneById } = this.props;
+
+    event.preventDefault();
+
+    if (!taskDone) {
+      taskDoneById(taskId);
+    }
+  }
+
+  removeTask(
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    taskId: string
+  ) {
+    const { removeTask } = this.props;
+
+    event.preventDefault();
+
+    removeTask(taskId);
+  }
+
+  // TODO: Use any here for now, the actual type is rather complex.
+  // TODO: We'll handle it properly later.  Not sure how to handle this one.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  handleFilterSelectionChange(event: any) {
+    const { setFilter } = this.props;
+
+    event.preventDefault();
+
+    this.setState({ selectedFilter: event.target.value });
+    setFilter(event.target.value);
+  }
+
   render() {
-    const { classes }: any = this.props;
+    const { classes } = this.props;
 
     return (
       <div>
-        {this.getTaskList(classes)}
+        {this.getTaskList()}
         <Button
           className={classes.addTaskButton}
           variant="contained"
