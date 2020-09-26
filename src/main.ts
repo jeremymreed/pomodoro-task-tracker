@@ -16,8 +16,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+// TODO: electron-settings is using the remote module, and this is going to be deprecated.
+// TODO: We may want to consider using a different system for settings management.
 import { BrowserWindow, app, ipcMain, Notification } from "electron";
 import path from "path";
+import electronSettings from "electron-settings";
 import LuxaforUtils from "./luxafor/luxafor-utils";
 import MenuGenerator from "./menu-generator";
 import NotificationOptions from "./utils/notification-options";
@@ -26,12 +29,8 @@ import NotificationOptions from "./utils/notification-options";
 let databaseName = "pomodoro-task-tracker-data";
 
 if (process.argv.length === 3) {
-  databaseName = process.argv[2];
+  [, , databaseName] = process.argv;
 }
-
-// TODO: electron-settings is using the remote module, and this is going to be deprecated.
-// TODO: We may want to consider using a different system for settings management.
-import electronSettings from "electron-settings";
 
 const notificationOptions = new NotificationOptions();
 
@@ -57,8 +56,6 @@ function initializeSettings() {
   }
 }
 
-function initializeDatabase() {}
-
 // Creates the browser window.
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -70,8 +67,6 @@ function createWindow() {
   });
 
   initializeSettings();
-
-  initializeDatabase();
 
   mainWindow.loadFile(path.join(__dirname, "index.html"));
 
@@ -112,12 +107,6 @@ app.on("activate", () => {
 ipcMain.on("getDatabaseName", (event) => {
   event.reply("databaseName", databaseName);
 });
-
-ipcMain.on("getData", () => {});
-
-ipcMain.on("submitTaskData", () => {});
-
-ipcMain.on("removeTask", () => {});
 
 ipcMain.on("setLuxaforRest", () => {
   luxaforUtils.color(0xff, 0, 255, 0);
