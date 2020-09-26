@@ -19,7 +19,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import React from "react";
 import ReactDOM from "react-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import {
+  MuiThemeProvider,
+  createMuiTheme,
+  Theme,
+} from "@material-ui/core/styles";
 import electronSettings from "electron-settings";
 import App from "./windows/app/app";
 
@@ -40,29 +44,42 @@ const themeMap = new Map([
   ["dark", darkTheme],
 ]);
 
-class ThemedApp extends React.Component<any, any> {
-  constructor(props: any) {
+const getThemeName = (): string => {
+  if (!electronSettings.has("theme")) {
+    return "light";
+  }
+
+  return electronSettings.getSync("theme") as string;
+};
+
+interface State {
+  currentTheme: Theme;
+}
+
+class ThemedApp extends React.Component<
+  Readonly<Record<string, unknown>>,
+  State
+> {
+  constructor(props: Readonly<Record<string, unknown>>) {
     super(props);
 
     this.changeTheme = this.changeTheme.bind(this);
 
-    const themeName = this.getThemeName();
+    const themeName = getThemeName();
 
-    if (themeName == undefined || themeName == null) {
+    if (themeName === undefined || themeName === null) {
       throw new Error("ThemedApp: themeName is null or undefined!");
     }
 
-    this.state = {
-      currentTheme: themeMap.get(themeName.toString()),
-    };
-  }
+    const currentTheme = themeMap.get(themeName.toString());
 
-  getThemeName() {
-    if (!electronSettings.has("theme")) {
-      return "light";
-    } else {
-      return electronSettings.getSync("theme");
+    if (currentTheme === undefined) {
+      throw new Error("currentTheme is undefined!");
     }
+
+    this.state = {
+      currentTheme,
+    };
   }
 
   changeTheme(themeName: string) {
@@ -76,9 +93,11 @@ class ThemedApp extends React.Component<any, any> {
   }
 
   render() {
+    const { currentTheme } = this.state;
+
     return (
       <div>
-        <MuiThemeProvider theme={this.state.currentTheme}>
+        <MuiThemeProvider theme={currentTheme}>
           <CssBaseline />
           <App changeTheme={this.changeTheme} />
         </MuiThemeProvider>
