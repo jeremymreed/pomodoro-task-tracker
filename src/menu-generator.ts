@@ -16,10 +16,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import { Menu, dialog } from "electron";
+import { BrowserWindow, Menu, dialog } from "electron";
 
 class MenuGenerator {
-  static getMenu(window: any, version: any) {
+  static getMenu(window: BrowserWindow, version: string): Menu {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const template: any = [
       {
         label: "File",
