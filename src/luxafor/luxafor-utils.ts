@@ -22,11 +22,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
  * The compiler handles the .d.ts file just fine, but VS Code will complain.
  * Suppressing this error in VS Code until we find a better workaround.
  */
-// @ts-ignore
+
 import { Luxafor } from "node-luxafor2";
 
 class LuxaforUtils {
   luxafor: Luxafor;
+
   active: boolean;
 
   constructor() {
@@ -35,17 +36,18 @@ class LuxaforUtils {
   }
 
   // Try to start Luxafor, if init fails, we assume we don't have a luxafor device attached.
-  init() {
+  init(): void {
     try {
       this.luxafor.init();
       this.active = true;
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.log("Failed to init luxafor, disabling!");
       this.active = false;
     }
   }
 
-  color(ledGroup: number, red: number, green: number, blue: number) {
+  color(ledGroup: number, red: number, green: number, blue: number): void {
     this.init();
 
     if (this.active) {
@@ -60,7 +62,7 @@ class LuxaforUtils {
     blue: number,
     time: number,
     repeat: number
-  ) {
+  ): void {
     this.init();
 
     if (this.active) {
