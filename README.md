@@ -44,10 +44,16 @@ npm ci && npm run rebuild-usb
 
 PRODUCTION:
 
-Build the software and install the database:
+Build the software.
 
 ```
-npm run build && npm run installDB
+npm run build
+```
+
+Create database indexes. This only needs to be done after installation, and whenever the database is deleted.
+
+```
+npm run installDB
 ```
 
 For testing purposes, you might want to seed the database with some test data:
@@ -64,10 +70,16 @@ npm start
 
 DEVELOPMENT:
 
-Build the software and install the database:
+Build the software.
 
 ```
-npm run build && npm run installDB-dev
+npm run build-dev
+```
+
+Create database indexes. This only needs to be done after installation, and whenever the database is deleted.
+
+```
+npm run installDB-dev
 ```
 
 For testing purposes, you might want to seed the database with some test data:
