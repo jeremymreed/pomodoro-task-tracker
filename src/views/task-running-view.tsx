@@ -18,16 +18,16 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 import React from "react";
 import { ipcRenderer } from "electron";
-import { withStyles } from "@material-ui/styles";
+import { withStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import Timer from "../components/timer";
 import PauseIcon from "@material-ui/icons/Pause";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import StopIcon from "@material-ui/icons/Stop";
 import CheckIcon from "@material-ui/icons/Check";
+import Timer from "../components/timer";
 import Task from "../data-models/task";
 
 /*
@@ -61,9 +61,9 @@ const styles = () => ({
 interface Props {
   classes: any;
   task: Task;
-  updateTaskTimeSpentOnTask: Function;
-  taskDone: Function;
-  stopTask: Function;
+  updateTaskTimeSpentOnTask: (timeSpentOnTask: number) => void;
+  taskDone: () => void;
+  stopTask: () => void;
 }
 
 interface State {
@@ -71,8 +71,9 @@ interface State {
 }
 
 class TaskRunningView extends React.Component<Props, State> {
-  getTotalTimeRan: Function;
-  getCurrentPhaseType: Function;
+  getTotalTimeRan: () => number;
+
+  getCurrentPhaseType: () => string;
 
   constructor(props: Props) {
     super(props);
@@ -81,8 +82,8 @@ class TaskRunningView extends React.Component<Props, State> {
     this.submitGetTotalTimeRan = this.submitGetTotalTimeRan.bind(this);
     this.submitGetCurrentPhaseType = this.submitGetCurrentPhaseType.bind(this);
 
-    this.getTotalTimeRan = () => {};
-    this.getCurrentPhaseType = () => {};
+    this.getTotalTimeRan = () => 0;
+    this.getCurrentPhaseType = () => "";
 
     this.state = {
       shouldRun: true,
@@ -98,18 +99,21 @@ class TaskRunningView extends React.Component<Props, State> {
   }
 
   // Called by Timer, to pass in its getTotalTimeRan function, so we can call it here.
-  submitGetTotalTimeRan(getTotalTimeRan: Function) {
+  submitGetTotalTimeRan(getTotalTimeRan: () => number) {
     this.getTotalTimeRan = getTotalTimeRan;
   }
 
-  submitGetCurrentPhaseType(getCurrentPhaseType: Function) {
+  submitGetCurrentPhaseType(getCurrentPhaseType: () => string) {
     this.getCurrentPhaseType = getCurrentPhaseType;
   }
 
   // Timer tells us it has expired.
   handleTimerExpiration(type: string) {
+    const { updateTaskTimeSpentOnTask } = this.props;
+
     this._stopTimer();
-    this.props.updateTaskTimeSpentOnTask(this.getTotalTimeRan());
+
+    updateTaskTimeSpentOnTask(this.getTotalTimeRan());
     if (this.getCurrentPhaseType() === "Work") {
       ipcRenderer.send("setLuxaforRestStrobe");
       ipcRenderer.send("showNotification", "timeToRest");
@@ -123,10 +127,12 @@ class TaskRunningView extends React.Component<Props, State> {
 
   // User wants to pause the timer.
   handlePause(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    const { updateTaskTimeSpentOnTask } = this.props;
+
     event.preventDefault();
 
     this._stopTimer();
-    this.props.updateTaskTimeSpentOnTask(this.getTotalTimeRan());
+    updateTaskTimeSpentOnTask(this.getTotalTimeRan());
   }
 
   // User wants to resume the timer.
@@ -149,30 +155,36 @@ class TaskRunningView extends React.Component<Props, State> {
   // User wants to stop working on this task, and return to the task list.
   // This does not set the task as being 'done'.
   stopTask(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    const { updateTaskTimeSpentOnTask, stopTask } = this.props;
+
     event.preventDefault();
 
     this._stopTimer();
-    this.props.updateTaskTimeSpentOnTask(this.getTotalTimeRan());
-    this.props.stopTask();
+    updateTaskTimeSpentOnTask(this.getTotalTimeRan());
+    stopTask();
 
     ipcRenderer.send("showNotification", "taskStopped");
   }
 
   // User is done with this task.
   taskDone(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    const { updateTaskTimeSpentOnTask, stopTask, taskDone } = this.props;
+
     event.preventDefault();
 
     this._stopTimer();
-    this.props.updateTaskTimeSpentOnTask(this.getTotalTimeRan());
-    this.props.taskDone();
-    this.props.stopTask();
+    updateTaskTimeSpentOnTask(this.getTotalTimeRan());
+    taskDone();
+    stopTask();
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, task } = this.props;
+    const { shouldRun } = this.state;
+
     let pauseResumeButton;
 
-    if (this.state.shouldRun) {
+    if (shouldRun) {
       pauseResumeButton = (
         <Button
           className={classes.pauseResumeButton}
@@ -199,13 +211,15 @@ class TaskRunningView extends React.Component<Props, State> {
       <div>
         <Box display="flex" justifyContent="center">
           <Typography className={classes.activeTask} variant="h6">
-            Active Task: {this.props.task.name}
+            {/* Resolve conflict between eslint and prettier */}
+            {/* eslint-disable react/jsx-one-expression-per-line */}
+            Active Task: {task.name}
           </Typography>
         </Box>
 
         <Box display="flex" justifyContent="center">
           <Timer
-            shouldRun={this.state.shouldRun}
+            shouldRun={shouldRun}
             handleTimerExpiration={this.handleTimerExpiration}
             submitGetTotalTimeRan={this.submitGetTotalTimeRan}
             submitGetCurrentPhaseType={this.submitGetCurrentPhaseType}
@@ -217,7 +231,7 @@ class TaskRunningView extends React.Component<Props, State> {
             label="Description"
             multiline
             rows={4}
-            defaultValue={this.props.task.description}
+            defaultValue={task.description}
             inputProps={{ readOnly: true }}
           />
         </Box>
