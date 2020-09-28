@@ -21,7 +21,9 @@ import humanizeDuration from "humanize-duration";
 
 class GhettoProfiler {
   name: string;
+
   startMoment: moment.Moment | null;
+
   endMoment: moment.Moment | null;
 
   constructor(name: string) {
@@ -30,7 +32,7 @@ class GhettoProfiler {
     this.endMoment = null;
   }
 
-  start() {
+  start(): void {
     if (this.startMoment === null) {
       this.startMoment = moment();
     } else {
@@ -40,7 +42,7 @@ class GhettoProfiler {
     }
   }
 
-  stop() {
+  stop(): void {
     if (this.startMoment !== null) {
       this.endMoment = moment();
     } else {
@@ -50,8 +52,10 @@ class GhettoProfiler {
     }
   }
 
-  status() {
+  status(): void {
     if (this.startMoment !== null && this.endMoment !== null) {
+      // We're ok with printing info to the console here.
+      // eslint-disable-next-line no-console
       console.log(
         `Profiler ${this.name} ran for ${humanizeDuration(
           this.endMoment.diff(this.startMoment),
