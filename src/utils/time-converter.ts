@@ -16,45 +16,43 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+import moment from "moment";
+
 class TimeConverter {
   static getAsDays(durationInSeconds: moment.Duration): string {
     if (Math.trunc(durationInSeconds.asDays()) < 10) {
       return `0${Math.trunc(durationInSeconds.asDays())}`;
-    } else {
-      return `${Math.trunc(durationInSeconds.asDays())}`;
     }
+
+    return `${Math.trunc(durationInSeconds.asDays())}`;
   }
 
   static getHours(durationInSeconds: moment.Duration): string {
     if (durationInSeconds.hours() < 10) {
       return `0${durationInSeconds.hours()}`;
-    } else {
-      return `${durationInSeconds.hours()}`;
     }
+    return `${durationInSeconds.hours()}`;
   }
 
   static getAsMinutes(durationInSeconds: moment.Duration): string {
     if (Math.trunc(durationInSeconds.asMinutes()) < 10) {
       return `0${Math.trunc(durationInSeconds.asMinutes())}`;
-    } else {
-      return `${Math.trunc(durationInSeconds.asMinutes())}`;
     }
+    return `${Math.trunc(durationInSeconds.asMinutes())}`;
   }
 
   static getMinutes(durationInSeconds: moment.Duration): string {
     if (durationInSeconds.minutes() < 10) {
       return `0${durationInSeconds.minutes()}`;
-    } else {
-      return `${durationInSeconds.minutes()}`;
     }
+    return `${durationInSeconds.minutes()}`;
   }
 
   static getSeconds(durationInSeconds: moment.Duration): string {
     if (durationInSeconds.seconds() < 10) {
       return `0${durationInSeconds.seconds()}`;
-    } else {
-      return `${durationInSeconds.seconds()}`;
     }
+    return `${durationInSeconds.seconds()}`;
   }
 }
 
