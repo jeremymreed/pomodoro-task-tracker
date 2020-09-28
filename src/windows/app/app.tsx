@@ -697,7 +697,6 @@ class App extends React.Component<AppProps, AppState> {
               openEditTaskView={this.openEditTaskView}
               openAddTaskView={this.openAddTaskView}
               openViewTaskView={this.openViewTaskView}
-              openEditSettingsView={this.openEditSettingsView}
               openViewLabelView={this.openViewLabelView}
               openEditLabelView={this.openEditLabelView}
               openAddLabelView={this.openAddLabelView}
