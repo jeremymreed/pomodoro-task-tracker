@@ -16,6 +16,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+import Electron from "electron";
+
 class NotificationOptions {
   notificationOptions: Map<string, Electron.NotificationConstructorOptions>;
 
@@ -70,12 +72,20 @@ class NotificationOptions {
     });
   }
 
-  getNotification(notificationName: string) {
+  getNotification(
+    notificationName: string
+  ): Electron.NotificationConstructorOptions {
     if (this.notificationOptions.has(notificationName)) {
-      return this.notificationOptions.get(notificationName);
-    } else {
-      throw new Error("Invalid Notification Name!");
+      const notificationConstructorOptions = this.notificationOptions.get(
+        notificationName
+      );
+
+      if (notificationConstructorOptions !== undefined) {
+        return notificationConstructorOptions;
+      }
     }
+
+    throw new Error("Invalid Notification Name!");
   }
 }
 
