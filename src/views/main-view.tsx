@@ -17,86 +17,105 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import React from "react";
+import Typography from "@material-ui/core/Typography";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import TaskFilter from "../enums/task-filter-enum";
 import TaskList from "../components/task-list";
 import LabelList from "../components/label-list";
 import CurrentListState from "../enums/current-list-state-enum";
 import Task from "../data-models/task";
 import Label from "../data-models/label";
-import Typography from "@material-ui/core/Typography";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
 
 interface Props {
   tasks: Array<Task>;
   labels: Array<Label>;
   currentList: CurrentListState;
-  setCurrentList: Function;
-  openEditTaskView: Function;
-  openAddTaskView: Function;
-  openEditSettingsView: Function;
-  openViewTaskView: Function;
-  openViewLabelView: Function;
-  openEditLabelView: Function;
-  openAddLabelView: Function;
-  startTask: Function;
-  taskDoneById: Function;
-  removeTask: Function;
-  removeLabel: Function;
-  setFilter: Function;
+  setCurrentList: (newView: number) => void;
+  openEditTaskView: (taskId: string) => void;
+  openAddTaskView: () => void;
+  openViewTaskView: () => void;
+  openViewLabelView: (labelId: string) => void;
+  openEditLabelView: (labelId: string) => void;
+  openAddLabelView: () => void;
+  startTask: (taskId: string) => void;
+  taskDoneById: (taskId: string) => void;
+  removeTask: (taskId: string) => void;
+  removeLabel: (labelId: string) => void;
+  setFilter: (filterName: TaskFilter) => void;
 }
 
-class MainView extends React.Component<Props, any> {
-  constructor(props: Props) {
-    super(props);
+function MainView(props: Props): React.ReactElement {
+  const { currentList } = props;
 
-    this.handleTabChange = this.handleTabChange.bind(this);
-  }
+  const handleTabChange = (
+    event: React.ChangeEvent<unknown>,
+    value: CurrentListState
+  ): void => {
+    const { setCurrentList } = props;
 
-  handleTabChange(event: any, newValue: CurrentListState) {
-    this.props.setCurrentList(newValue);
-  }
+    setCurrentList(value);
+  };
 
-  renderList() {
-    if (this.props.currentList === CurrentListState.taskListState) {
+  const renderList = (): React.ReactElement => {
+    const {
+      tasks,
+      labels,
+      startTask,
+      taskDoneById,
+      openEditTaskView,
+      openAddTaskView,
+      openViewTaskView,
+      removeTask,
+      setFilter,
+      openViewLabelView,
+      openEditLabelView,
+      openAddLabelView,
+      removeLabel,
+    } = props;
+
+    if (currentList === CurrentListState.taskListState) {
       return (
         <TaskList
-          tasks={this.props.tasks}
-          startTask={this.props.startTask}
-          taskDoneById={this.props.taskDoneById}
-          openEditTaskView={this.props.openEditTaskView}
-          openAddTaskView={this.props.openAddTaskView}
-          openViewTaskView={this.props.openViewTaskView}
-          removeTask={this.props.removeTask}
-          setFilter={this.props.setFilter}
-        />
-      );
-    } else if (this.props.currentList === CurrentListState.labelListState) {
-      return (
-        <LabelList
-          labels={this.props.labels}
-          openViewLabelView={this.props.openViewLabelView}
-          openEditLabelView={this.props.openEditLabelView}
-          openAddLabelView={this.props.openAddLabelView}
-          removeLabel={this.props.removeLabel}
+          tasks={tasks}
+          startTask={startTask}
+          taskDoneById={taskDoneById}
+          openEditTaskView={openEditTaskView}
+          openAddTaskView={openAddTaskView}
+          openViewTaskView={openViewTaskView}
+          removeTask={removeTask}
+          setFilter={setFilter}
         />
       );
     }
-  }
 
-  render() {
-    return (
-      <div>
-        <Typography variant="h3" align="center">
-          Pomodoro Task Tracker
-        </Typography>
-        <Tabs value={this.props.currentList} onChange={this.handleTabChange}>
-          <Tab label="Tasks" />
-          <Tab label="Labels" />
-        </Tabs>
-        {this.renderList()}
-      </div>
-    );
-  }
+    if (currentList === CurrentListState.labelListState) {
+      return (
+        <LabelList
+          labels={labels}
+          openViewLabelView={openViewLabelView}
+          openEditLabelView={openEditLabelView}
+          openAddLabelView={openAddLabelView}
+          removeLabel={removeLabel}
+        />
+      );
+    }
+
+    throw new Error("renderList: invalid CurrentListState!");
+  };
+
+  return (
+    <div>
+      <Typography variant="h3" align="center">
+        Pomodoro Task Tracker
+      </Typography>
+      <Tabs value={currentList} onChange={handleTabChange}>
+        <Tab label="Tasks" />
+        <Tab label="Labels" />
+      </Tabs>
+      {renderList()}
+    </div>
+  );
 }
 
 export default MainView;
