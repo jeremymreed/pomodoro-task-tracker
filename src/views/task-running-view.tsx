@@ -18,7 +18,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 import React from "react";
 import { ipcRenderer } from "electron";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles, WithStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
@@ -58,8 +58,7 @@ const styles = () => ({
   },
 });
 
-interface Props {
-  classes: any;
+interface Props extends WithStyles<typeof styles> {
   task: Task;
   updateTaskTimeSpentOnTask: (timeSpentOnTask: number) => void;
   taskDone: () => void;
