@@ -17,7 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import React from "react";
-import { withStyles } from "@material-ui/styles";
+import { withStyles, WithStyles } from "@material-ui/core/styles";
 import FormGroup from "@material-ui/core/FormGroup";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -42,48 +42,53 @@ const styles = () => ({
   },
 });
 
-interface Props {
-  classes: any;
+interface Props extends WithStyles<typeof styles> {
   label: Label;
-  closeViewLabelView: Function;
-  getLabelById: Function;
+  closeViewLabelView: () => void;
+  getLabelById: (labelId: string) => Label;
 }
 
 interface State {
   name: string;
   description: string;
-  label: string;
 }
 
 class ViewLabelView extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    const { label } = this.props;
+
     this.state = {
-      name: this.props.label.name,
-      description: this.props.label.description,
-      label: this.props.label.labelId,
+      name: label.name,
+      description: label.description,
     };
   }
 
   getLabelLabelName() {
-    if (this.props.label.labelId === "") {
+    const { label, getLabelById } = this.props;
+
+    if (label.labelId === "") {
       return "";
     }
 
-    let labelLabel = this.props.getLabelById(this.props.label.labelId);
+    const labelLabel = getLabelById(label.labelId);
 
     return labelLabel.name;
   }
 
   exit(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    const { closeViewLabelView } = this.props;
+
     event.preventDefault();
 
-    this.props.closeViewLabelView();
+    closeViewLabelView();
   }
 
   render() {
     const { classes } = this.props;
+    const { name, description } = this.state;
+
     return (
       <div>
         <Typography variant="h1" align="center">
@@ -96,7 +101,7 @@ class ViewLabelView extends React.Component<Props, State> {
             label="Name"
             multiline
             rows={4}
-            defaultValue={this.state.name}
+            defaultValue={name}
             inputProps={{ readOnly: true }}
           />
 
@@ -112,7 +117,7 @@ class ViewLabelView extends React.Component<Props, State> {
             label="Description"
             multiline
             rows={4}
-            defaultValue={this.state.description}
+            defaultValue={description}
             inputProps={{ readOnly: true }}
           />
 
