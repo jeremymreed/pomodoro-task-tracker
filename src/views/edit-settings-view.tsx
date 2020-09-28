@@ -19,7 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import React from "react";
 import electronSettings from "electron-settings";
 import { ipcRenderer } from "electron";
-import { withStyles } from "@material-ui/styles";
+import { withStyles, WithStyles } from "@material-ui/core/styles";
 import Slider from "@material-ui/core/Slider";
 import Typography from "@material-ui/core/Typography";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -47,10 +47,9 @@ const styles = () => ({
   },
 });
 
-interface Props {
-  classes: any;
-  changeTheme: Function;
-  closeEditSettingsView: Function;
+interface Props extends WithStyles<typeof styles> {
+  changeTheme: (themeName: string) => void;
+  closeEditSettingsView: () => void;
 }
 
 interface State {
@@ -66,6 +65,18 @@ interface State {
   intervalsInSetMin: number;
   intervalsInSetMax: number;
 }
+
+const secondsToMinutes = (amount: number) => {
+  return Math.trunc(amount / 60);
+};
+
+const minutesToSeconds = (amount: number) => {
+  return amount * 60;
+};
+
+const valueText = (value: number) => {
+  return `${value}`;
+};
 
 class EditSettingsView extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -88,13 +99,13 @@ class EditSettingsView extends React.Component<Props, State> {
     );
 
     this.state = {
-      pomodoro: this.secondsToMinutes(
+      pomodoro: secondsToMinutes(
         electronSettings.getSync("pomodoro") as number
       ),
-      shortRest: this.secondsToMinutes(
+      shortRest: secondsToMinutes(
         electronSettings.getSync("shortRest") as number
       ),
-      longRest: this.secondsToMinutes(
+      longRest: secondsToMinutes(
         electronSettings.getSync("longRest") as number
       ),
       intervalsInSet: electronSettings.getSync("intervalsInSet") as number,
@@ -110,93 +121,163 @@ class EditSettingsView extends React.Component<Props, State> {
     };
   }
 
-  secondsToMinutes(amount: number) {
-    return Math.trunc(amount / 60);
-  }
+  getShouldDisplaySecondsCheckbox() {
+    const { shouldDisplaySeconds } = this.state;
 
-  minutesToSeconds(amount: number) {
-    return amount * 60;
-  }
-
-  // TODO: Not sure what kind of event this is.
-  handleLongRestChange(event: any) {
-    const newLongRestChange = event.target.value;
-    this.setState({ longRest: newLongRestChange });
-  }
-
-  // TODO: Not sure what kind of event this is.
-  handleIntervalsInSetChange(event: any) {
-    const newIntervalsInSet = event.target.value;
-    this.setState({ intervalsInSet: newIntervalsInSet });
-  }
-
-  handleShouldDisplaySecondsChange() {
-    this.setState({ shouldDisplaySeconds: !this.state.shouldDisplaySeconds });
-  }
-
-  formSubmit(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    event.preventDefault();
-
-    electronSettings.setSync({
-      pomodoro: this.minutesToSeconds(this.state.pomodoro),
-      shortRest: this.minutesToSeconds(this.state.shortRest),
-      longRest: this.minutesToSeconds(this.state.longRest),
-      intervalsInSet: this.state.intervalsInSet,
-      shouldDisplaySeconds: this.state.shouldDisplaySeconds,
-      databaseFileName: this.state.databaseFileName,
-      theme: this.state.selectedTheme,
-    });
-
-    this.props.changeTheme(this.state.selectedTheme);
-
-    ipcRenderer.send("showNotification", "settingsUpdated");
-
-    this.props.closeEditSettingsView();
+    return (
+      <Checkbox
+        checked={shouldDisplaySeconds}
+        onChange={() => this.handleShouldDisplaySecondsChange()}
+        color="primary"
+        inputProps={{ "aria-label": "should display seconds checkbox" }}
+      />
+    );
   }
 
   cancelEdit(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    const { closeEditSettingsView } = this.props;
+
     event.preventDefault();
 
-    this.props.closeEditSettingsView();
+    closeEditSettingsView();
+  }
+
+  handleShouldDisplaySecondsChange() {
+    const { shouldDisplaySeconds } = this.state;
+    this.setState({ shouldDisplaySeconds: !shouldDisplaySeconds });
   }
 
   // TODO: Fix type name of this event.
-  handlePomodoroSliderChange(event: any, value: any) {
+  handlePomodoroSliderChange(
+    event: React.ChangeEvent<unknown>,
+    value: number | number[]
+  ) {
     event.preventDefault();
 
-    this.setState({ pomodoro: value });
+    let sliderValue;
+
+    if (Array.isArray(value)) {
+      [sliderValue] = value;
+    } else {
+      sliderValue = value;
+    }
+
+    this.setState({ pomodoro: sliderValue });
   }
 
-  handleShortRestSliderChange(event: any, value: any) {
+  handleShortRestSliderChange(
+    event: React.ChangeEvent<unknown>,
+    value: number | number[]
+  ) {
     event.preventDefault();
 
-    this.setState({ shortRest: value });
+    let sliderValue;
+
+    if (Array.isArray(value)) {
+      [sliderValue] = value;
+    } else {
+      sliderValue = value;
+    }
+
+    this.setState({ shortRest: sliderValue });
   }
 
-  handleLongRestSliderChange(event: any, value: any) {
+  handleLongRestSliderChange(
+    event: React.ChangeEvent<unknown>,
+    value: number | number[]
+  ) {
     event.preventDefault();
 
-    this.setState({ longRest: value });
+    let sliderValue;
+
+    if (Array.isArray(value)) {
+      [sliderValue] = value;
+    } else {
+      sliderValue = value;
+    }
+
+    this.setState({ longRest: sliderValue });
   }
 
-  handleIntervalsInSetSliderChange(event: any, value: any) {
+  handleIntervalsInSetSliderChange(
+    event: React.ChangeEvent<unknown>,
+    value: number | number[]
+  ) {
     event.preventDefault();
 
-    this.setState({ intervalsInSet: value });
+    let sliderValue;
+
+    if (Array.isArray(value)) {
+      [sliderValue] = value;
+    } else {
+      sliderValue = value;
+    }
+
+    this.setState({ intervalsInSet: sliderValue });
   }
 
-  handleThemeSelectionChange(event: any) {
+  handleThemeSelectionChange(
+    event: React.ChangeEvent<{
+      name?: string | undefined;
+      value: unknown;
+    }>
+  ) {
     event.preventDefault();
 
-    this.setState({ selectedTheme: event.target.value });
+    if (typeof event.target.value === "string") {
+      this.setState({ selectedTheme: event.target.value });
+    } else {
+      throw new Error("handleThemeSelectionChange: value is not a string!");
+    }
   }
 
-  valueText(value: number) {
-    return `${value}`;
+  formSubmit(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    const { changeTheme, closeEditSettingsView } = this.props;
+
+    const {
+      pomodoro,
+      shortRest,
+      longRest,
+      intervalsInSet,
+      shouldDisplaySeconds,
+      databaseFileName,
+      selectedTheme,
+    } = this.state;
+
+    event.preventDefault();
+
+    electronSettings.setSync({
+      pomodoro: minutesToSeconds(pomodoro),
+      shortRest: minutesToSeconds(shortRest),
+      longRest: minutesToSeconds(longRest),
+      intervalsInSet,
+      shouldDisplaySeconds,
+      databaseFileName,
+      theme: selectedTheme,
+    });
+
+    changeTheme(selectedTheme);
+
+    ipcRenderer.send("showNotification", "settingsUpdated");
+
+    closeEditSettingsView();
   }
 
   render() {
     const { classes } = this.props;
+
+    const {
+      pomodoro,
+      timeLengthMin,
+      timeLengthMax,
+      shortRest,
+      longRest,
+      intervalsInSet,
+      intervalsInSetMax,
+      intervalsInSetMin,
+      selectedTheme,
+    } = this.state;
+
     return (
       <div>
         <Typography variant="h1" align="center">
@@ -204,111 +285,105 @@ class EditSettingsView extends React.Component<Props, State> {
         </Typography>
 
         <FormGroup>
-          <Typography>
-            Pomodoro Length (in minutes): {this.state.pomodoro}
-          </Typography>
+          {/* Resolving conflict between eslint and prettier here */}
+          {/* eslint-disable-next-line react/jsx-one-expression-per-line */}
+          <Typography>Pomodoro Length (in minutes): {pomodoro}</Typography>
           <Slider
-            defaultValue={this.state.pomodoro}
-            getAriaValueText={this.valueText}
+            defaultValue={pomodoro}
+            getAriaValueText={valueText}
             aria-labelledby="discrete-slider-small-steps"
             step={1}
             marks={[
               {
-                value: this.state.timeLengthMin,
-                label: `${this.state.timeLengthMin}`,
+                value: timeLengthMin,
+                label: `${timeLengthMin}`,
               },
               {
-                value: this.state.timeLengthMax,
-                label: `${this.state.timeLengthMax}`,
+                value: timeLengthMax,
+                label: `${timeLengthMax}`,
               },
             ]}
-            min={this.state.timeLengthMin}
-            max={this.state.timeLengthMax}
+            min={timeLengthMin}
+            max={timeLengthMax}
             valueLabelDisplay="auto"
             onChangeCommitted={this.handlePomodoroSliderChange}
           />
 
-          <Typography>
-            Short Rest Length (in minutes): {this.state.shortRest}
-          </Typography>
+          {/* Resolving conflict between eslint and prettier here */}
+          {/* eslint-disable-next-line react/jsx-one-expression-per-line */}
+          <Typography>Short Rest Length (in minutes): {shortRest}</Typography>
           <Slider
-            defaultValue={this.state.shortRest}
-            getAriaValueText={this.valueText}
+            defaultValue={shortRest}
+            getAriaValueText={valueText}
             aria-labelledby="discrete-slider-small-steps"
             step={1}
             marks={[
               {
-                value: this.state.timeLengthMin,
-                label: `${this.state.timeLengthMin}`,
+                value: timeLengthMin,
+                label: `${timeLengthMin}`,
               },
               {
-                value: this.state.timeLengthMax,
-                label: `${this.state.timeLengthMax}`,
+                value: timeLengthMax,
+                label: `${timeLengthMax}`,
               },
             ]}
-            min={this.state.timeLengthMin}
-            max={this.state.timeLengthMax}
+            min={timeLengthMin}
+            max={timeLengthMax}
             valueLabelDisplay="auto"
             onChangeCommitted={this.handleShortRestSliderChange}
           />
 
-          <Typography>
-            Long Rest Length (in minutes): {this.state.longRest}
-          </Typography>
+          {/* Resolving conflict between eslint and prettier here */}
+          {/* eslint-disable-next-line react/jsx-one-expression-per-line */}
+          <Typography>Long Rest Length (in minutes): {longRest}</Typography>
           <Slider
-            defaultValue={this.state.longRest}
-            getAriaValueText={this.valueText}
+            defaultValue={longRest}
+            getAriaValueText={valueText}
             aria-labelledby="discrete-slider-small-steps"
             step={1}
             marks={[
               {
-                value: this.state.timeLengthMin,
-                label: `${this.state.timeLengthMin}`,
+                value: timeLengthMin,
+                label: `${timeLengthMin}`,
               },
               {
-                value: this.state.timeLengthMax,
-                label: `${this.state.timeLengthMax}`,
+                value: timeLengthMax,
+                label: `${timeLengthMax}`,
               },
             ]}
-            min={this.state.timeLengthMin}
-            max={this.state.timeLengthMax}
+            min={timeLengthMin}
+            max={timeLengthMax}
             valueLabelDisplay="auto"
             onChangeCommitted={this.handleLongRestSliderChange}
           />
 
           <Typography>
-            How many Pomodoros before a long rest? {this.state.intervalsInSet}
+            How many Pomodoros before a long rest?
+            {intervalsInSet}
           </Typography>
           <Slider
-            defaultValue={this.state.intervalsInSet}
-            getAriaValueText={this.valueText}
+            defaultValue={intervalsInSet}
+            getAriaValueText={valueText}
             aria-labelledby="discrete-slider-small-steps"
             step={1}
             marks={[
               {
-                value: this.state.intervalsInSetMin,
-                label: `${this.state.intervalsInSetMin}`,
+                value: intervalsInSetMin,
+                label: `${intervalsInSetMin}`,
               },
               {
-                value: this.state.intervalsInSetMax,
-                label: `${this.state.intervalsInSetMax}`,
+                value: intervalsInSetMax,
+                label: `${intervalsInSetMax}`,
               },
             ]}
-            min={this.state.intervalsInSetMin}
-            max={this.state.intervalsInSetMax}
+            min={intervalsInSetMin}
+            max={intervalsInSetMax}
             valueLabelDisplay="auto"
             onChangeCommitted={this.handleIntervalsInSetSliderChange}
           />
 
           <FormControlLabel
-            control={
-              <Checkbox
-                checked={this.state.shouldDisplaySeconds}
-                onChange={() => this.handleShouldDisplaySecondsChange()}
-                color="primary"
-                inputProps={{ "aria-label": "should display seconds checkbox" }}
-              />
-            }
+            control={this.getShouldDisplaySecondsCheckbox()}
             label="Display Seconds?"
           />
 
@@ -316,11 +391,11 @@ class EditSettingsView extends React.Component<Props, State> {
             <InputLabel>Theme</InputLabel>
             <Select
               label="Theme"
-              value={this.state.selectedTheme}
+              value={selectedTheme}
               onChange={this.handleThemeSelectionChange}
             >
-              <MenuItem value={"light"}>Light</MenuItem>
-              <MenuItem value={"dark"}>Dark</MenuItem>
+              <MenuItem value="light">Light</MenuItem>
+              <MenuItem value="dark">Dark</MenuItem>
             </Select>
           </FormControl>
 
