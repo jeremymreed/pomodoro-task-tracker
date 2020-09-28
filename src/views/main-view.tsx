@@ -34,7 +34,7 @@ interface Props {
   setCurrentList: (newView: number) => void;
   openEditTaskView: (taskId: string) => void;
   openAddTaskView: () => void;
-  openViewTaskView: () => void;
+  openViewTaskView: (taskId: string) => void;
   openViewLabelView: (labelId: string) => void;
   openEditLabelView: (labelId: string) => void;
   openAddLabelView: () => void;
