@@ -21,7 +21,7 @@ import RawLabel from "../interfaces/raw-label-interface";
 
 // data is raw doc from PouchDB / CouchDB.
 class LabelMapper {
-  static mapDataToLabel(rawLabel: RawLabel) {
+  static mapDataToLabel(rawLabel: RawLabel): Label {
     return new Label(
       rawLabel._id,
       rawLabel._rev,
