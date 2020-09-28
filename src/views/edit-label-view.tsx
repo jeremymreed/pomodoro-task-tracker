@@ -17,9 +17,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import React from "react";
-import PropTypes from "prop-types";
 import { useFormik } from "formik";
-import { withStyles } from "@material-ui/styles";
+import { withStyles, WithStyles } from "@material-ui/core/styles";
 import FormGroup from "@material-ui/core/FormGroup";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -58,7 +57,15 @@ const styles = () => ({
   },
 });
 
-const validate = (values: any) => {
+interface FormValues {
+  name: string;
+  description: string;
+  labelLabelId: string;
+}
+
+const validate = (values: FormValues) => {
+  // Can't predict what the shape of errors will be, so use any.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const errors: any = {};
 
   if (!values.name || values.name === "") {
@@ -84,21 +91,22 @@ const mapValueToLabelLabelId = (value: string) => {
   return value;
 };
 
-interface Props {
-  classes: any;
+interface Props extends WithStyles<typeof styles> {
   title: string;
   label: Label;
   labels: Label[];
-  editLabel: Function;
-  closeEditLabelView: Function;
+  editLabel: (name: string, description: string, labelLabelId: string) => void;
+  closeEditLabelView: () => void;
 }
 
-function EditLabelView(props: Props) {
+function EditLabelView(props: Props): React.ReactElement {
+  const { label } = props;
+
   const formik = useFormik({
     initialValues: {
-      name: props.label.name,
-      description: props.label.description,
-      labelLabelId: mapLabelLabelIdToValue(props.label.labelId),
+      name: label.name,
+      description: label.description,
+      labelLabelId: mapLabelLabelIdToValue(label.labelId),
     },
     validate,
     onSubmit: (values) => {
@@ -112,7 +120,7 @@ function EditLabelView(props: Props) {
   });
 
   const getLabelMenuItems = () => {
-    let labelMenuItems = Array();
+    const labelMenuItems = [];
 
     labelMenuItems.push(
       <MenuItem key={0} value="none">
@@ -120,7 +128,7 @@ function EditLabelView(props: Props) {
       </MenuItem>
     );
 
-    for (let i = 0; i < props.labels.length; i++) {
+    for (let i = 0; i < props.labels.length; i += 1) {
       if (props.labels[i]._id !== props.label._id) {
         labelMenuItems.push(
           <MenuItem key={props.labels[i]._id} value={props.labels[i]._id}>
@@ -142,12 +150,12 @@ function EditLabelView(props: Props) {
     return Object.keys(formik.errors).length !== 0 || formik.values.name === "";
   };
 
-  const { classes } = props;
+  const { classes, title } = props;
 
   return (
     <div>
       <Typography variant="h1" align="center">
-        {props.title}
+        {title}
       </Typography>
 
       <form onSubmit={formik.handleSubmit}>
@@ -162,7 +170,7 @@ function EditLabelView(props: Props) {
             rows={4}
             value={formik.values.name}
             onChange={formik.handleChange}
-            error={formik.errors.name ? true : false}
+            error={!formik.errors.name !== undefined}
             helperText={formik.errors.name ? formik.errors.name : ""}
           />
 
