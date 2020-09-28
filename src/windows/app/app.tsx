@@ -65,8 +65,6 @@ enum StateVars {
 }
 
 class App extends React.Component<AppProps, AppState> {
-  private isMounted: boolean;
-
   private db: Database | undefined;
 
   private currentFilter: TaskFilter;
@@ -75,8 +73,6 @@ class App extends React.Component<AppProps, AppState> {
     super(props);
 
     this.db = undefined;
-
-    this.isMounted = false;
 
     this.processRawTasks = this.processRawTasks.bind(this);
     this.getLabelById = this.getLabelById.bind(this);
@@ -119,8 +115,6 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   componentDidMount(): void {
-    this.isMounted = true;
-
     ipcRenderer.on("showEditSettingsView", this.openEditSettingsView);
 
     ipcRenderer.send("getDatabaseName");
@@ -141,10 +135,6 @@ class App extends React.Component<AppProps, AppState> {
         console.log("Caught error: ", error);
       });
     });
-  }
-
-  componentWillUnmount(): void {
-    this.isMounted = false;
   }
 
   getCurrentTask(): Task {
@@ -475,9 +465,7 @@ class App extends React.Component<AppProps, AppState> {
       }
     }
 
-    if (this.isMounted) {
-      this.setState({ taskMap, tasks });
-    }
+    this.setState({ taskMap, tasks });
   }
 
   // Database can be undefined, until it is set componentDidMount.
