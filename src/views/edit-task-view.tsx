@@ -110,7 +110,7 @@ interface Props extends WithStyles<typeof styles> {
   closeEditTaskView: () => void;
 }
 
-function EditTaskView(props: Props) {
+function EditTaskView(props: Props): React.ReactElement {
   const { task, classes, title } = props;
 
   const formik = useFormik({
