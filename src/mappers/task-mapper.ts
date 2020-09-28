@@ -21,7 +21,7 @@ import RawTask from "../interfaces/raw-task-interface";
 
 // data is raw doc from PouchDB / CouchDB.
 class TaskMapper {
-  static mapDataToTask(rawTask: RawTask) {
+  static mapDataToTask(rawTask: RawTask): Task {
     return new Task(
       rawTask._id,
       rawTask._rev,
