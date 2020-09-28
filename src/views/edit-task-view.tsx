@@ -18,9 +18,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 import React from "react";
 import { ipcRenderer } from "electron";
-import PropTypes from "prop-types";
 import { useFormik } from "formik";
-import { withStyles } from "@material-ui/styles";
+import { withStyles, WithStyles } from "@material-ui/core/styles";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -62,8 +61,16 @@ const styles = () => ({
   },
 });
 
-const validate = (values: any) => {
+interface FormValues {
+  name: string;
+  description: string;
+  labelId: string;
+  done: boolean;
+}
+
+const validate = (values: FormValues) => {
   // Can't predict what the shape of errors will be, so use any.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const errors: any = {};
 
   if (!values.name || values.name === "") {
@@ -89,23 +96,29 @@ const mapValueToLabelId = (value: string) => {
   return value;
 };
 
-interface Props {
-  classes: any;
+interface Props extends WithStyles<typeof styles> {
   newTask: boolean;
   title: string;
   task: Task;
   labels: Label[];
-  editTask: Function;
-  closeEditTaskView: Function;
+  editTask: (
+    name: string,
+    description: string,
+    label: string,
+    done: boolean
+  ) => void;
+  closeEditTaskView: () => void;
 }
 
 function EditTaskView(props: Props) {
+  const { task, classes, title } = props;
+
   const formik = useFormik({
     initialValues: {
-      name: props.task.name,
-      description: props.task.description,
-      labelId: mapLabelIdToValue(props.task.labelId),
-      done: props.task.done,
+      name: task.name,
+      description: task.description,
+      labelId: mapLabelIdToValue(task.labelId),
+      done: task.done,
     },
     validate,
     onSubmit: (values) => {
@@ -121,7 +134,7 @@ function EditTaskView(props: Props) {
   });
 
   const getLabelMenuItems = () => {
-    let labelMenuItems = Array();
+    const labelMenuItems = [];
 
     labelMenuItems.push(
       <MenuItem key={0} value="none">
@@ -129,7 +142,7 @@ function EditTaskView(props: Props) {
       </MenuItem>
     );
 
-    for (let i = 0; i < props.labels.length; i++) {
+    for (let i = 0; i < props.labels.length; i += 1) {
       labelMenuItems.push(
         <MenuItem key={props.labels[i]._id} value={props.labels[i]._id}>
           {props.labels[i].name}
@@ -140,21 +153,25 @@ function EditTaskView(props: Props) {
     return labelMenuItems;
   };
 
+  const getDoneCheckboxJSX = () => {
+    return (
+      <Checkbox
+        id="done"
+        name="done"
+        checked={formik.values.done}
+        onChange={formik.handleChange}
+        color="primary"
+        inputProps={{ "aria-label": "task done checkbox" }}
+      />
+    );
+  };
+
   const getDoneCheckbox = () => {
     if (!props.newTask) {
       return (
         <FormControlLabel
           className="done"
-          control={
-            <Checkbox
-              id="done"
-              name="done"
-              checked={formik.values.done}
-              onChange={formik.handleChange}
-              color="primary"
-              inputProps={{ "aria-label": "task done checkbox" }}
-            />
-          }
+          control={getDoneCheckboxJSX()}
           label="Done"
         />
       );
@@ -172,12 +189,10 @@ function EditTaskView(props: Props) {
     return Object.keys(formik.errors).length !== 0 || formik.values.name === "";
   };
 
-  const { classes } = props;
-
   return (
     <div>
       <Typography variant="h1" align="center">
-        {props.title}
+        {title}
       </Typography>
 
       <form onSubmit={formik.handleSubmit}>
@@ -192,7 +207,7 @@ function EditTaskView(props: Props) {
             rows={4}
             value={formik.values.name}
             onChange={formik.handleChange}
-            error={formik.errors.name ? true : false}
+            error={formik.errors.name !== undefined}
             helperText={formik.errors.name ? formik.errors.name : ""}
           />
 
