@@ -16,77 +16,84 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import React from 'react';
-import { withStyles } from '@material-ui/styles';
-import FormGroup from '@material-ui/core/FormGroup';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import CancelIcon from '@material-ui/icons/Cancel';
-import Label from '../data-models/label';
+import React from "react";
+import { withStyles, WithStyles } from "@material-ui/core/styles";
+import FormGroup from "@material-ui/core/FormGroup";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import CancelIcon from "@material-ui/icons/Cancel";
+import Label from "../data-models/label";
 
 const styles = () => ({
   name: {
-    marginBottom: '5px'
+    marginBottom: "5px",
   },
   description: {
-    marginTop: '5px',
-    marginBottom: '5px'
+    marginTop: "5px",
+    marginBottom: "5px",
   },
   done: {
-    marginTop: '5px',
-    marginBottom: '5px'
+    marginTop: "5px",
+    marginBottom: "5px",
   },
   exitButton: {
-    marginTop: '5px',
-  }
+    marginTop: "5px",
+  },
 });
 
-interface Props {
-  classes: any,
-  label: Label,
-  closeViewLabelView: Function,
-  getLabelById: Function
+interface Props extends WithStyles<typeof styles> {
+  label: Label;
+  closeViewLabelView: () => void;
+  getLabelById: (labelId: string) => Label;
 }
 
 interface State {
-  name: string,
-  description: string,
-  label: string
+  name: string;
+  description: string;
 }
 
 class ViewLabelView extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    const { label } = this.props;
+
     this.state = {
-      name: this.props.label.name,
-      description: this.props.label.description,
-      label: this.props.label.labelId
-    }
+      name: label.name,
+      description: label.description,
+    };
   }
 
   getLabelLabelName() {
-    if (this.props.label.labelId === '') {
-      return '';
+    const { label, getLabelById } = this.props;
+
+    if (label.labelId === "") {
+      return "";
     }
 
-    let labelLabel = this.props.getLabelById(this.props.label.labelId);
+    const labelLabel = getLabelById(label.labelId);
 
     return labelLabel.name;
   }
 
   exit(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    const { closeViewLabelView } = this.props;
+
     event.preventDefault();
 
-    this.props.closeViewLabelView();
+    closeViewLabelView();
   }
 
   render() {
     const { classes } = this.props;
+    const { name, description } = this.state;
+
     return (
       <div>
-        <Typography variant="h1" align="center">Label</Typography>
+        <Typography variant="h1" align="center">
+          Label
+        </Typography>
 
         <FormGroup>
           <TextField
@@ -94,15 +101,15 @@ class ViewLabelView extends React.Component<Props, State> {
             label="Name"
             multiline
             rows={4}
-            defaultValue={this.state.name}
-            inputProps={{readOnly: true}}
+            defaultValue={name}
+            inputProps={{ readOnly: true }}
           />
 
           <TextField
             className="label"
             label="Label"
             defaultValue={this.getLabelLabelName()}
-            inputProps={{readOnly: true}}
+            inputProps={{ readOnly: true }}
           />
 
           <TextField
@@ -110,12 +117,17 @@ class ViewLabelView extends React.Component<Props, State> {
             label="Description"
             multiline
             rows={4}
-            defaultValue={ this.state.description }
-            inputProps={{readOnly: true}}
+            defaultValue={description}
+            inputProps={{ readOnly: true }}
           />
 
           <span>
-            <Button className={classes.exitButton} variant="contained" color="primary" onClick={(e) => this.exit(e)}>
+            <Button
+              className={classes.exitButton}
+              variant="contained"
+              color="primary"
+              onClick={(e) => this.exit(e)}
+            >
               <CancelIcon />
             </Button>
           </span>

@@ -16,13 +16,21 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import Task from '../data-models/task';
-import RawTask from '../interfaces/raw-task-interface';
+import Task from "../data-models/task";
+import RawTask from "../interfaces/raw-task-interface";
 
 // data is raw doc from PouchDB / CouchDB.
 class TaskMapper {
-  static mapDataToTask(rawTask: RawTask) {
-    return new Task(rawTask._id, rawTask._rev, rawTask.name, rawTask.description, rawTask.labelId, rawTask.timeSpent, rawTask.done);
+  static mapDataToTask(rawTask: RawTask): Task {
+    return new Task(
+      rawTask._id,
+      rawTask._rev,
+      rawTask.name,
+      rawTask.description,
+      rawTask.labelId,
+      rawTask.timeSpent,
+      rawTask.done
+    );
   }
 }
 

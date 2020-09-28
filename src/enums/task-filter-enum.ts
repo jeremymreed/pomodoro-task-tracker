@@ -1,7 +1,7 @@
 enum TaskFilter {
   All,
   Done,
-  NotDone
+  NotDone,
 }
 
 export default TaskFilter;
