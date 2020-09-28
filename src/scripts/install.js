@@ -16,18 +16,28 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+import fs from "fs";
 import os from "os";
 import Database from "../database";
 
+let configPathBase = os.homedir() + "/.config/pomodoro-task-tracker/";
 // Default to production database.
 let databaseName = "pomodoro-task-tracker-data";
+
+try {
+  let configDir = fs.opendirSync(configPathBase);
+} catch (error) {
+  if (error.code === "ENOENT") {
+    console.log("Creating config directory!");
+    fs.mkdirSync(configPathBase);
+  }
+}
 
 if (process.argv.length === 3) {
   databaseName = process.argv[2];
 }
 
-const databasePath =
-  os.homedir() + "/.config/pomodoro-task-tracker/" + databaseName;
+const databasePath = configPathBase + databaseName;
 console.log("App constructor: databasePath", databasePath);
 
 const db = new Database(databasePath);
