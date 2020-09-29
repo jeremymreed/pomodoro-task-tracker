@@ -50,12 +50,6 @@ Build the software.
 npm run build
 ```
 
-Create database indexes. This only needs to be done after installation, and whenever the database is deleted.
-
-```
-npm run installDB
-```
-
 For testing purposes, you might want to seed the database with some test data:
 
 ```
@@ -74,12 +68,6 @@ Build the software.
 
 ```
 npm run build-dev
-```
-
-Create database indexes. This only needs to be done after installation, and whenever the database is deleted.
-
-```
-npm run installDB-dev
 ```
 
 For testing purposes, you might want to seed the database with some test data:
