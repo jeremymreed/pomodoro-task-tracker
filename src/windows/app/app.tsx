@@ -67,6 +67,8 @@ enum StateVars {
 class App extends React.Component<AppProps, AppState> {
   private db: Database | undefined;
 
+  private pouchdbDebug: boolean;
+
   private currentFilter: TaskFilter;
 
   constructor(props: AppProps) {
@@ -99,7 +101,9 @@ class App extends React.Component<AppProps, AppState> {
     this.setFilter = this.setFilter.bind(this);
     this.startTask = this.startTask.bind(this);
     this.stopTask = this.stopTask.bind(this);
+    this.togglePouchdbDebug = this.togglePouchdbDebug.bind(this);
 
+    this.pouchdbDebug = true;
     this.currentFilter = TaskFilter.All;
 
     this.state = {
@@ -117,6 +121,8 @@ class App extends React.Component<AppProps, AppState> {
   componentDidMount(): void {
     ipcRenderer.on("showEditSettingsView", this.openEditSettingsView);
 
+    ipcRenderer.on("togglePouchdbDebug", this.togglePouchdbDebug);
+
     ipcRenderer.send("getDatabaseName");
 
     ipcRenderer.on("databaseName", (event, databaseName) => {
@@ -128,7 +134,12 @@ class App extends React.Component<AppProps, AppState> {
       console.log("componentDidMount: databaseFullPath", databasePath);
 
       this.db = new Database(databasePath);
-      this.db.enableDebug();
+
+      if (this.pouchdbDebug) {
+        this.db.enableDebug();
+      } else {
+        this.db.disableDebug();
+      }
 
       this.loadState().catch((error) => {
         // eslint-disable-next-line no-console
@@ -624,6 +635,20 @@ class App extends React.Component<AppProps, AppState> {
           // eslint-disable-next-line no-console
           console.log("error: ", error);
         });
+    }
+  }
+
+  togglePouchdbDebug(): void {
+    if (this.db !== undefined) {
+      this.pouchdbDebug = !this.pouchdbDebug;
+
+      if (this.pouchdbDebug) {
+        this.db.enableDebug();
+      } else {
+        this.db.disableDebug();
+      }
+    } else {
+      throw new Error("togglePouchDBDebug: this.db is undefined!");
     }
   }
 
