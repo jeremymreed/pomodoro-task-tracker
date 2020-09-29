@@ -128,7 +128,7 @@ class App extends React.Component<AppProps, AppState> {
       console.log("componentDidMount: databaseFullPath", databasePath);
 
       this.db = new Database(databasePath);
-      this.db.disableDebug();
+      this.db.enableDebug();
 
       this.loadState().catch((error) => {
         // eslint-disable-next-line no-console
