@@ -63,6 +63,10 @@ class Database {
     }
   }
 
+  async close() {
+    await this.db.close();
+  }
+
   async getTasks() {
     try {
       let findResult = await this.db.find({
