@@ -56,6 +56,12 @@ class MenuGenerator {
               window.webContents.openDevTools();
             },
           },
+          {
+            label: "Toggle PouchDB Debug",
+            click: () => {
+              window.webContents.send("togglePouchdbDebug");
+            },
+          },
         ],
       },
     ];
