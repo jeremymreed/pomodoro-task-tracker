@@ -43,6 +43,7 @@ luxaforUtils.init();
 const createIndexes = async (databasePath: string) => {
   const db = new Database(databasePath);
 
+  db.disableDebug();
   await db.createIndexes();
   await db.close();
 };
