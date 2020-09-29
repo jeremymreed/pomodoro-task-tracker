@@ -137,6 +137,12 @@ class App extends React.Component<AppProps, AppState> {
     });
   }
 
+  componentWillUnmount(): void {
+    if (this.db !== undefined) {
+      this.db.close();
+    }
+  }
+
   getCurrentTask(): Task {
     const { currentTask, taskMap } = this.state;
 
