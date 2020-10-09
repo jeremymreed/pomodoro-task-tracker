@@ -17,6 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import os from "os";
+import fs from "fs";
 import Database from "../database";
 import Task from "../data-models/task";
 import Label from "../data-models/label";
@@ -28,9 +29,19 @@ if (process.argv.length === 3) {
   databaseName = process.argv[2];
 }
 
-const databasePath =
-  os.homedir() + "/.config/pomodoro-task-tracker/" + databaseName;
-console.log("App constructor: databasePath", databasePath);
+const databasePathBase = os.homedir() + "/.config/pomodoro-task-tracker/";
+const databasePath = databasePathBase + databaseName;
+
+try {
+  const testDir = fs.opendirSync(databasePathBase);
+  testDir.closeSync();
+} catch (error) {
+  if (error.code === "ENOENT") {
+    // eslint-disable-next-line no-console
+    console.log("Creating config directory!");
+    fs.mkdirSync(databasePathBase);
+  }
+}
 
 const db = new Database(databasePath);
 
