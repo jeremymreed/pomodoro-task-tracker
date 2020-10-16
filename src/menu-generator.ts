@@ -19,12 +19,23 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import { BrowserWindow, Menu, dialog } from "electron";
 
 class MenuGenerator {
-  static getMenu(window: BrowserWindow, version: string): Menu {
+  static getMenu(
+    window: BrowserWindow,
+    version: string,
+    processQuit: () => void
+  ): Menu {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const template: any = [
       {
         label: "File",
-        submenu: [{ role: "quit" }],
+        submenu: [
+          {
+            label: "Quit",
+            click: () => {
+              processQuit();
+            },
+          },
+        ],
       },
       {
         label: "Settings",
