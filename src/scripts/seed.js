@@ -16,11 +16,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import os from "os";
 import fs from "fs";
+import EnvPaths from "../paths";
 import Database from "../database";
 import Task from "../data-models/task";
 import Label from "../data-models/label";
+
 
 // Default to production database.
 let databaseName = "pomodoro-task-tracker-data";
@@ -29,8 +30,13 @@ if (process.argv.length === 3) {
   databaseName = process.argv[2];
 }
 
-const databasePathBase = os.homedir() + "/.config/pomodoro-task-tracker/";
-const databasePath = databasePathBase + databaseName;
+const envPaths = new EnvPaths("pomodoro-task-tracker");
+
+// TODO: This line assumes that the user is using Linux.  Won't work on MacOS or Windows.
+const databasePathBase = envPaths.getConfig();
+const databasePath = databasePathBase + "/" + databaseName;
+
+console.log("databasePath: ", databasePath);
 
 try {
   const testDir = fs.opendirSync(databasePathBase);
@@ -276,6 +282,8 @@ const seedDB = async () => {
       console.log("Labels: Got invalid rev!");
     }
   }
+
+  db.close();
 
   console.log("tasks: ", tasks);
   console.log("labels: ", labels);
