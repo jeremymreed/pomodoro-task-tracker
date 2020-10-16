@@ -16,9 +16,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import electron, { ipcRenderer } from "electron";
+import { ipcRenderer } from "electron";
 import { v4 as uuidv4 } from "uuid";
 import React from "react";
+import EnvPaths from "../../paths";
 import Database from "../../database";
 import MainView from "../../views/main-view";
 import EditTaskView from "../../views/edit-task-view";
@@ -67,6 +68,8 @@ enum StateVars {
 class App extends React.Component<AppProps, AppState> {
   private db: Database | undefined;
 
+  private envPaths: EnvPaths | undefined;
+
   private pouchdbDebug: boolean;
 
   private currentFilter: TaskFilter;
@@ -75,6 +78,7 @@ class App extends React.Component<AppProps, AppState> {
     super(props);
 
     this.db = undefined;
+    this.envPaths = undefined;
 
     this.processRawTasks = this.processRawTasks.bind(this);
     this.getLabelById = this.getLabelById.bind(this);
@@ -126,9 +130,13 @@ class App extends React.Component<AppProps, AppState> {
     ipcRenderer.send("getDatabaseName");
 
     ipcRenderer.on("databaseName", (event, databaseName) => {
-      const databasePath = `${(electron.app || electron.remote.app).getPath(
-        "userData"
-      )}/${databaseName}`;
+      this.envPaths = new EnvPaths();
+
+      const databasePathBase = this.envPaths.getConfig();
+      const databasePath = `${databasePathBase}/${databaseName}`;
+
+      // eslint-disable-next-line no-console
+      console.log("databasePath: ", databasePath);
 
       // eslint-disable-next-line no-console
       console.log("componentDidMount: databaseFullPath", databasePath);
