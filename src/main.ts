@@ -22,6 +22,7 @@ import { BrowserWindow, app, ipcMain, Notification } from "electron";
 import fs from "fs";
 import path from "path";
 import electronSettings from "electron-settings";
+import EnvPaths from "./paths";
 import Database from "./database";
 import LuxaforUtils from "./luxafor/luxafor-utils";
 import MenuGenerator from "./menu-generator";
@@ -33,6 +34,8 @@ let databaseName = "pomodoro-task-tracker-data";
 if (process.argv.length === 3) {
   [, , databaseName] = process.argv;
 }
+
+const envPaths = new EnvPaths();
 
 const notificationOptions = new NotificationOptions();
 
@@ -49,7 +52,10 @@ const setupDatabase = async (databasePath: string) => {
 };
 
 function initializeDatabase() {
-  const configPathBase = app.getPath("userData");
+  const configPathBase = envPaths.getConfig();
+
+  // eslint-disable-next-line no-console
+  console.log("configPathBase: ", configPathBase);
 
   try {
     const testDir = fs.opendirSync(configPathBase);
