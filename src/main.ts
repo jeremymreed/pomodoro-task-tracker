@@ -40,7 +40,7 @@ let mainWindow = null;
 const luxaforUtils = new LuxaforUtils();
 luxaforUtils.init();
 
-const createIndexes = async (databasePath: string) => {
+const setupDatabase = async (databasePath: string) => {
   const db = new Database(databasePath);
 
   db.disableDebug();
@@ -64,7 +64,7 @@ function initializeDatabase() {
 
   // Now create those indexes.
 
-  createIndexes(`${configPathBase}/${databaseName}`)
+  setupDatabase(`${configPathBase}/${databaseName}`)
     .then(() => {
       // eslint-disable-next-line no-console
       console.log("Created Indexes");
