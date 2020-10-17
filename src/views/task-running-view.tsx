@@ -27,6 +27,7 @@ import PauseIcon from "@material-ui/icons/Pause";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import StopIcon from "@material-ui/icons/Stop";
 import CheckIcon from "@material-ui/icons/Check";
+import PhaseType from "../enums/phase-type-enum";
 import Timer from "../components/timer";
 import Task from "../data-models/task";
 
@@ -72,7 +73,7 @@ interface State {
 class TaskRunningView extends React.Component<Props, State> {
   getTotalTimeRan: () => number;
 
-  getCurrentPhaseType: () => string;
+  getCurrentPhaseType: () => PhaseType;
 
   constructor(props: Props) {
     super(props);
@@ -82,7 +83,7 @@ class TaskRunningView extends React.Component<Props, State> {
     this.submitGetCurrentPhaseType = this.submitGetCurrentPhaseType.bind(this);
 
     this.getTotalTimeRan = () => 0;
-    this.getCurrentPhaseType = () => "";
+    this.getCurrentPhaseType = () => PhaseType.WORK;
 
     this.state = {
       shouldRun: true,
@@ -106,7 +107,7 @@ class TaskRunningView extends React.Component<Props, State> {
     this.getTotalTimeRan = getTotalTimeRan;
   }
 
-  submitGetCurrentPhaseType(getCurrentPhaseType: () => string) {
+  submitGetCurrentPhaseType(getCurrentPhaseType: () => PhaseType) {
     this.getCurrentPhaseType = getCurrentPhaseType;
   }
 
@@ -120,16 +121,16 @@ class TaskRunningView extends React.Component<Props, State> {
   }
 
   // Timer tells us it has expired.
-  handleTimerExpiration(type: string) {
+  handleTimerExpiration(type: PhaseType) {
     const { updateTaskTimeSpentOnTask } = this.props;
 
     this._stopTimer();
 
     updateTaskTimeSpentOnTask(this.getTotalTimeRan());
-    if (this.getCurrentPhaseType() === "Work") {
+    if (this.getCurrentPhaseType() === PhaseType.WORK) {
       ipcRenderer.send("setLuxaforRestStrobe");
       ipcRenderer.send("showNotification", "timeToRest");
-    } else if (type === "Rest") {
+    } else if (type === PhaseType.REST) {
       ipcRenderer.send("setLuxaforWorkStrobe");
       ipcRenderer.send("showNotification", "timeToWork");
     } else {
@@ -156,9 +157,9 @@ class TaskRunningView extends React.Component<Props, State> {
 
     const currentPhase = this.getCurrentPhaseType();
 
-    if (currentPhase === "Work") {
+    if (currentPhase === PhaseType.WORK) {
       ipcRenderer.send("setLuxaforWork");
-    } else if (currentPhase === "Rest") {
+    } else if (currentPhase === PhaseType.REST) {
       ipcRenderer.send("setLuxaforRest");
     } else {
       throw new Error("Invalid Phase Type detected!");
