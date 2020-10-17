@@ -143,6 +143,7 @@ class TaskRunningView extends React.Component<Props, State> {
 
     event.preventDefault();
 
+    ipcRenderer.send("setLuxaforOff");
     this._stopTimer();
     updateTaskTimeSpentOnTask(this.getTotalTimeRan());
   }
