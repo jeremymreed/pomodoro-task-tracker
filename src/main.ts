@@ -121,12 +121,20 @@ function createWindow() {
   // mainWindow.webContents.openDevTools();
 }
 
+// Passed to menu, ensure we clear luxafor flag properly when quitting.
+// window-all-closed event handler doesn't seem to fire when the user clicks quit in the menu, not sure why.
+function processQuit() {
+  luxaforUtils.color(0xff, 0, 0, 0);
+
+  app.quit();
+}
+
 app.whenReady().then(createWindow);
 
 // Get rid of default menu on startup.
 app.on("browser-window-created", (event, window) => {
   // TODO: Isn't this a little weird?
-  window.setMenu(MenuGenerator.getMenu(window, app.getVersion()));
+  window.setMenu(MenuGenerator.getMenu(window, app.getVersion(), processQuit));
 });
 
 // Quit when all the windows are closed, except on macOS.
