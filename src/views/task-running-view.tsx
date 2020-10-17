@@ -61,7 +61,7 @@ const styles = () => ({
 
 interface Props extends WithStyles<typeof styles> {
   task: Task;
-  updateTaskTimeSpentOnTask: (timeSpentOnTask: number) => void;
+  updateTaskTimeSpentOnTask: (taskId: string, timeSpentOnTask: number) => void;
   taskDone: () => void;
   stopTask: () => void;
 }
@@ -113,20 +113,20 @@ class TaskRunningView extends React.Component<Props, State> {
 
   // Called when we will be unmounted.
   cleanup(): void {
-    const { updateTaskTimeSpentOnTask } = this.props;
+    const { task, updateTaskTimeSpentOnTask } = this.props;
 
     ipcRenderer.send("setLuxaforOff");
     this._stopTimer();
-    updateTaskTimeSpentOnTask(this.getTotalTimeRan());
+    updateTaskTimeSpentOnTask(task._id, this.getTotalTimeRan());
   }
 
   // Timer tells us it has expired.
   handleTimerExpiration(type: PhaseType) {
-    const { updateTaskTimeSpentOnTask } = this.props;
+    const { task, updateTaskTimeSpentOnTask } = this.props;
 
     this._stopTimer();
 
-    updateTaskTimeSpentOnTask(this.getTotalTimeRan());
+    updateTaskTimeSpentOnTask(task._id, this.getTotalTimeRan());
     if (this.getCurrentPhaseType() === PhaseType.WORK) {
       ipcRenderer.send("setLuxaforRestStrobe");
       ipcRenderer.send("showNotification", "timeToRest");
@@ -140,13 +140,13 @@ class TaskRunningView extends React.Component<Props, State> {
 
   // User wants to pause the timer.
   handlePause(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    const { updateTaskTimeSpentOnTask } = this.props;
+    const { task, updateTaskTimeSpentOnTask } = this.props;
 
     event.preventDefault();
 
     ipcRenderer.send("setLuxaforOff");
     this._stopTimer();
-    updateTaskTimeSpentOnTask(this.getTotalTimeRan());
+    updateTaskTimeSpentOnTask(task._id, this.getTotalTimeRan());
   }
 
   // User wants to resume the timer.
@@ -169,12 +169,12 @@ class TaskRunningView extends React.Component<Props, State> {
   // User wants to stop working on this task, and return to the task list.
   // This does not set the task as being 'done'.
   stopTask(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    const { updateTaskTimeSpentOnTask, stopTask } = this.props;
+    const { task, updateTaskTimeSpentOnTask, stopTask } = this.props;
 
     event.preventDefault();
 
     this._stopTimer();
-    updateTaskTimeSpentOnTask(this.getTotalTimeRan());
+    updateTaskTimeSpentOnTask(task._id, this.getTotalTimeRan());
     stopTask();
 
     ipcRenderer.send("showNotification", "taskStopped");
@@ -182,12 +182,12 @@ class TaskRunningView extends React.Component<Props, State> {
 
   // User is done with this task.
   taskDone(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    const { updateTaskTimeSpentOnTask, stopTask, taskDone } = this.props;
+    const { task, updateTaskTimeSpentOnTask, stopTask, taskDone } = this.props;
 
     event.preventDefault();
 
     this._stopTimer();
-    updateTaskTimeSpentOnTask(this.getTotalTimeRan());
+    updateTaskTimeSpentOnTask(task._id, this.getTotalTimeRan());
     taskDone();
     stopTask();
   }

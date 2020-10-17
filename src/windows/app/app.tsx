@@ -165,9 +165,8 @@ class App extends React.Component<AppProps, AppState> {
   getCurrentTask(): Task {
     const { currentTask, taskMap } = this.state;
 
-    if (currentTask === "") {
-      return new Task(uuidv4(), "", "");
-    }
+    // eslint-disable-next-line no-console
+    console.log("currentTask: ", currentTask);
 
     const task = taskMap.get(currentTask);
 
@@ -555,13 +554,21 @@ class App extends React.Component<AppProps, AppState> {
     ipcRenderer.send("setLuxaforWork");
   }
 
-  updateTaskTimeSpentOnTask(timeSpentOnTask: number): void {
+  // We take a taskId here, because if the TaskRunningView wants to update a task while it's being unmounted,
+  // this.state.currentTask will already have been set to an empty string by the state transition function.
+  // Thus to handle this case, we will need to pass in the taskId, so the task can be looked up by its id.
+  // In most cases this.state.currentTask will have a valid value.
+  updateTaskTimeSpentOnTask(taskId: string, timeSpentOnTask: number): void {
     if (this.db === undefined) {
       throw new Error("this.db is undefined!");
     }
 
-    const task: Task = this.getCurrentTask();
+    const task: Task = this.getTaskById(taskId);
     task.timeSpent += timeSpentOnTask;
+
+    // eslint-disable-next-line no-console
+    console.log("task: ", task);
+
     this.db
       .upsert(task)
       .then((rev) => {
@@ -704,7 +711,7 @@ class App extends React.Component<AppProps, AppState> {
             <EditTaskView
               newTask
               title="Add New Task"
-              task={this.getCurrentTask()}
+              task={new Task(uuidv4(), "", "")}
               labels={labels}
               editTask={this.editTask}
               closeEditTaskView={this.closeEditTaskView}
