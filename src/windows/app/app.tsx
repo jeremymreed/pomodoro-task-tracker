@@ -520,7 +520,7 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   openEditSettingsView(): void {
-    this.setState({ stateVar: StateVars.EditSettingsState });
+    this.setState({ currentTask: "", stateVar: StateVars.EditSettingsState });
   }
 
   closeEditSettingsView(): void {
