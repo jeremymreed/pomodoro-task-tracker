@@ -89,6 +89,10 @@ class TaskRunningView extends React.Component<Props, State> {
     };
   }
 
+  componentWillUnmount() {
+    this.cleanup();
+  }
+
   _startTimer() {
     this.setState({ shouldRun: true });
   }
@@ -104,6 +108,15 @@ class TaskRunningView extends React.Component<Props, State> {
 
   submitGetCurrentPhaseType(getCurrentPhaseType: () => string) {
     this.getCurrentPhaseType = getCurrentPhaseType;
+  }
+
+  // Called when we will be unmounted.
+  cleanup(): void {
+    const { updateTaskTimeSpentOnTask } = this.props;
+
+    ipcRenderer.send("setLuxaforOff");
+    this._stopTimer();
+    updateTaskTimeSpentOnTask(this.getTotalTimeRan());
   }
 
   // Timer tells us it has expired.
