@@ -17,6 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 import electronSettings from "electron-settings";
+import PhaseType from "../enums/phase-type-enum";
 
 // Extra types for electron-settings/
 // TODO: Really should be in a .d.ts file.
@@ -37,7 +38,7 @@ type SettingsObject = {
 // This class determines what that should be.
 
 interface Phase {
-  type: string;
+  type: PhaseType;
   title: string;
   length: number;
 }
@@ -90,20 +91,20 @@ class Pomodoro {
   setupIntervalArray(): void {
     if (this.currentInterval !== this.intervalsInSet - 1) {
       this.intervalArray.push({
-        type: "Rest",
+        type: PhaseType.REST,
         title: "Short Rest",
         length: this.shortRest,
       });
     } else {
       this.intervalArray.push({
-        type: "Rest",
+        type: PhaseType.REST,
         title: "Long Rest",
         length: this.longRest,
       });
     }
 
     this.intervalArray.push({
-      type: "Work",
+      type: PhaseType.WORK,
       title: "Work",
       length: this.pomodoro,
     });

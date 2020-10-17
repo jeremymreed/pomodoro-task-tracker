@@ -19,20 +19,21 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import React from "react";
 import moment from "moment";
 import Typography from "@material-ui/core/Typography";
+import PhaseType from "../enums/phase-type-enum";
 import Pomodoro from "../utils/pomodoro";
 import TimeConverter from "../utils/time-converter";
 
 interface Props {
   shouldRun: boolean;
   submitGetTotalTimeRan: (getTotalTimeRan: () => number) => void;
-  submitGetCurrentPhaseType: (getCurrentPhaseType: () => string) => void;
-  handleTimerExpiration: (type: string) => void;
+  submitGetCurrentPhaseType: (getCurrentPhaseType: () => PhaseType) => void;
+  handleTimerExpiration: (type: PhaseType) => void;
 }
 
 interface State {
   numPomodoros: number;
   time: moment.Duration;
-  type: string;
+  type: PhaseType;
   title: string;
 }
 
@@ -92,7 +93,7 @@ class Timer extends React.Component<Props, State> {
     return totalTimeRan;
   }
 
-  getCurrentPhaseType(): string {
+  getCurrentPhaseType(): PhaseType {
     const { type } = this.state;
 
     return type;
@@ -103,7 +104,7 @@ class Timer extends React.Component<Props, State> {
     const { time, type, numPomodoros } = this.state;
 
     if (shouldRun) {
-      if (type === "Work") {
+      if (type === PhaseType.WORK) {
         this.totalTimeRan += 1;
       }
 
@@ -115,7 +116,7 @@ class Timer extends React.Component<Props, State> {
       // TImer should run, and has expired.
       if (shouldRun && time.minutes() === 0 && time.seconds() === 0) {
         handleTimerExpiration(type);
-        if (type === "Work") {
+        if (type === PhaseType.WORK) {
           this.setState({
             numPomodoros: numPomodoros + 1,
           });
