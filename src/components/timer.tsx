@@ -103,7 +103,9 @@ class Timer extends React.Component<Props, State> {
     const { time, type, numPomodoros } = this.state;
 
     if (shouldRun) {
-      this.totalTimeRan += 1;
+      if (type === "Work") {
+        this.totalTimeRan += 1;
+      }
 
       // Timer should run, and has not expired.
       if (shouldRun && !(time.minutes() === 0 && time.seconds() === 0)) {
