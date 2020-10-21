@@ -329,14 +329,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [v0.1.0] - 2020-08-03 - 13:19:20 ET
 ### Added
+- Notifications.
 
 ### Changed
+- Add done checkbox to EditTask form.
+- Make description a textarea in EditTask form.
+- Don't open devtools by default.
+- Clean up README, add screenshot.
+- License Headers.
+- Change MainView title.
 
 ### Deprecated
 
 ### Removed
+- Got rid of some old state variables.
 
 ### Fixed
+- Don't start tasks that are done.
 
 ### Security
 
