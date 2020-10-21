@@ -272,20 +272,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 
 ## [v0.1.4] - 2020-08-05 - 16:40:15 ET
-### Added
-
 ### Changed
 - Update Screenshot.
 - Humanize task on task string.
 - Make displaying seconds optional, add to settings editor.
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
 
 
 ## [v0.1.3] - 2020-08-05 - 12:16:21 ET
