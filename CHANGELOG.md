@@ -443,3 +443,37 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - Created prototype code.  Intended to test integration of react, reach-router, and electron.
 - Installed dependencies. (React, Electron, ESLint)
 - Generated Electron Forge boilerplate.
+
+
+[unreleased]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.9.0...HEAD
+[v0.9.0]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.8.0...v0.9.0
+[v0.8.0]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.7.0...v0.8.0
+[v0.7.0]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.6.3...v0.7.0
+[v0.6.3]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.6.2...v0.6.3
+[v0.6.2]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.6.1...v0.6.2
+[v0.6.1]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.6.0...v0.6.1
+[v0.6.0]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.5.1...v0.6.0
+[v0.5.1]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.5.0...v0.5.1
+[v0.5.0]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.4.3...v0.5.0
+[v0.4.3]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.4.2...v0.4.3
+[v0.4.2]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.4.1...v0.4.2
+[v0.4.1]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.4.0...v4.1.0
+[v0.4.0]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.3.0...v0.4.0
+[v0.3.0]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.2.0...v0.3.0
+[v0.2.0]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.1.8...v0.2.0
+[v0.1.8]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.1.7...v0.1.8
+[v0.1.7]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.1.6...v0.1.7
+[v0.1.6]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.1.5...v0.1.6
+[v0.1.5]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.1.4...v0.1.5
+[v0.1.4]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.1.3...v0.1.4
+[v0.1.3]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.1.2...v0.1.3
+[v0.1.2]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.1.1...v0.1.2
+[v0.1.1]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.1.0...v1.1.1
+[v0.1.0]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.0.7...v0.1.0
+[v0.0.7]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.0.6...v0.0.7
+[v0.0.6]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.0.5...v0.0.6
+[v0.0.5]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.0.4...v0.0.5
+[v0.0.4]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.0.3...v0.0.4
+[v0.0.3]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.0.2...v0.0.3
+[v0.0.2]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.0.1...v0.0.2
+[v0.0.1]: https://github.com/jeremymreed/pomodoro-task-tracker/releases/tag/v0.0.1
