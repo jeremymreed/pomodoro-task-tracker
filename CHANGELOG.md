@@ -21,36 +21,33 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [v0.8.0] - 2020-09-09 - 16:22:07 ET
 ### Added
+- Labels.
 
 ### Changed
+- Update UI to include Labels.
+- Added scrollbar to TaskList View.
 
 ### Deprecated
 
 ### Removed
 
 ### Fixed
-
-### Security
+- Use Label Ids, not names to identify labels.
+- Make sure filter select is active when there are no tasks in the TaskList.
 
 
 ## [v0.7.0] - 2020-09-09 - 16:00:47 ET
-### Added
-
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
 ### Security
+- Fixed security issue in dependency bl.
 
 
 ## [v0.6.3] - 2020-08-27 - 21:18:25 ET
 ### Added
+- Code of Conduct.
 
 ### Changed
+- Add License Headers.
+- Move new Luxafor() invocation to LuxaforUtils constructor.
 
 ### Deprecated
 
