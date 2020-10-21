@@ -119,6 +119,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [v0.5.0] - 2020-08-23 - 16:36:34 ET
 ### Added
+- Added filtering to the TaskList.
 - Created seed script.
 - Created indexes.
 - Created mappers to map raw data to data-model objects.
