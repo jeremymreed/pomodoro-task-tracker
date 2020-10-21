@@ -63,16 +63,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [v0.6.2] - 2020-08-27 - 17:20:11 ET
 ### Added
+- Installed electron-builder.
 
 ### Changed
-
-### Deprecated
+- Migrated from electron-forge to electron-builder for packaging purposes.
 
 ### Removed
+- electron-forge.
 
 ### Fixed
-
-### Security
+- Make sure the luxafor flag is initialized when calling color() and strobe() to avoid issue when flag is unplugged while the app is running.
 
 
 ## [v0.6.1] - 2020-08-26 - 12:56:13 ET
