@@ -189,16 +189,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [v0.3.0] - 2020-08-12 - 16:26:46 ET
 ### Added
+- Add Work / Rest notifications.
+- Custom DB path.
 
 ### Changed
-
-### Deprecated
+- Make critical notifications normal priority.
+- Show version string in About dialog.
+- Make task name textfield multiline, with 4 rows.
+- Show useful message when no tasks exist.
+- Limit task title length to 200 characters.
 
 ### Removed
+- Debug prints.
 
 ### Fixed
-
-### Security
+- Fixed Settings Editor not saving properly.
 
 
 ## [v0.2.0] - 2020-08-10 - 22:21:20 ET
