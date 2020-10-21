@@ -105,16 +105,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [v0.5.1] - 2020-08-24 - 10:02:29 ET
 ### Added
+- PouchDB performance profiling.
+- Added simple profiling code.
+- Created install script.
+- Installed pouchdb-debug.
 
 ### Changed
-
-### Deprecated
+- Open devtools by default.
+- Enable PouchDB debugging.
 
 ### Removed
-
-### Fixed
-
-### Security
+- Debug prints.
 
 
 ## [v0.5.0] - 2020-08-23 - 16:36:34 ET
