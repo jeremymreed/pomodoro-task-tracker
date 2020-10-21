@@ -6,17 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ## [Unreleased]
 
 ## [v0.9.0] - 2020-09-11 - 15:35:27 ET
-### Added
-
 ### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
+- Update Screenshot.
+- Use icon buttons instead of buttons with text.
 
 
 ## [v0.8.0] - 2020-09-09 - 16:22:07 ET
