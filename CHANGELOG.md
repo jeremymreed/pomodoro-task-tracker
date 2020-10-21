@@ -216,17 +216,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 
 ## [v0.1.8] - 2020-08-07 - 11:09:04 ET
-### Added
-
 ### Changed
-
-### Deprecated
+- Mark min/max values on sliders in settings editor.
 
 ### Removed
-
-### Fixed
-
-### Security
+- Removed edit settings buttons from MainView.
 
 
 ## [v0.1.7] - 2020-08-06 - 21:07:25 ET
