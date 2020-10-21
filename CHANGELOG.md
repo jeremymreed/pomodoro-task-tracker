@@ -175,16 +175,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [v0.4.0] - 2020-08-14 - 16:06:02 ET
 ### Added
+- Light / Dark mode.
 
 ### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
+- Updated Screenshot.
+- Change Add New Task View title.
 
 
 ## [v0.3.0] - 2020-08-12 - 16:26:46 ET
