@@ -314,17 +314,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 
 ## [v0.1.1] - 2020-08-03 - 13:46:31 ET
-### Added
-
-### Changed
-
-### Deprecated
-
 ### Removed
-
-### Fixed
-
-### Security
+- Debug prints.
 
 
 ## [v0.1.0] - 2020-08-03 - 13:19:20 ET
