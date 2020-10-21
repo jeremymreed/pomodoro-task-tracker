@@ -161,16 +161,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [v0.4.1] - 2020-08-18 - 07:09:47 ET
 ### Added
-
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
+- Edit Task form validation.
 
 ### Security
+- Ran npm audit fix.
 
 
 ## [v0.4.0] - 2020-08-14 - 16:06:02 ET
