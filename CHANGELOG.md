@@ -397,6 +397,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - Installed prop-types.
 
 ### Changed
+- Make EditTask a View.
 - Move state to App component.
 - Use state variables and conditional rendering to simulate routing.
 - Code reorganization.
