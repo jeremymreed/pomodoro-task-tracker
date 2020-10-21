@@ -203,16 +203,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [v0.2.0] - 2020-08-10 - 22:21:20 ET
 ### Added
+- Installed Material UI Icons.
 
 ### Changed
-
-### Deprecated
-
-### Removed
+- Update Screenshot.
+- UI Cleanup work.
+- Migrate UI to Material UI.
 
 ### Fixed
-
-### Security
+- Don't show fractional minutes.
 
 
 ## [v0.1.8] - 2020-08-07 - 11:09:04 ET
