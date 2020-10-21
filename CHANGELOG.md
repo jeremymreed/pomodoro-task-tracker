@@ -300,17 +300,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 
 ## [v0.1.2] - 2020-08-03 - 13:59:29 ET
-### Added
-
-### Changed
-
-### Deprecated
-
 ### Removed
-
-### Fixed
-
-### Security
+- Get rid of id and description columns in TaskList table.
+- Debug prints.
 
 
 ## [v0.1.1] - 2020-08-03 - 13:46:31 ET
