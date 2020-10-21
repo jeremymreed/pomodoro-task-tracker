@@ -371,16 +371,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [v0.0.5] - 2020-07-27 - 23:10:09 ET
 ### Added
+- TaskRunningView View.
+- Timer component.
+- Implement pause, resume, done. (Timer functions)
+- Install moment.
+- Implement cancel edit. (EditTask)
 
 ### Changed
 
-### Deprecated
+- Rename test-data.json to good-data.json for clarity.
 
 ### Removed
+- Don't need toggleTask, startTask, and stopTask.
 
 ### Fixed
-
-### Security
+- Remove unneeded underscores.
+- Fix test-data.json, had incorrect data.
 
 
 ## [v0.0.4] - 2020-07-27 - 14:30:55 ET
