@@ -286,17 +286,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 
 ## [v0.1.3] - 2020-08-05 - 12:16:21 ET
-### Added
-
 ### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
+- UI improvements.
+- TimeConverter utilities.
 
 
 ## [v0.1.2] - 2020-08-03 - 13:59:29 ET
