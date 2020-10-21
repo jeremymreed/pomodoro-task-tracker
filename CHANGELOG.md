@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+### Added
+- This changelog!
+- Create enumerations to get rid of some magic numbers. (State vars, phase types, etc)
+- Add database path as command line argument.
+- installed env-paths.
+- Installed Prettier.
+- Set up eslint typescript.
+- Installed Typescript.
+
+### Changed
+- Use env-paths to standardize our config location.
+- Changes to installation process, updated README to reflect these changes.
+- Turn Luxafor flag off when pausing the current Task.
+- Only track time the current phase is 'Work'.
+- Handled linting issues.
+- A bunch of refactors, renaming to make code clearer.
+- Refactored Task.label to Task.labelId, Label.label to LabelId to make things clear.
+- Update README to describe installation process.
+- Ported code to Typescript.
+
+### Fixed
+- Fixed Luxafor flag does not clear properly when going from TaskRunning -> Settings Editor.
+- Clear Luxafor flag when quitting via menu.
+- Seed script should not assume the user is using Linux.
+
 
 ## [v0.9.0] - 2020-09-11 - 15:35:27 ET
 ### Changed
