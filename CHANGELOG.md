@@ -119,16 +119,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [v0.5.0] - 2020-08-23 - 16:36:34 ET
 ### Added
+- Created seed script.
+- Created indexes.
+- Created mappers to map raw data to data-model objects.
+- Installed PouchDB.
 
 ### Changed
-
-### Deprecated
+- Moved database file to data/
+- Update code to use PouchDB.
 
 ### Removed
-
-### Fixed
-
-### Security
+- Old file based database system.
+- Tests for old file based database.
 
 
 ## [v0.4.3] - 2020-08-18 - 16:30:17 ET
