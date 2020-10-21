@@ -457,7 +457,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 [v0.5.0]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.4.3...v0.5.0
 [v0.4.3]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.4.2...v0.4.3
 [v0.4.2]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.4.1...v0.4.2
-[v0.4.1]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.4.0...v4.1.0
+[v0.4.1]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.4.0...v0.4.1
 [v0.4.0]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.3.0...v0.4.0
 [v0.3.0]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.2.0...v0.3.0
 [v0.2.0]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.1.8...v0.2.0
@@ -468,7 +468,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 [v0.1.4]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.1.3...v0.1.4
 [v0.1.3]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.1.2...v0.1.3
 [v0.1.2]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.1.1...v0.1.2
-[v0.1.1]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.1.0...v1.1.1
+[v0.1.1]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.1.0...v0.1.1
 [v0.1.0]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.0.7...v0.1.0
 [v0.0.7]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.0.6...v0.0.7
 [v0.0.6]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.0.5...v0.0.6
