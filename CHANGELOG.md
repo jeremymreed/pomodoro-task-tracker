@@ -231,16 +231,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [v0.1.7] - 2020-08-06 - 21:07:25 ET
 ### Added
+- Installed Material UI.
 
 ### Changed
-
-### Deprecated
-
-### Removed
+- Change Submit to Save in settings editor.
+- Use sliders in the settings editor for some settings.
 
 ### Fixed
-
-### Security
+- Fixed invalid inputs in the settings editor.
 
 
 ## [v0.1.6] - 2020-08-06 - 14:49:52 ET
