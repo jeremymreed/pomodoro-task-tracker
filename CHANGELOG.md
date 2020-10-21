@@ -343,16 +343,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [v0.0.7] - 2020-07-31 - 23:18:19 ET
 ### Added
+- Settings Editor.
+- Integrate electron-settings.
+- Installed electron-settings.
 
 ### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
+- Cleaned up form handling hooks.
+- Cleaned up some of the Views.
 
 
 ## [v0.0.6] - 2020-07-28 - 23:02:02 ET
