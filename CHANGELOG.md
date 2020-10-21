@@ -133,16 +133,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [v0.4.3] - 2020-08-18 - 16:30:17 ET
 ### Added
+- Installed formik.
 
 ### Changed
-
-### Deprecated
+- Update forms to use formik.
 
 ### Removed
-
-### Fixed
-
-### Security
+- Old form validation code.
 
 
 ## [v0.4.2] - 2020-08-18 - 08:16:46 ET
