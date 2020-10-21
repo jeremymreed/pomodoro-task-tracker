@@ -91,16 +91,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [v0.6.0] - 2020-08-25 - 16:42:13 ET
 ### Added
+- Luxafor integration.
+- Installed node-luxafor2.
+- Ghetto Profiler utility.
 
 ### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
+- Update README with luxafor related information.
+- Cleaned up seed / install scripts.
 
 
 ## [v0.5.1] - 2020-08-24 - 10:02:29 ET
