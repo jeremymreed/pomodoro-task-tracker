@@ -16,69 +16,88 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import electronSettings from 'electron-settings';
-import App from './windows/app/app';
+import React from "react";
+import ReactDOM from "react-dom";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import {
+  MuiThemeProvider,
+  createMuiTheme,
+  Theme,
+} from "@material-ui/core/styles";
+import electronSettings from "electron-settings";
+import App from "./windows/app/app";
 
 const lightTheme = createMuiTheme({
   palette: {
-    type: 'light',
-  }
+    type: "light",
+  },
 });
 
 const darkTheme = createMuiTheme({
   palette: {
-    type: 'dark',
-  }
+    type: "dark",
+  },
 });
 
 const themeMap = new Map([
-  ['light', lightTheme],
-  ['dark', darkTheme]
+  ["light", lightTheme],
+  ["dark", darkTheme],
 ]);
 
-class ThemedApp extends React.Component<any, any> {
-  constructor(props: any) {
+const getThemeName = (): string => {
+  if (!electronSettings.has("theme")) {
+    return "light";
+  }
+
+  return electronSettings.getSync("theme") as string;
+};
+
+interface State {
+  currentTheme: Theme;
+}
+
+class ThemedApp extends React.Component<
+  Readonly<Record<string, unknown>>,
+  State
+> {
+  constructor(props: Readonly<Record<string, unknown>>) {
     super(props);
 
     this.changeTheme = this.changeTheme.bind(this);
 
-    const themeName = this.getThemeName();
+    const themeName = getThemeName();
 
-    if (themeName == undefined || themeName == null) {
-      throw new Error('ThemedApp: themeName is null or undefined!');
+    if (themeName === undefined || themeName === null) {
+      throw new Error("ThemedApp: themeName is null or undefined!");
+    }
+
+    const currentTheme = themeMap.get(themeName.toString());
+
+    if (currentTheme === undefined) {
+      throw new Error("currentTheme is undefined!");
     }
 
     this.state = {
-      currentTheme: themeMap.get(themeName.toString())
-    }
-  }
-
-  getThemeName() {
-    if (!electronSettings.has('theme')) {
-      return 'light';
-    } else {
-      return electronSettings.getSync('theme');
-    }
+      currentTheme,
+    };
   }
 
   changeTheme(themeName: string) {
-    if (themeName === 'light') {
-      this.setState({currentTheme: lightTheme});
-    } else if (themeName === 'dark') {
-      this.setState({currentTheme: darkTheme});
+    if (themeName === "light") {
+      this.setState({ currentTheme: lightTheme });
+    } else if (themeName === "dark") {
+      this.setState({ currentTheme: darkTheme });
     } else {
-      throw Error('Invalid theme name!')
+      throw Error("Invalid theme name!");
     }
   }
 
   render() {
+    const { currentTheme } = this.state;
+
     return (
       <div>
-        <MuiThemeProvider theme={this.state.currentTheme}>
+        <MuiThemeProvider theme={currentTheme}>
           <CssBaseline />
           <App changeTheme={this.changeTheme} />
         </MuiThemeProvider>
@@ -87,7 +106,4 @@ class ThemedApp extends React.Component<any, any> {
   }
 }
 
-ReactDOM.render(
-  <ThemedApp />,
-  document.getElementById('root')
-);
+ReactDOM.render(<ThemedApp />, document.getElementById("root"));

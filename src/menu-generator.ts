@@ -16,50 +16,65 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import { Menu, dialog } from 'electron';
+import { BrowserWindow, Menu, dialog } from "electron";
 
 class MenuGenerator {
-  static getMenu(window: any, version: any) {
+  static getMenu(
+    window: BrowserWindow,
+    version: string,
+    processQuit: () => void
+  ): Menu {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const template: any = [
       {
-        label: 'File',
-        submenu: [
-          {role: 'quit'}
-        ]
-      },
-      {
-        label: 'Settings',
+        label: "File",
         submenu: [
           {
-            label: 'Edit Settings',
+            label: "Quit",
             click: () => {
-              window.webContents.send('showEditSettingsView');
-            }
-          }
-        ]
+              processQuit();
+            },
+          },
+        ],
       },
       {
-        role: 'help',
+        label: "Settings",
         submenu: [
           {
-            label: 'About',
+            label: "Edit Settings",
             click: () => {
-              dialog.showMessageBoxSync(
-                {
-                  title: 'About this app',
-                  message: `This application is a task tracker, using the pomodoro technique to track time spent on tasks. \n See https://en.wikipedia.org/wiki/Pomodoro_Technique\n Version: ${version}`,
-                  buttons: ['Close'],
-                });
-            }
+              window.webContents.send("showEditSettingsView");
+            },
+          },
+        ],
+      },
+      {
+        role: "help",
+        submenu: [
+          {
+            label: "About",
+            click: () => {
+              dialog.showMessageBoxSync({
+                title: "About this app",
+                message: `This application is a task tracker, using the pomodoro technique to track time spent on tasks. \n See https://en.wikipedia.org/wiki/Pomodoro_Technique\n Version: ${version}`,
+                buttons: ["Close"],
+              });
+            },
           },
           {
-            label: 'Toggle Developer Tools',
+            label: "Toggle Developer Tools",
             click: () => {
               window.webContents.openDevTools();
-            }
-          }
-        ]
-      }
+            },
+          },
+          {
+            label: "Toggle PouchDB Debug",
+            click: () => {
+              window.webContents.send("togglePouchdbDebug");
+            },
+          },
+        ],
+      },
     ];
 
     return Menu.buildFromTemplate(template);

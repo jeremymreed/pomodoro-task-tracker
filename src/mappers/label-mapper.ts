@@ -16,12 +16,19 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import Label from '../data-models/label';
+import Label from "../data-models/label";
+import RawLabel from "../interfaces/raw-label-interface";
 
 // data is raw doc from PouchDB / CouchDB.
 class LabelMapper {
-  static mapDataToLabel(data: any) {
-    return new Label(data._id, data._rev, data.name, data.description, data.labelId);
+  static mapDataToLabel(rawLabel: RawLabel): Label {
+    return new Label(
+      rawLabel._id,
+      rawLabel._rev,
+      rawLabel.name,
+      rawLabel.description,
+      rawLabel.labelId
+    );
   }
 }
 

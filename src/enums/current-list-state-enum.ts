@@ -1,6 +1,6 @@
 enum CurrentListState {
   taskListState,
-  labelListState
+  labelListState,
 }
 
 export default CurrentListState;

@@ -16,93 +16,124 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import React from 'react';
-import electronSettings from 'electron-settings';
-import { withStyles } from '@material-ui/styles';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import humanizeDuration from 'humanize-duration';
-import CancelIcon from '@material-ui/icons/Cancel';
-import Task from '../data-models/task';
+import React from "react";
+import electronSettings from "electron-settings";
+import { withStyles, WithStyles } from "@material-ui/core/styles";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import humanizeDuration from "humanize-duration";
+import CancelIcon from "@material-ui/icons/Cancel";
+import Task from "../data-models/task";
+import Label from "../data-models/label";
 
 const styles = () => ({
   name: {
-    marginBottom: '5px'
+    marginBottom: "5px",
   },
   description: {
-    marginTop: '5px',
-    marginBottom: '5px'
+    marginTop: "5px",
+    marginBottom: "5px",
   },
   done: {
-    marginTop: '5px',
-    marginBottom: '5px'
+    marginTop: "5px",
+    marginBottom: "5px",
   },
   exitButton: {
-    marginTop: '5px',
-  }
+    marginTop: "5px",
+  },
 });
 
-interface Props {
-  classes: any,
-  task: Task,
-  closeViewTaskView: Function,
-  getLabelById: Function
+interface Props extends WithStyles<typeof styles> {
+  task: Task;
+  closeViewTaskView: () => void;
+  getLabelById: (labelId: string) => Label;
 }
 
 interface State {
-  name: string,
-  description: string,
-  timeSpent: number,
-  label: string,
-  done: boolean
+  name: string;
+  description: string;
+  timeSpent: number;
+  done: boolean;
 }
+
+const getTimeString = (timeInSeconds: number) => {
+  if (electronSettings.getSync("shouldDisplaySeconds")) {
+    return humanizeDuration(timeInSeconds * 1000, {
+      round: false,
+      maxDecimalPoints: 0,
+      units: ["d", "h", "m", "s"],
+    });
+  }
+
+  return humanizeDuration(timeInSeconds * 1000, {
+    round: false,
+    maxDecimalPoints: 0,
+    units: ["d", "h", "m"],
+  });
+};
 
 class ViewTaskView extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    const { task } = this.props;
+
     this.state = {
-      name: this.props.task.name,
-      description: this.props.task.description,
-      timeSpent: this.props.task.timeSpent,
-      label: this.props.task.labelId,
-      done: this.props.task.done
-    }
+      name: task.name,
+      description: task.description,
+      timeSpent: task.timeSpent,
+      done: task.done,
+    };
   }
 
   getLabelName() {
-    if (this.props.task.labelId === '') {
-      return '';
+    const { task, getLabelById } = this.props;
+
+    if (task.labelId === "") {
+      return "";
     }
 
-    let label = this.props.getLabelById(this.props.task.labelId);
+    const label = getLabelById(task.labelId);
 
     return label.name;
   }
 
-  getTimeString(timeInSeconds: number) {
-    if (electronSettings.getSync('shouldDisplaySeconds')) {
-      return humanizeDuration(timeInSeconds * 1000, {round: false, maxDecimalPoints: 0, units: ['d', 'h', 'm', 's']});
-    } else {
-      return humanizeDuration(timeInSeconds * 1000, {round: false, maxDecimalPoints: 0, units: ['d', 'h', 'm']});
-    }
+  getDoneCheckbox() {
+    const { done } = this.state;
+
+    return (
+      <Checkbox
+        checked={done}
+        color="primary"
+        inputProps={{
+          readOnly: true,
+          "aria-label": "task done checkbox",
+        }}
+      />
+    );
   }
 
   exit(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    const { closeViewTaskView } = this.props;
+
     event.preventDefault();
 
-    this.props.closeViewTaskView();
+    closeViewTaskView();
   }
 
   render() {
     const { classes } = this.props;
+    const { name, description, timeSpent } = this.state;
+
     return (
       <div>
-        <Typography variant="h1" align="center">Task</Typography>
+        <Typography variant="h1" align="center">
+          Task
+        </Typography>
 
         <FormGroup>
           <TextField
@@ -110,22 +141,22 @@ class ViewTaskView extends React.Component<Props, State> {
             label="Name"
             multiline
             rows={4}
-            defaultValue={this.state.name}
-            inputProps={{readOnly: true}}
+            defaultValue={name}
+            inputProps={{ readOnly: true }}
           />
 
           <TextField
             className="label"
             label="Label"
             defaultValue={this.getLabelName()}
-            inputProps={{readOnly: true}}
+            inputProps={{ readOnly: true }}
           />
 
           <TextField
             className="name"
             label="Time spent on task"
-            defaultValue={this.getTimeString(this.state.timeSpent)}
-            inputProps={{readOnly: true}}
+            defaultValue={getTimeString(timeSpent)}
+            inputProps={{ readOnly: true }}
           />
 
           <TextField
@@ -133,22 +164,23 @@ class ViewTaskView extends React.Component<Props, State> {
             label="Description"
             multiline
             rows={4}
-            defaultValue={ this.state.description }
-            inputProps={{readOnly: true}}
+            defaultValue={description}
+            inputProps={{ readOnly: true }}
           />
 
           <FormControlLabel
             className="done"
-            control= {<Checkbox
-              checked={ this.state.done }
-              color="primary"
-              inputProps={{ readOnly: true, 'aria-label': 'task done checkbox' }}
-            />}
             label="Done"
+            control={this.getDoneCheckbox()}
           />
 
           <span>
-            <Button className={classes.exitButton} variant="contained" color="primary" onClick={(e) => this.exit(e)}>
+            <Button
+              className={classes.exitButton}
+              variant="contained"
+              color="primary"
+              onClick={(e) => this.exit(e)}
+            >
               <CancelIcon />
             </Button>
           </span>

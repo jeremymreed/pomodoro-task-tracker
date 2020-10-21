@@ -16,25 +16,36 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 // TODO: Should we consider adding getters/setters, and avoid directly accessing these data members directly from code?
 class Label {
-  _id: string
-  _rev: string
-  type: string
-  name: string
-  description: string
-  labelId: string
+  _id: string;
 
-  constructor(id = uuidv4(), rev = '', name = '', description = '', label = '') {
+  _rev: string;
+
+  type: string;
+
+  name: string;
+
+  description: string;
+
+  labelId: string;
+
+  constructor(
+    id = uuidv4(),
+    rev = "",
+    name = "",
+    description = "",
+    label = ""
+  ) {
     this._id = id;
     this._rev = rev;
-    this.type = 'label';
+    this.type = "label";
     this.name = name;
     this.description = description;
     this.labelId = label;
   }
 }
 
-export default Label
+export default Label;

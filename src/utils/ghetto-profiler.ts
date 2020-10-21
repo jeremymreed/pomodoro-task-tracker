@@ -16,13 +16,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import moment from 'moment';
-import humanizeDuration from 'humanize-duration';
+import moment from "moment";
+import humanizeDuration from "humanize-duration";
 
 class GhettoProfiler {
-  name: string
-  startMoment: moment.Moment | null
-  endMoment: moment.Moment | null
+  name: string;
+
+  startMoment: moment.Moment | null;
+
+  endMoment: moment.Moment | null;
 
   constructor(name: string) {
     this.name = name;
@@ -30,25 +32,36 @@ class GhettoProfiler {
     this.endMoment = null;
   }
 
-  start() {
+  start(): void {
     if (this.startMoment === null) {
       this.startMoment = moment();
     } else {
-      throw new Error('Cannot start running profiler when it has already been started!');
+      throw new Error(
+        "Cannot start running profiler when it has already been started!"
+      );
     }
   }
 
-  stop() {
+  stop(): void {
     if (this.startMoment !== null) {
       this.endMoment = moment();
     } else {
-      throw new Error('Cannot stop running profiler when it has not been started!');
+      throw new Error(
+        "Cannot stop running profiler when it has not been started!"
+      );
     }
   }
 
-  status() {
+  status(): void {
     if (this.startMoment !== null && this.endMoment !== null) {
-      console.log(`Profiler ${this.name} ran for ${humanizeDuration(this.endMoment.diff(this.startMoment), {round: false, maxDecimalPoints: 0, units: ['h', 'm', 's', 'ms']})}`)
+      // We're ok with printing info to the console here.
+      // eslint-disable-next-line no-console
+      console.log(
+        `Profiler ${this.name} ran for ${humanizeDuration(
+          this.endMoment.diff(this.startMoment),
+          { round: false, maxDecimalPoints: 0, units: ["h", "m", "s", "ms"] }
+        )}`
+      );
     }
   }
 }
