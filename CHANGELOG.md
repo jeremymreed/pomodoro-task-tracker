@@ -357,16 +357,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [v0.0.6] - 2020-07-28 - 23:02:02 ET
 ### Added
-
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
+- Elasped time on task added to TaskRunningView UI.
+- Pomodoro feature.
 
 
 ## [v0.0.5] - 2020-07-27 - 23:10:09 ET
