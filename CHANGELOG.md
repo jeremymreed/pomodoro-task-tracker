@@ -5,7 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
-## [v0.10.0] - 2020-09-23 18:13:00
+
+## [v0.10.1] - 2020-09-23 - 18:45:00
+## Security
+- Fixed https://github.com/advisories/GHSA-56pc-6jqp-xqj8 by updating Electron to ^9.3.0
+
+## [v0.10.0] - 2020-09-23 - 18:13:00
 ### Added
 - This changelog!
 - Create enumerations to get rid of some magic numbers. (State vars, phase types, etc)
@@ -391,7 +396,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Added
 - Initial commit.
 
-[unreleased]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.10.0...HEAD
+[unreleased]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.10.1...HEAD
+[v0.10.1]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.10.0...v0.10.1
 [v0.10.0]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.9.0...v0.10.0
 [v0.9.0]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.8.0...v0.9.0
 [v0.8.0]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.7.0...v0.8.0
