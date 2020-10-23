@@ -16,10 +16,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import PouchDB from 'pouchdb';
+import PouchDB from "pouchdb";
+import TaskFilter from "./enums/task-filter-enum";
 
-PouchDB.plugin(require('pouchdb-find'));
-PouchDB.plugin(require('pouchdb-debug'));
+PouchDB.plugin(require("pouchdb-find"));
+PouchDB.plugin(require("pouchdb-debug"));
 
 class Database {
   constructor(databasePath) {
@@ -30,58 +31,54 @@ class Database {
   // Do nothing otherwise.
   async createIndexes() {
     let indexes = await this.db.getIndexes();
-  
+
     if (indexes.indexes.length === 1) {
-  
       await this.db.createIndex({
         index: {
-          fields: ['name'],
-          ddoc: 'index-by-name'
-        }
-      });
-  
-      await this.db.createIndex({
-        index: {
-          fields: ['type'],
-          ddoc: 'index-by-type'
-        }
-      });
-  
-      await this.db.createIndex({
-        index: {
-          fields: ['done'],
-          ddoc: 'index-by-done'
-        }
-      });
-
-      await this.db.createIndex({
-        index: {
-          fields: ['label'],
-          ddoc: 'index-by-label'
-        }
-      });
-
-      await this.db.createIndex({
-        index: {
-          fields: ['type', 'label'],
+          fields: ["name"],
+          ddoc: "index-by-name",
         },
-        ddoc: 'index-by-type-label'
+      });
+
+      await this.db.createIndex({
+        index: {
+          fields: ["type"],
+          ddoc: "index-by-type",
+        },
+      });
+
+      await this.db.createIndex({
+        index: {
+          fields: ["done"],
+          ddoc: "index-by-done",
+        },
+      });
+
+      await this.db.createIndex({
+        index: {
+          fields: ["labelId"],
+          ddoc: "index-by-labelId",
+        },
       });
     }
+  }
+
+  async close() {
+    await this.db.close();
   }
 
   async getTasks() {
     try {
       let findResult = await this.db.find({
         selector: {
-          type: 'task'
+          type: "task",
         },
-        use_index: 'index-by-type'
+        use_index: "index-by-type",
       });
 
       return findResult.docs;
     } catch (error) {
-      console.log('Caught error', error);
+      console.log("Caught error", error);
     }
   }
 
@@ -89,28 +86,28 @@ class Database {
     try {
       let findResult = await this.db.find({
         selector: {
-          done: done
+          done: done,
         },
-        use_index: 'index-by-done'
+        use_index: "index-by-done",
       });
 
       return findResult.docs;
     } catch (error) {
-      console.log('Caught error', error);
+      console.log("Caught error", error);
     }
   }
 
   async filterTasks(filterName) {
     try {
-      if (filterName === 'all') {
+      if (filterName === TaskFilter.All) {
         return this.getTasks();
-      } else if (filterName === 'tasksDone') {
+      } else if (filterName === TaskFilter.Done) {
         return this.filterTasksByDone(true);
-      } else if (filterName === 'tasksNotDone') {
+      } else if (filterName === TaskFilter.NotDone) {
         return this.filterTasksByDone(false);
       }
     } catch (error) {
-      console.log('Caught error: ', error);
+      console.log("Caught error: ", error);
     }
   }
 
@@ -118,29 +115,29 @@ class Database {
     try {
       let findResult = await this.db.find({
         selector: {
-          type: 'label'
+          type: "label",
         },
-        use_index: 'index-by-type'
+        use_index: "index-by-type",
       });
 
       return findResult.docs;
     } catch (error) {
-      console.log('Caught error: ', error);
+      console.log("Caught error: ", error);
     }
   }
 
-  async getByLabel(labelId) {
+  async getByLabelId(labelId) {
     try {
       let findResult = await this.db.find({
         selector: {
-          label: labelId
+          labelId: labelId,
         },
-        use_index: 'index-by-label'
+        use_index: "index-by-labelId",
       });
 
       return findResult.docs;
     } catch (error) {
-      console.log('Caught error: ', error);
+      console.log("Caught error: ", error);
     }
   }
 
@@ -149,7 +146,7 @@ class Database {
       const response = await this.db.bulkDocs(docs);
       return response;
     } catch (error) {
-      console.log('error: ', error);
+      console.log("error: ", error);
     }
   }
 
@@ -159,10 +156,10 @@ class Database {
       if (response.ok) {
         return response.rev;
       } else {
-        throw new Error('Failed to upsert!');
+        throw new Error("Failed to upsert!");
       }
     } catch (error) {
-      console.log('error:', error);
+      console.log("error:", error);
     }
   }
 
@@ -172,12 +169,12 @@ class Database {
 
       return result;
     } catch (error) {
-      console.log('error: ', error);
+      console.log("error: ", error);
     }
   }
 
   enableDebug() {
-    PouchDB.debug.enable('*');
+    PouchDB.debug.enable("*");
   }
 
   disableDebug() {

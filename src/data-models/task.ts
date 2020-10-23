@@ -16,32 +16,44 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif;
-  margin: auto;
-  max-width: 100rem;
-  padding: 2rem;
+import { v4 as uuidv4 } from "uuid";
+
+// TODO: Should we consider adding getters/setters, and avoid directly accessing these data members directly from code?
+class Task {
+  _id: string;
+
+  _rev: string;
+
+  type: string;
+
+  name: string;
+
+  description: string;
+
+  labelId: string;
+
+  timeSpent: number;
+
+  done: boolean;
+
+  constructor(
+    id = uuidv4(),
+    rev = "",
+    name = "",
+    description = "",
+    label = "",
+    timeSpent = 0,
+    done = false
+  ) {
+    this._id = id;
+    this._rev = rev;
+    this.type = "task";
+    this.name = name;
+    this.description = description;
+    this.labelId = label;
+    this.timeSpent = timeSpent; // In seconds.
+    this.done = done;
+  }
 }
 
-.description-size {
-  height: 10em;
-  width: 50em;
-}
-
-.task-list-table {
-  border: 2px solid #000;
-}
-
-.remove-button {
-  background-color: #f00;
-  color: #fff;
-}
-
-.active-task-style {
-  font-weight: bold;
-}
-
-.description-style {
-  font-style: italic;
-}
+export default Task;
