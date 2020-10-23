@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+## Security
+- Fixed https://github.com/advisories/GHSA-56pc-6jqp-xqj8 by updating Electron to ^9.3.0
 
 ## [v0.10.0] - 2020-09-23 18:13:00
 ### Added
