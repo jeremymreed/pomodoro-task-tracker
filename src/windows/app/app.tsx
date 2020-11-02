@@ -180,10 +180,6 @@ class App extends React.Component<AppProps, AppState> {
   getCurrentLabel(): Label {
     const { currentLabel, labelMap } = this.state;
 
-    if (currentLabel === "") {
-      return new Label(uuidv4());
-    }
-
     const label = labelMap.get(currentLabel);
 
     if (label === undefined) {
@@ -264,26 +260,23 @@ class App extends React.Component<AppProps, AppState> {
       });
   }
 
-  editLabel(name: string, description: string, labelLabelId: string): void {
+  editLabel(label: Label): void {
     if (this.db === undefined) {
       throw new Error("this.db is undefined!");
     }
 
-    const label = this.getCurrentLabel();
-
-    if (label.labelId === labelLabelId) {
+    if (label.labelId === label._id) {
       throw new Error("Cannot assign label to itself.");
     }
 
-    label.name = name;
-    label.description = description;
-    label.labelId = labelLabelId;
+    const tempLabel = label;
+
     this.db.upsert(label).then((rev) => {
       if (rev === undefined) {
         throw new Error("editLabel: rev is undefined!");
       }
 
-      label._rev = rev;
+      tempLabel._rev = rev;
       ipcRenderer.send("showNotification", "labelUpdated");
       this.loadState().catch((error) => {
         // eslint-disable-next-line no-console
@@ -765,7 +758,7 @@ class App extends React.Component<AppProps, AppState> {
         return (
           <EditLabelView
             title="Add New Label"
-            label={this.getCurrentLabel()}
+            label={new Label(uuidv4())}
             labels={labels}
             editLabel={this.editLabel}
             closeEditLabelView={this.closeEditLabelView}
