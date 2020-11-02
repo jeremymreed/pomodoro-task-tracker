@@ -1,6 +1,6 @@
-const fs = require("fs");
-const Database = require("../database");
-const EnvPaths = require("../paths");
+import fs from "fs";
+import EnvPaths from "../paths";
+import Database from "../database";
 
 const getDatabaseName = () => {
   // Default to production database.
