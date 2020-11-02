@@ -19,11 +19,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // TODO: electron-settings is using the remote module, and this is going to be deprecated.
 // TODO: We may want to consider using a different system for settings management.
 import { BrowserWindow, app, ipcMain, Notification } from "electron";
-import fs from "fs";
 import path from "path";
 import electronSettings from "electron-settings";
-import EnvPaths from "./paths";
-import Database from "./database";
 import LuxaforUtils from "./luxafor/luxafor-utils";
 import MenuGenerator from "./menu-generator";
 import NotificationOptions from "./utils/notification-options";
@@ -35,54 +32,11 @@ if (process.argv.length === 3) {
   [, , databaseName] = process.argv;
 }
 
-const envPaths = new EnvPaths();
-
 const notificationOptions = new NotificationOptions();
 
 let mainWindow = null;
 const luxaforUtils = new LuxaforUtils();
 luxaforUtils.init();
-
-const setupDatabase = async (databasePath: string) => {
-  const db = new Database(databasePath);
-
-  db.disableDebug();
-  await db.createIndexes();
-  await db.close();
-};
-
-function initializeDatabase() {
-  const configPathBase = envPaths.getConfig();
-
-  // eslint-disable-next-line no-console
-  console.log("configPathBase: ", configPathBase);
-
-  try {
-    const testDir = fs.opendirSync(configPathBase);
-    testDir.closeSync();
-  } catch (error) {
-    if (error.code === "ENOENT") {
-      // eslint-disable-next-line no-console
-      console.log("Creating config directory!");
-      fs.mkdirSync(configPathBase);
-    }
-  }
-
-  // Now create those indexes.
-
-  setupDatabase(`${configPathBase}/${databaseName}`)
-    .then(() => {
-      // eslint-disable-next-line no-console
-      console.log("Created Indexes");
-    })
-    .catch((createIndexesError) => {
-      // eslint-disable-next-line no-console
-      console.log(
-        "initializeDatabase: Caught createIndexesError",
-        createIndexesError
-      );
-    });
-}
 
 // TODO: This should live in a config module.
 // If there are no settings, set our initial setting state.
@@ -111,8 +65,6 @@ function createWindow() {
       nodeIntegration: true,
     },
   });
-
-  initializeDatabase();
 
   initializeSettings();
 
