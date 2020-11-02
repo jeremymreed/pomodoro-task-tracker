@@ -169,7 +169,7 @@ function EditLabelView(props: Props): React.ReactElement {
             rows={4}
             value={formik.values.name}
             onChange={formik.handleChange}
-            error={!formik.errors.name !== undefined}
+            error={formik.errors.name !== undefined}
             helperText={formik.errors.name ? formik.errors.name : ""}
           />
 
