@@ -101,12 +101,7 @@ interface Props extends WithStyles<typeof styles> {
   title: string;
   task: Task;
   labels: Label[];
-  editTask: (
-    name: string,
-    description: string,
-    label: string,
-    done: boolean
-  ) => void;
+  editTask: (task: Task) => void;
   closeEditTaskView: () => void;
 }
 
@@ -122,12 +117,11 @@ function EditTaskView(props: Props): React.ReactElement {
     },
     validate,
     onSubmit: (values) => {
-      props.editTask(
-        values.name,
-        values.description,
-        mapValueToLabelId(values.labelId),
-        values.done
-      );
+      task.name = values.name;
+      task.description = values.description;
+      task.labelId = mapValueToLabelId(values.labelId);
+      task.done = values.done;
+      props.editTask(task);
       ipcRenderer.send("showNotification", "taskUpdated");
       props.closeEditTaskView();
     },

@@ -234,21 +234,16 @@ class App extends React.Component<AppProps, AppState> {
     });
   }
 
-  editTask(
-    name: string,
-    description: string,
-    label: string,
-    done: boolean
-  ): void {
+  editTask(task: Task): void {
     if (this.db === undefined) {
       throw new Error("this.db is undefined!");
     }
 
-    const task = this.getCurrentTask();
-    task.name = name;
-    task.description = description;
-    task.labelId = label;
-    task.done = done;
+    // eslint-disable-next-line no-console
+    console.log("task: ", task);
+
+    const tempTask = task;
+
     this.db
       .upsert(task)
       .then((rev) => {
@@ -256,7 +251,7 @@ class App extends React.Component<AppProps, AppState> {
           throw new Error("editTask: rev is undefined!");
         }
 
-        task._rev = rev;
+        tempTask._rev = rev;
         ipcRenderer.send("showNotification", "taskUpdated");
         this.loadState().catch((error) => {
           // eslint-disable-next-line no-console
