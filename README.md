@@ -50,6 +50,12 @@ Build the software.
 npm run build
 ```
 
+Setup the Database.  This creates the config directory, and sets up the required indexes.
+
+```
+npm run setup
+```
+
 For testing purposes, you might want to seed the database with some test data:
 
 ```
@@ -68,6 +74,12 @@ Build the software.
 
 ```
 npm run build-dev
+```
+
+Setup the Database.  This creates the config directory, and sets up the required indexes.
+
+```
+npm run setup-dev
 ```
 
 For testing purposes, you might want to seed the database with some test data:
