@@ -95,7 +95,7 @@ interface Props extends WithStyles<typeof styles> {
   title: string;
   label: Label;
   labels: Label[];
-  editLabel: (name: string, description: string, labelLabelId: string) => void;
+  editLabel: (label: Label) => void;
   closeEditLabelView: () => void;
 }
 
@@ -110,11 +110,10 @@ function EditLabelView(props: Props): React.ReactElement {
     },
     validate,
     onSubmit: (values) => {
-      props.editLabel(
-        values.name,
-        values.description,
-        mapValueToLabelLabelId(values.labelLabelId)
-      );
+      label.name = values.name;
+      label.description = values.description;
+      label.labelId = mapValueToLabelLabelId(values.labelLabelId);
+      props.editLabel(label);
       props.closeEditLabelView();
     },
   });
@@ -170,7 +169,7 @@ function EditLabelView(props: Props): React.ReactElement {
             rows={4}
             value={formik.values.name}
             onChange={formik.handleChange}
-            error={!formik.errors.name !== undefined}
+            error={formik.errors.name !== undefined}
             helperText={formik.errors.name ? formik.errors.name : ""}
           />
 

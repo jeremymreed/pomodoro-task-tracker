@@ -5,6 +5,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+## [v0.11.0] - 2020-11-02 14:31
+## Added
+- Create setup script.
+- Acceptance test procedure.
+
+## Changed
+- App: Refactor editLabel to take label reference as opposed to separate fields.
+- App: Refactor editTask to take task reference as opposed to separate fields.
+
+## Fixed
+- EditLabel: Unable to create new task.
+- EditLabel: Label name validation.
 
 ## [v0.10.1] - 2020-09-23 - 18:45:00
 ## Security
@@ -396,7 +408,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Added
 - Initial commit.
 
-[unreleased]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.10.1...HEAD
+[unreleased]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.11.0...HEAD
+[v0.11.0]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.10.1...v0.11.0
 [v0.10.1]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.10.0...v0.10.1
 [v0.10.0]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.9.0...v0.10.0
 [v0.9.0]: https://github.com/jeremymreed/pomodoro-task-tracker/compare/v0.8.0...v0.9.0
