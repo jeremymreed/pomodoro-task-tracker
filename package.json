@@ -17,6 +17,8 @@
     "compile": "tsc -p ./",
     "babel": "babel build/ --out-dir build/ --source-maps",
     "copy-static": "cp static/* build/",
+    "setup": "node build/scripts/setup.js",
+    "setup-dev": "node build/scripts/setup.js pomodoro-task-tracker-dev",
     "seed": "node build/scripts/seed.js",
     "seed-dev": "node build/scripts/seed.js pomodoro-task-tracker-dev",
     "test": "mocha -r esm tests/**/*.spec.js",
