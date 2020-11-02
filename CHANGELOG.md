@@ -4,7 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
-
+## Added
+- Create setup script.
 
 ## [v0.10.1] - 2020-09-23 - 18:45:00
 ## Security
