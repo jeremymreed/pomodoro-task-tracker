@@ -1,13 +1,16 @@
+
+Tasks:
 1. View Task list.
 2. View Task.  Confirm initial seed values.
 3. Edit Task.  Confirm edits by View Task.
     - Change Name.
-        - Empty name is an error, should not be able to save edits.
+        - Empty name is an error, should not be able to save edits.  Save button should be disabled.
     - Change Description.
     - Change Label.
     - Toggle Done checkbox.
 4. Add new Task.  Confirm by View Task List, and View Task.
     - Empty name is error, should not be able to save edits.
+        - When the form is first opened, the name is empty, and this is not an error.  But submit button should be disabled.
 5. Remove Task.  Confirm by View Task List.
 6. Start Task.  Confirm by looking at TaskRunningView UI values. (Confirm that timer runs, and Luxafor flag is on with correct color.)
 7. Pause Task. (Check task time update.) (Confirm that TaskRunningView UI has correct display, and Luxafor flag is off)
@@ -15,12 +18,36 @@
 9. Stop Task. (Check task time update.) (Confirm UI switch to Task List, and Luxafor flag is off.)
 10. Start Task, mark Task done. (Check task time update.) (Confirm UI switch to Task List, Luxafor flag is off, and done checkmark is added.)
 11. Check Pomodoro phases. (can check this via unit testing.) (Check to be sure that time spent on task is only updated during Work phases.)
-12. Check number of pomodoros on TaskRunningView UI for correct updates.
-13. View Label list. (Confirm UI switch to Label List, confirm seed labels)
-14. Edit Label. (Confirm edits by View Task)
+12. Check filtering.  Filter by All, Incomplete, and Complete.  Verify that the Task List shows the correct tasks.
+    - Also ensure that the Filter selection is still available if there are no tasks matching the filter.
+
+Pomodoro:
+13. Check number of pomodoros on TaskRunningView UI for correct updates.
+
+Labels:
+14. View Label list. (Confirm UI switch to Label List, confirm seed labels)
+15. View Label.  Confirm initial seed values.
+16. Edit Label. (Confirm edits by View Task)
     - Change Name.
-        - Empty name is an error, should not be able to save edits.
+        - Empty name is an error, should not be able to save edits.  Save button should be disabled.
     - Change Description.
     - Change Label.  (Make sure we can't select label as it's own label.)
-15. Add new Label.  (Confirm by Label List, and View Label).
-16. Remove Label.  (Confirm by Label List.)
+17. Add new Label.  (Confirm by Label List, and View Label).
+    - Empty name is error, should not be able to save edits.
+        - When the form is first opened, the name is empty, and this is not an error.  But submit button should be disabled.
+18. Remove Label.  (Confirm by Label List.)
+    - Check that all Labels and Tasks with this label have their labels set to 'none'.
+
+Edit Settings:
+19. Set lengths of pomodoro, short rest, long rest, and number pomodoros before long rest.  Confirm by looking at settings file.
+20. Toggle display seconds checkbox.  Confirm by looking at settings file.
+21. Select theme.  Confirm by looking at settings file.
+
+Quitting.
+22. Click x icon at upper right hand corner.  Verify that this closes all windows, and quits the app.
+23. Click on File -> Quit.  Verify that this closes all windows, and quits the app.
+
+Menu:
+24. Clicking Help->About should bring up a dialog.  Verify that the dialog has the expected message, and version number.
+25. Clicking Help->Toggle Dev Tools should bring up developer tools.
+26. Clicking Help->Toggle PouchDB debug should turn on/off PouchDB debug mode.  Verify by looking for PouchDB debug info in dev tools console. 
