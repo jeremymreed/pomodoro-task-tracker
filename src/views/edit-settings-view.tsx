@@ -32,6 +32,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
 import SaveIcon from "@material-ui/icons/Save";
 import CancelIcon from "@material-ui/icons/Cancel";
+import StateVars from "../enums/state-vars-enum";
 
 const styles = () => ({
   themeFormControl: {
@@ -49,7 +50,11 @@ const styles = () => ({
 
 interface Props extends WithStyles<typeof styles> {
   changeTheme: (themeName: string) => void;
-  closeEditSettingsView: () => void;
+  appStateUpdate: (
+    newState: StateVars,
+    taskId: string,
+    labelId: string
+  ) => void;
 }
 
 interface State {
@@ -135,11 +140,11 @@ class EditSettingsView extends React.Component<Props, State> {
   }
 
   cancelEdit(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    const { closeEditSettingsView } = this.props;
+    const { appStateUpdate } = this.props;
 
     event.preventDefault();
 
-    closeEditSettingsView();
+    appStateUpdate(StateVars.MainViewState, "", "");
   }
 
   handleShouldDisplaySecondsChange() {
@@ -232,7 +237,7 @@ class EditSettingsView extends React.Component<Props, State> {
   }
 
   formSubmit(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    const { changeTheme, closeEditSettingsView } = this.props;
+    const { changeTheme, appStateUpdate } = this.props;
 
     const {
       pomodoro,
@@ -260,7 +265,7 @@ class EditSettingsView extends React.Component<Props, State> {
 
     ipcRenderer.send("showNotification", "settingsUpdated");
 
-    closeEditSettingsView();
+    appStateUpdate(StateVars.MainViewState, "", "");
   }
 
   render() {

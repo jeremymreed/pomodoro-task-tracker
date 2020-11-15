@@ -658,7 +658,7 @@ class App extends React.Component<AppProps, AppState> {
         return (
           <div>
             <EditSettingsView
-              closeEditSettingsView={this.closeEditSettingsView}
+              appStateUpdate={this.appStateUpdate}
               changeTheme={changeTheme}
             />
           </div>
