@@ -630,6 +630,23 @@ class App extends React.Component<AppProps, AppState> {
     const { changeTheme } = this.props;
 
     switch (stateVar) {
+      case StateVars.MainViewState:
+        return (
+          <div>
+            <MainView
+              tasks={tasks}
+              labels={labels}
+              currentList={currentList}
+              startTask={this.startTask}
+              taskDoneById={this.taskDoneById}
+              setCurrentList={this.setCurrentList}
+              appStateUpdate={this.appStateUpdate}
+              removeTask={this.removeTask}
+              removeLabel={this.removeLabel}
+              setFilter={this.setFilter}
+            />
+          </div>
+        );
       case StateVars.TaskRunningState:
         return (
           <div>
@@ -673,23 +690,6 @@ class App extends React.Component<AppProps, AppState> {
               labels={labels}
               editTask={this.editTask}
               closeEditTaskView={this.closeEditTaskView}
-            />
-          </div>
-        );
-      case StateVars.MainViewState:
-        return (
-          <div>
-            <MainView
-              tasks={tasks}
-              labels={labels}
-              currentList={currentList}
-              startTask={this.startTask}
-              taskDoneById={this.taskDoneById}
-              setCurrentList={this.setCurrentList}
-              appStateUpdate={this.appStateUpdate}
-              removeTask={this.removeTask}
-              removeLabel={this.removeLabel}
-              setFilter={this.setFilter}
             />
           </div>
         );
