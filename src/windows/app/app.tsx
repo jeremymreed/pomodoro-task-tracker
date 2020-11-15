@@ -603,70 +603,82 @@ class App extends React.Component<AppProps, AppState> {
 
   // State transition functions.
 
-  appStateTransition(newState: StateVars): void {
-    this.setState({ stateVar: newState });
+  appStateUpdate(newState: StateVars, taskId: string, labelId: string): void {
+    this.setState({
+      currentTask: taskId,
+      currentLabel: labelId,
+      stateVar: newState,
+    });
   }
 
   openEditLabelView(labelId: string): void {
+    /*
     this.setState({
       currentLabel: labelId,
       stateVar: StateVars.EditLabelState,
     });
+    */
+    this.appStateUpdate(StateVars.EditLabelState, "", labelId);
   }
 
   openViewLabelView(labelId: string): void {
+    /*
     this.setState({
       currentLabel: labelId,
       stateVar: StateVars.ViewLabelState,
     });
+    */
+    this.appStateUpdate(StateVars.ViewLabelState, "", labelId);
   }
 
   openEditTaskView(taskId: string): void {
-    this.setState({ currentTask: taskId, stateVar: StateVars.EditTaskState });
+    // this.setState({ currentTask: taskId, stateVar: StateVars.EditTaskState });
+    this.appStateUpdate(StateVars.EditTaskState, taskId, "");
   }
 
   openViewTaskView(taskId: string): void {
-    this.setState({ currentTask: taskId, stateVar: StateVars.ViewTaskState });
+    // this.setState({ currentTask: taskId, stateVar: StateVars.ViewTaskState });
+    this.appStateUpdate(StateVars.ViewTaskState, taskId, "");
   }
 
   closeEditLabelView(): void {
     // this.setState({ currentLabel: "", stateVar: StateVars.MainViewState });
-    this.appStateTransition(StateVars.MainViewState);
+    this.appStateUpdate(StateVars.MainViewState, "", "");
   }
 
   openAddLabelView(): void {
     // this.setState({ currentLabel: "", stateVar: StateVars.AddNewLabelState });
-    this.appStateTransition(StateVars.AddNewLabelState);
+    this.appStateUpdate(StateVars.AddNewLabelState, "", "");
   }
 
   closeEditTaskView(): void {
     // this.setState({ currentTask: "", stateVar: StateVars.MainViewState });
-    this.appStateTransition(StateVars.MainViewState);
+    this.appStateUpdate(StateVars.MainViewState, "", "");
   }
 
   openAddTaskView(): void {
     // this.setState({ currentTask: "", stateVar: StateVars.AddNewTaskState });
-    this.appStateTransition(StateVars.AddNewTaskState);
+    this.appStateUpdate(StateVars.AddNewTaskState, "", "");
   }
 
   openEditSettingsView(): void {
     // this.setState({ currentTask: "", stateVar: StateVars.EditSettingsState });
-    this.appStateTransition(StateVars.EditSettingsState);
+    this.appStateUpdate(StateVars.EditSettingsState, "", "");
   }
 
   closeEditSettingsView(): void {
     // this.setState({ currentTask: "", stateVar: StateVars.MainViewState });
-    this.appStateTransition(StateVars.MainViewState);
+    this.appStateUpdate(StateVars.MainViewState, "", "");
   }
 
   closeViewTaskView(): void {
     // this.setState({ currentTask: "", stateVar: StateVars.MainViewState });
-    this.appStateTransition(StateVars.MainViewState);
+    this.appStateUpdate(StateVars.MainViewState, "", "");
   }
 
   closeViewLabelView(): void {
     // this.setState({ currentLabel: "", stateVar: StateVars.MainViewState });
-    this.appStateTransition(StateVars.MainViewState);
+    this.appStateUpdate(StateVars.MainViewState, "", "");
   }
 
   render(): React.ReactNode {
