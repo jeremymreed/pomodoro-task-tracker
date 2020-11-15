@@ -84,7 +84,6 @@ class App extends React.Component<AppProps, AppState> {
     this.stopTask = this.stopTask.bind(this);
     this.togglePouchdbDebug = this.togglePouchdbDebug.bind(this);
     this.appStateUpdate = this.appStateUpdate.bind(this);
-    this.closeEditSettingsView = this.closeEditSettingsView.bind(this);
 
     this.pouchdbDebug = true;
     this.currentFilter = TaskFilter.All;
@@ -590,11 +589,6 @@ class App extends React.Component<AppProps, AppState> {
       currentLabel: labelId,
       stateVar: newState,
     });
-  }
-
-  closeEditSettingsView(): void {
-    // this.setState({ currentTask: "", stateVar: StateVars.MainViewState });
-    this.appStateUpdate(StateVars.MainViewState, "", "");
   }
 
   render(): React.ReactNode {
