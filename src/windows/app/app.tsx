@@ -86,7 +86,6 @@ class App extends React.Component<AppProps, AppState> {
     this.appStateUpdate = this.appStateUpdate.bind(this);
     this.closeEditLabelView = this.closeEditLabelView.bind(this);
     this.closeEditTaskView = this.closeEditTaskView.bind(this);
-    this.openEditSettingsView = this.openEditSettingsView.bind(this);
     this.closeEditSettingsView = this.closeEditSettingsView.bind(this);
     this.closeViewTaskView = this.closeViewTaskView.bind(this);
     this.closeViewLabelView = this.closeViewLabelView.bind(this);
@@ -107,7 +106,9 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   componentDidMount(): void {
-    ipcRenderer.on("showEditSettingsView", this.openEditSettingsView);
+    ipcRenderer.on("showEditSettingsView", () => {
+      this.appStateUpdate(StateVars.EditSettingsState, "", "");
+    });
 
     ipcRenderer.on("togglePouchdbDebug", this.togglePouchdbDebug);
 
@@ -603,11 +604,6 @@ class App extends React.Component<AppProps, AppState> {
   closeEditTaskView(): void {
     // this.setState({ currentTask: "", stateVar: StateVars.MainViewState });
     this.appStateUpdate(StateVars.MainViewState, "", "");
-  }
-
-  openEditSettingsView(): void {
-    // this.setState({ currentTask: "", stateVar: StateVars.EditSettingsState });
-    this.appStateUpdate(StateVars.EditSettingsState, "", "");
   }
 
   closeEditSettingsView(): void {
