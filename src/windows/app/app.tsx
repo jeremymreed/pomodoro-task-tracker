@@ -87,12 +87,9 @@ class App extends React.Component<AppProps, AppState> {
     this.openEditLabelView = this.openEditLabelView.bind(this);
     this.closeEditLabelView = this.closeEditLabelView.bind(this);
     this.openAddLabelView = this.openAddLabelView.bind(this);
-    this.openEditTaskView = this.openEditTaskView.bind(this);
     this.closeEditTaskView = this.closeEditTaskView.bind(this);
-    this.openAddTaskView = this.openAddTaskView.bind(this);
     this.openEditSettingsView = this.openEditSettingsView.bind(this);
     this.closeEditSettingsView = this.closeEditSettingsView.bind(this);
-    this.openViewTaskView = this.openViewTaskView.bind(this);
     this.closeViewTaskView = this.closeViewTaskView.bind(this);
     this.openViewLabelView = this.openViewLabelView.bind(this);
     this.closeViewLabelView = this.closeViewLabelView.bind(this);
@@ -621,16 +618,6 @@ class App extends React.Component<AppProps, AppState> {
     this.appStateUpdate(StateVars.ViewLabelState, "", labelId);
   }
 
-  openEditTaskView(taskId: string): void {
-    // this.setState({ currentTask: taskId, stateVar: StateVars.EditTaskState });
-    this.appStateUpdate(StateVars.EditTaskState, taskId, "");
-  }
-
-  openViewTaskView(taskId: string): void {
-    // this.setState({ currentTask: taskId, stateVar: StateVars.ViewTaskState });
-    this.appStateUpdate(StateVars.ViewTaskState, taskId, "");
-  }
-
   closeEditLabelView(): void {
     // this.setState({ currentLabel: "", stateVar: StateVars.MainViewState });
     this.appStateUpdate(StateVars.MainViewState, "", "");
@@ -644,11 +631,6 @@ class App extends React.Component<AppProps, AppState> {
   closeEditTaskView(): void {
     // this.setState({ currentTask: "", stateVar: StateVars.MainViewState });
     this.appStateUpdate(StateVars.MainViewState, "", "");
-  }
-
-  openAddTaskView(): void {
-    // this.setState({ currentTask: "", stateVar: StateVars.AddNewTaskState });
-    this.appStateUpdate(StateVars.AddNewTaskState, "", "");
   }
 
   openEditSettingsView(): void {
