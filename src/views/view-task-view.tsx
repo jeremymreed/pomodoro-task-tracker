@@ -29,6 +29,7 @@ import humanizeDuration from "humanize-duration";
 import CancelIcon from "@material-ui/icons/Cancel";
 import Task from "../data-models/task";
 import Label from "../data-models/label";
+import StateVars from "../enums/state-vars-enum";
 
 const styles = () => ({
   name: {
@@ -49,7 +50,11 @@ const styles = () => ({
 
 interface Props extends WithStyles<typeof styles> {
   task: Task;
-  closeViewTaskView: () => void;
+  appStateUpdate: (
+    newState: StateVars,
+    taskId: string,
+    labelId: string
+  ) => void;
   getLabelById: (labelId: string) => Label;
 }
 
@@ -118,11 +123,11 @@ class ViewTaskView extends React.Component<Props, State> {
   }
 
   exit(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    const { closeViewTaskView } = this.props;
+    const { appStateUpdate } = this.props;
 
     event.preventDefault();
 
-    closeViewTaskView();
+    appStateUpdate(StateVars.MainViewState, "", "");
   }
 
   render() {
