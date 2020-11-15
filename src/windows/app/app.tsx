@@ -83,20 +83,8 @@ class App extends React.Component<AppProps, AppState> {
     this.processRawTasks = this.processRawTasks.bind(this);
     this.getLabelById = this.getLabelById.bind(this);
     this.setCurrentList = this.setCurrentList.bind(this);
-    this.openEditTaskView = this.openEditTaskView.bind(this);
-    this.closeEditTaskView = this.closeEditTaskView.bind(this);
-    this.openAddTaskView = this.openAddTaskView.bind(this);
-    this.openEditSettingsView = this.openEditSettingsView.bind(this);
-    this.closeEditSettingsView = this.closeEditSettingsView.bind(this);
-    this.openViewTaskView = this.openViewTaskView.bind(this);
-    this.closeViewTaskView = this.closeViewTaskView.bind(this);
-    this.openViewLabelView = this.openViewLabelView.bind(this);
-    this.closeViewLabelView = this.closeViewLabelView.bind(this);
     this.editLabel = this.editLabel.bind(this);
     this.removeLabel = this.removeLabel.bind(this);
-    this.openEditLabelView = this.openEditLabelView.bind(this);
-    this.closeEditLabelView = this.closeEditLabelView.bind(this);
-    this.openAddLabelView = this.openAddLabelView.bind(this);
     this.updateTaskTimeSpentOnTask = this.updateTaskTimeSpentOnTask.bind(this);
     this.taskDone = this.taskDone.bind(this);
     this.taskDoneById = this.taskDoneById.bind(this);
@@ -106,6 +94,18 @@ class App extends React.Component<AppProps, AppState> {
     this.startTask = this.startTask.bind(this);
     this.stopTask = this.stopTask.bind(this);
     this.togglePouchdbDebug = this.togglePouchdbDebug.bind(this);
+    this.openEditLabelView = this.openEditLabelView.bind(this);
+    this.closeEditLabelView = this.closeEditLabelView.bind(this);
+    this.openAddLabelView = this.openAddLabelView.bind(this);
+    this.openEditTaskView = this.openEditTaskView.bind(this);
+    this.closeEditTaskView = this.closeEditTaskView.bind(this);
+    this.openAddTaskView = this.openAddTaskView.bind(this);
+    this.openEditSettingsView = this.openEditSettingsView.bind(this);
+    this.closeEditSettingsView = this.closeEditSettingsView.bind(this);
+    this.openViewTaskView = this.openViewTaskView.bind(this);
+    this.closeViewTaskView = this.closeViewTaskView.bind(this);
+    this.openViewLabelView = this.openViewLabelView.bind(this);
+    this.closeViewLabelView = this.closeViewLabelView.bind(this);
 
     this.pouchdbDebug = true;
     this.currentFilter = TaskFilter.All;
@@ -358,21 +358,6 @@ class App extends React.Component<AppProps, AppState> {
       });
   }
 
-  openEditLabelView(labelId: string): void {
-    this.setState({
-      currentLabel: labelId,
-      stateVar: StateVars.EditLabelState,
-    });
-  }
-
-  closeEditLabelView(): void {
-    this.setState({ currentLabel: "", stateVar: StateVars.MainViewState });
-  }
-
-  openAddLabelView(): void {
-    this.setState({ currentLabel: "", stateVar: StateVars.AddNewLabelState });
-  }
-
   removeTask(taskId: string): void {
     const { taskMap } = this.state;
 
@@ -495,45 +480,6 @@ class App extends React.Component<AppProps, AppState> {
     return currentList >= 0 && currentList <= 1;
   }
 
-  openEditTaskView(taskId: string): void {
-    this.setState({ currentTask: taskId, stateVar: StateVars.EditTaskState });
-  }
-
-  closeEditTaskView(): void {
-    this.setState({ currentTask: "", stateVar: StateVars.MainViewState });
-  }
-
-  openAddTaskView(): void {
-    this.setState({ currentTask: "", stateVar: StateVars.AddNewTaskState });
-  }
-
-  openEditSettingsView(): void {
-    this.setState({ currentTask: "", stateVar: StateVars.EditSettingsState });
-  }
-
-  closeEditSettingsView(): void {
-    this.setState({ currentTask: "", stateVar: StateVars.MainViewState });
-  }
-
-  openViewTaskView(taskId: string): void {
-    this.setState({ currentTask: taskId, stateVar: StateVars.ViewTaskState });
-  }
-
-  closeViewTaskView(): void {
-    this.setState({ currentTask: "", stateVar: StateVars.MainViewState });
-  }
-
-  openViewLabelView(labelId: string): void {
-    this.setState({
-      currentLabel: labelId,
-      stateVar: StateVars.ViewLabelState,
-    });
-  }
-
-  closeViewLabelView(): void {
-    this.setState({ currentLabel: "", stateVar: StateVars.MainViewState });
-  }
-
   startTask(taskId: string): void {
     this.setState({
       currentTask: taskId,
@@ -653,6 +599,74 @@ class App extends React.Component<AppProps, AppState> {
     } else {
       throw new Error("togglePouchDBDebug: this.db is undefined!");
     }
+  }
+
+  // State transition functions.
+
+  appStateTransition(newState: StateVars): void {
+    this.setState({ stateVar: newState });
+  }
+
+  openEditLabelView(labelId: string): void {
+    this.setState({
+      currentLabel: labelId,
+      stateVar: StateVars.EditLabelState,
+    });
+  }
+
+  openViewLabelView(labelId: string): void {
+    this.setState({
+      currentLabel: labelId,
+      stateVar: StateVars.ViewLabelState,
+    });
+  }
+
+  openEditTaskView(taskId: string): void {
+    this.setState({ currentTask: taskId, stateVar: StateVars.EditTaskState });
+  }
+
+  openViewTaskView(taskId: string): void {
+    this.setState({ currentTask: taskId, stateVar: StateVars.ViewTaskState });
+  }
+
+  closeEditLabelView(): void {
+    // this.setState({ currentLabel: "", stateVar: StateVars.MainViewState });
+    this.appStateTransition(StateVars.MainViewState);
+  }
+
+  openAddLabelView(): void {
+    // this.setState({ currentLabel: "", stateVar: StateVars.AddNewLabelState });
+    this.appStateTransition(StateVars.AddNewLabelState);
+  }
+
+  closeEditTaskView(): void {
+    // this.setState({ currentTask: "", stateVar: StateVars.MainViewState });
+    this.appStateTransition(StateVars.MainViewState);
+  }
+
+  openAddTaskView(): void {
+    // this.setState({ currentTask: "", stateVar: StateVars.AddNewTaskState });
+    this.appStateTransition(StateVars.AddNewTaskState);
+  }
+
+  openEditSettingsView(): void {
+    // this.setState({ currentTask: "", stateVar: StateVars.EditSettingsState });
+    this.appStateTransition(StateVars.EditSettingsState);
+  }
+
+  closeEditSettingsView(): void {
+    // this.setState({ currentTask: "", stateVar: StateVars.MainViewState });
+    this.appStateTransition(StateVars.MainViewState);
+  }
+
+  closeViewTaskView(): void {
+    // this.setState({ currentTask: "", stateVar: StateVars.MainViewState });
+    this.appStateTransition(StateVars.MainViewState);
+  }
+
+  closeViewLabelView(): void {
+    // this.setState({ currentLabel: "", stateVar: StateVars.MainViewState });
+    this.appStateTransition(StateVars.MainViewState);
   }
 
   render(): React.ReactNode {
