@@ -85,7 +85,6 @@ class App extends React.Component<AppProps, AppState> {
     this.togglePouchdbDebug = this.togglePouchdbDebug.bind(this);
     this.appStateUpdate = this.appStateUpdate.bind(this);
     this.closeEditLabelView = this.closeEditLabelView.bind(this);
-    this.closeEditTaskView = this.closeEditTaskView.bind(this);
     this.closeEditSettingsView = this.closeEditSettingsView.bind(this);
     this.closeViewTaskView = this.closeViewTaskView.bind(this);
     this.closeViewLabelView = this.closeViewLabelView.bind(this);
@@ -601,11 +600,6 @@ class App extends React.Component<AppProps, AppState> {
     this.appStateUpdate(StateVars.MainViewState, "", "");
   }
 
-  closeEditTaskView(): void {
-    // this.setState({ currentTask: "", stateVar: StateVars.MainViewState });
-    this.appStateUpdate(StateVars.MainViewState, "", "");
-  }
-
   closeEditSettingsView(): void {
     // this.setState({ currentTask: "", stateVar: StateVars.MainViewState });
     this.appStateUpdate(StateVars.MainViewState, "", "");
@@ -672,7 +666,7 @@ class App extends React.Component<AppProps, AppState> {
               task={this.getCurrentTask()}
               labels={labels}
               editTask={this.editTask}
-              closeEditTaskView={this.closeEditTaskView}
+              appStateUpdate={this.appStateUpdate}
             />
           </div>
         );
@@ -685,7 +679,7 @@ class App extends React.Component<AppProps, AppState> {
               task={new Task(uuidv4(), "", "")}
               labels={labels}
               editTask={this.editTask}
-              closeEditTaskView={this.closeEditTaskView}
+              appStateUpdate={this.appStateUpdate}
             />
           </div>
         );
