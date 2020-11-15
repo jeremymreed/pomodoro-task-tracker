@@ -715,9 +715,6 @@ class App extends React.Component<AppProps, AppState> {
               taskDoneById={this.taskDoneById}
               setCurrentList={this.setCurrentList}
               appStateUpdate={this.appStateUpdate}
-              openViewLabelView={this.openViewLabelView}
-              openEditLabelView={this.openEditLabelView}
-              openAddLabelView={this.openAddLabelView}
               removeTask={this.removeTask}
               removeLabel={this.removeLabel}
               setFilter={this.setFilter}

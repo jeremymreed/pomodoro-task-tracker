@@ -38,9 +38,6 @@ interface Props {
     taskId: string,
     labelId: string
   ) => void;
-  openViewLabelView: (labelId: string) => void;
-  openEditLabelView: (labelId: string) => void;
-  openAddLabelView: () => void;
   startTask: (taskId: string) => void;
   taskDoneById: (taskId: string) => void;
   removeTask: (taskId: string) => void;
@@ -69,9 +66,6 @@ function MainView(props: Props): React.ReactElement {
       appStateUpdate,
       removeTask,
       setFilter,
-      openViewLabelView,
-      openEditLabelView,
-      openAddLabelView,
       removeLabel,
     } = props;
 
@@ -91,10 +85,8 @@ function MainView(props: Props): React.ReactElement {
     if (currentList === CurrentListState.labelListState) {
       return (
         <LabelList
+          appStateUpdate={appStateUpdate}
           labels={labels}
-          openViewLabelView={openViewLabelView}
-          openEditLabelView={openEditLabelView}
-          openAddLabelView={openAddLabelView}
           removeLabel={removeLabel}
         />
       );
