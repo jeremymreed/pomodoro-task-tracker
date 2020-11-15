@@ -84,7 +84,6 @@ class App extends React.Component<AppProps, AppState> {
     this.stopTask = this.stopTask.bind(this);
     this.togglePouchdbDebug = this.togglePouchdbDebug.bind(this);
     this.appStateUpdate = this.appStateUpdate.bind(this);
-    this.closeEditLabelView = this.closeEditLabelView.bind(this);
     this.closeEditSettingsView = this.closeEditSettingsView.bind(this);
 
     this.pouchdbDebug = true;
@@ -593,11 +592,6 @@ class App extends React.Component<AppProps, AppState> {
     });
   }
 
-  closeEditLabelView(): void {
-    // this.setState({ currentLabel: "", stateVar: StateVars.MainViewState });
-    this.appStateUpdate(StateVars.MainViewState, "", "");
-  }
-
   closeEditSettingsView(): void {
     // this.setState({ currentTask: "", stateVar: StateVars.MainViewState });
     this.appStateUpdate(StateVars.MainViewState, "", "");
@@ -694,7 +688,7 @@ class App extends React.Component<AppProps, AppState> {
             label={this.getCurrentLabel()}
             labels={labels}
             editLabel={this.editLabel}
-            closeEditLabelView={this.closeEditLabelView}
+            appStateUpdate={this.appStateUpdate}
           />
         );
       case StateVars.AddNewLabelState:
@@ -704,7 +698,7 @@ class App extends React.Component<AppProps, AppState> {
             label={new Label(uuidv4())}
             labels={labels}
             editLabel={this.editLabel}
-            closeEditLabelView={this.closeEditLabelView}
+            appStateUpdate={this.appStateUpdate}
           />
         );
 
