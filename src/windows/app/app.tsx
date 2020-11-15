@@ -32,6 +32,7 @@ import TaskMapper from "../../mappers/task-mapper";
 import LabelMapper from "../../mappers/label-mapper";
 import Task from "../../data-models/task";
 import Label from "../../data-models/label";
+import StateVars from "../../enums/state-vars-enum";
 import CurrentListState from "../../enums/current-list-state-enum";
 import TaskFilter from "../../enums/task-filter-enum";
 import UpsertResponse from "../../interfaces/upsert-response-interface";
@@ -51,18 +52,6 @@ interface AppState {
   currentLabel: string;
   stateVar: StateVars;
   currentList: CurrentListState;
-}
-
-enum StateVars {
-  MainViewState,
-  EditTaskState,
-  AddNewTaskState,
-  TaskRunningState,
-  EditSettingsState,
-  ViewTaskState,
-  ViewLabelState,
-  AddNewLabelState,
-  EditLabelState,
 }
 
 class App extends React.Component<AppProps, AppState> {
@@ -94,6 +83,7 @@ class App extends React.Component<AppProps, AppState> {
     this.startTask = this.startTask.bind(this);
     this.stopTask = this.stopTask.bind(this);
     this.togglePouchdbDebug = this.togglePouchdbDebug.bind(this);
+    this.appStateUpdate = this.appStateUpdate.bind(this);
     this.openEditLabelView = this.openEditLabelView.bind(this);
     this.closeEditLabelView = this.closeEditLabelView.bind(this);
     this.openAddLabelView = this.openAddLabelView.bind(this);
@@ -742,9 +732,7 @@ class App extends React.Component<AppProps, AppState> {
               startTask={this.startTask}
               taskDoneById={this.taskDoneById}
               setCurrentList={this.setCurrentList}
-              openEditTaskView={this.openEditTaskView}
-              openAddTaskView={this.openAddTaskView}
-              openViewTaskView={this.openViewTaskView}
+              appStateUpdate={this.appStateUpdate}
               openViewLabelView={this.openViewLabelView}
               openEditLabelView={this.openEditLabelView}
               openAddLabelView={this.openAddLabelView}
