@@ -86,7 +86,6 @@ class App extends React.Component<AppProps, AppState> {
     this.appStateUpdate = this.appStateUpdate.bind(this);
     this.closeEditLabelView = this.closeEditLabelView.bind(this);
     this.closeEditSettingsView = this.closeEditSettingsView.bind(this);
-    this.closeViewLabelView = this.closeViewLabelView.bind(this);
 
     this.pouchdbDebug = true;
     this.currentFilter = TaskFilter.All;
@@ -604,11 +603,6 @@ class App extends React.Component<AppProps, AppState> {
     this.appStateUpdate(StateVars.MainViewState, "", "");
   }
 
-  closeViewLabelView(): void {
-    // this.setState({ currentLabel: "", stateVar: StateVars.MainViewState });
-    this.appStateUpdate(StateVars.MainViewState, "", "");
-  }
-
   render(): React.ReactNode {
     const { stateVar, labels, tasks, currentList } = this.state;
     const { changeTheme } = this.props;
@@ -690,7 +684,7 @@ class App extends React.Component<AppProps, AppState> {
           <ViewLabelView
             label={this.getCurrentLabel()}
             getLabelById={this.getLabelById}
-            closeViewLabelView={this.closeViewLabelView}
+            appStateUpdate={this.appStateUpdate}
           />
         );
       case StateVars.EditLabelState:
