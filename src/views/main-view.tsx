@@ -23,6 +23,7 @@ import Tab from "@material-ui/core/Tab";
 import TaskFilter from "../enums/task-filter-enum";
 import TaskList from "../components/task-list";
 import LabelList from "../components/label-list";
+import StateVars from "../enums/state-vars-enum";
 import CurrentListState from "../enums/current-list-state-enum";
 import Task from "../data-models/task";
 import Label from "../data-models/label";
@@ -32,12 +33,11 @@ interface Props {
   labels: Array<Label>;
   currentList: CurrentListState;
   setCurrentList: (newView: number) => void;
-  openEditTaskView: (taskId: string) => void;
-  openAddTaskView: () => void;
-  openViewTaskView: (taskId: string) => void;
-  openViewLabelView: (labelId: string) => void;
-  openEditLabelView: (labelId: string) => void;
-  openAddLabelView: () => void;
+  appStateUpdate: (
+    newState: StateVars,
+    taskId: string,
+    labelId: string
+  ) => void;
   startTask: (taskId: string) => void;
   taskDoneById: (taskId: string) => void;
   removeTask: (taskId: string) => void;
@@ -63,14 +63,9 @@ function MainView(props: Props): React.ReactElement {
       labels,
       startTask,
       taskDoneById,
-      openEditTaskView,
-      openAddTaskView,
-      openViewTaskView,
+      appStateUpdate,
       removeTask,
       setFilter,
-      openViewLabelView,
-      openEditLabelView,
-      openAddLabelView,
       removeLabel,
     } = props;
 
@@ -80,9 +75,7 @@ function MainView(props: Props): React.ReactElement {
           tasks={tasks}
           startTask={startTask}
           taskDoneById={taskDoneById}
-          openEditTaskView={openEditTaskView}
-          openAddTaskView={openAddTaskView}
-          openViewTaskView={openViewTaskView}
+          appStateUpdate={appStateUpdate}
           removeTask={removeTask}
           setFilter={setFilter}
         />
@@ -92,10 +85,8 @@ function MainView(props: Props): React.ReactElement {
     if (currentList === CurrentListState.labelListState) {
       return (
         <LabelList
+          appStateUpdate={appStateUpdate}
           labels={labels}
-          openViewLabelView={openViewLabelView}
-          openEditLabelView={openEditLabelView}
-          openAddLabelView={openAddLabelView}
           removeLabel={removeLabel}
         />
       );

@@ -30,6 +30,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import SaveIcon from "@material-ui/icons/Save";
 import CancelIcon from "@material-ui/icons/Cancel";
 import Label from "../data-models/label";
+import StateVars from "../enums/state-vars-enum";
 
 const styles = () => ({
   labelSelectFormControl: {
@@ -96,7 +97,11 @@ interface Props extends WithStyles<typeof styles> {
   label: Label;
   labels: Label[];
   editLabel: (label: Label) => void;
-  closeEditLabelView: () => void;
+  appStateUpdate: (
+    newState: StateVars,
+    taskId: string,
+    labelId: string
+  ) => void;
 }
 
 function EditLabelView(props: Props): React.ReactElement {
@@ -114,7 +119,7 @@ function EditLabelView(props: Props): React.ReactElement {
       label.description = values.description;
       label.labelId = mapValueToLabelLabelId(values.labelLabelId);
       props.editLabel(label);
-      props.closeEditLabelView();
+      props.appStateUpdate(StateVars.MainViewState, "", "");
     },
   });
 
@@ -141,7 +146,7 @@ function EditLabelView(props: Props): React.ReactElement {
   };
 
   const cancel = () => {
-    props.closeEditLabelView();
+    props.appStateUpdate(StateVars.MainViewState, "", "");
   };
 
   // TODO: See if there's a better way to do this.  The save button must be disabled while the form is not fully filled out.

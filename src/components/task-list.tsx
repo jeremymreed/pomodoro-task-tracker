@@ -41,6 +41,7 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import AddIcon from "@material-ui/icons/Add";
 import Task from "../data-models/task";
 import TaskFilter from "../enums/task-filter-enum";
+import StateVars from "../enums/state-vars-enum";
 
 const styles = createStyles({
   divTable: {
@@ -73,9 +74,11 @@ const styles = createStyles({
 
 interface Props extends WithStyles<typeof styles> {
   tasks: Array<Task>;
-  openEditTaskView: (taskId: string) => void;
-  openAddTaskView: () => void;
-  openViewTaskView: (taskId: string) => void;
+  appStateUpdate: (
+    newState: StateVars,
+    taskId: string,
+    labelId: string
+  ) => void;
   startTask: (taskId: string) => void;
   taskDoneById: (taskId: string) => void;
   removeTask: (taskId: string) => void;
@@ -275,32 +278,32 @@ class TaskList extends React.Component<Props, State> {
   }
 
   addTask(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    const { openAddTaskView } = this.props;
+    const { appStateUpdate } = this.props;
 
     event.preventDefault();
 
-    openAddTaskView();
+    appStateUpdate(StateVars.AddNewTaskState, "", "");
   }
 
   viewTask(
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     taskId: string
   ) {
-    const { openViewTaskView } = this.props;
+    const { appStateUpdate } = this.props;
     event.preventDefault();
 
-    openViewTaskView(taskId);
+    appStateUpdate(StateVars.ViewTaskState, taskId, "");
   }
 
   editTask(
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     taskId: string
   ) {
-    const { openEditTaskView } = this.props;
+    const { appStateUpdate } = this.props;
 
     event.preventDefault();
 
-    openEditTaskView(taskId);
+    appStateUpdate(StateVars.EditTaskState, taskId, "");
   }
 
   taskDoneById(
