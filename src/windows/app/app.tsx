@@ -32,6 +32,7 @@ import TaskMapper from "../../mappers/task-mapper";
 import LabelMapper from "../../mappers/label-mapper";
 import Task from "../../data-models/task";
 import Label from "../../data-models/label";
+import StateVars from "../../enums/state-vars-enum";
 import CurrentListState from "../../enums/current-list-state-enum";
 import TaskFilter from "../../enums/task-filter-enum";
 import UpsertResponse from "../../interfaces/upsert-response-interface";
@@ -53,18 +54,6 @@ interface AppState {
   currentList: CurrentListState;
 }
 
-enum StateVars {
-  MainViewState,
-  EditTaskState,
-  AddNewTaskState,
-  TaskRunningState,
-  EditSettingsState,
-  ViewTaskState,
-  ViewLabelState,
-  AddNewLabelState,
-  EditLabelState,
-}
-
 class App extends React.Component<AppProps, AppState> {
   private db: Database | undefined;
 
@@ -83,20 +72,8 @@ class App extends React.Component<AppProps, AppState> {
     this.processRawTasks = this.processRawTasks.bind(this);
     this.getLabelById = this.getLabelById.bind(this);
     this.setCurrentList = this.setCurrentList.bind(this);
-    this.openEditTaskView = this.openEditTaskView.bind(this);
-    this.closeEditTaskView = this.closeEditTaskView.bind(this);
-    this.openAddTaskView = this.openAddTaskView.bind(this);
-    this.openEditSettingsView = this.openEditSettingsView.bind(this);
-    this.closeEditSettingsView = this.closeEditSettingsView.bind(this);
-    this.openViewTaskView = this.openViewTaskView.bind(this);
-    this.closeViewTaskView = this.closeViewTaskView.bind(this);
-    this.openViewLabelView = this.openViewLabelView.bind(this);
-    this.closeViewLabelView = this.closeViewLabelView.bind(this);
     this.editLabel = this.editLabel.bind(this);
     this.removeLabel = this.removeLabel.bind(this);
-    this.openEditLabelView = this.openEditLabelView.bind(this);
-    this.closeEditLabelView = this.closeEditLabelView.bind(this);
-    this.openAddLabelView = this.openAddLabelView.bind(this);
     this.updateTaskTimeSpentOnTask = this.updateTaskTimeSpentOnTask.bind(this);
     this.taskDone = this.taskDone.bind(this);
     this.taskDoneById = this.taskDoneById.bind(this);
@@ -106,6 +83,7 @@ class App extends React.Component<AppProps, AppState> {
     this.startTask = this.startTask.bind(this);
     this.stopTask = this.stopTask.bind(this);
     this.togglePouchdbDebug = this.togglePouchdbDebug.bind(this);
+    this.appStateUpdate = this.appStateUpdate.bind(this);
 
     this.pouchdbDebug = true;
     this.currentFilter = TaskFilter.All;
@@ -123,7 +101,9 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   componentDidMount(): void {
-    ipcRenderer.on("showEditSettingsView", this.openEditSettingsView);
+    ipcRenderer.on("showEditSettingsView", () => {
+      this.appStateUpdate(StateVars.EditSettingsState, "", "");
+    });
 
     ipcRenderer.on("togglePouchdbDebug", this.togglePouchdbDebug);
 
@@ -358,21 +338,6 @@ class App extends React.Component<AppProps, AppState> {
       });
   }
 
-  openEditLabelView(labelId: string): void {
-    this.setState({
-      currentLabel: labelId,
-      stateVar: StateVars.EditLabelState,
-    });
-  }
-
-  closeEditLabelView(): void {
-    this.setState({ currentLabel: "", stateVar: StateVars.MainViewState });
-  }
-
-  openAddLabelView(): void {
-    this.setState({ currentLabel: "", stateVar: StateVars.AddNewLabelState });
-  }
-
   removeTask(taskId: string): void {
     const { taskMap } = this.state;
 
@@ -493,45 +458,6 @@ class App extends React.Component<AppProps, AppState> {
     const { currentList } = this.state;
 
     return currentList >= 0 && currentList <= 1;
-  }
-
-  openEditTaskView(taskId: string): void {
-    this.setState({ currentTask: taskId, stateVar: StateVars.EditTaskState });
-  }
-
-  closeEditTaskView(): void {
-    this.setState({ currentTask: "", stateVar: StateVars.MainViewState });
-  }
-
-  openAddTaskView(): void {
-    this.setState({ currentTask: "", stateVar: StateVars.AddNewTaskState });
-  }
-
-  openEditSettingsView(): void {
-    this.setState({ currentTask: "", stateVar: StateVars.EditSettingsState });
-  }
-
-  closeEditSettingsView(): void {
-    this.setState({ currentTask: "", stateVar: StateVars.MainViewState });
-  }
-
-  openViewTaskView(taskId: string): void {
-    this.setState({ currentTask: taskId, stateVar: StateVars.ViewTaskState });
-  }
-
-  closeViewTaskView(): void {
-    this.setState({ currentTask: "", stateVar: StateVars.MainViewState });
-  }
-
-  openViewLabelView(labelId: string): void {
-    this.setState({
-      currentLabel: labelId,
-      stateVar: StateVars.ViewLabelState,
-    });
-  }
-
-  closeViewLabelView(): void {
-    this.setState({ currentLabel: "", stateVar: StateVars.MainViewState });
   }
 
   startTask(taskId: string): void {
@@ -655,11 +581,38 @@ class App extends React.Component<AppProps, AppState> {
     }
   }
 
+  // State transition functions.
+
+  appStateUpdate(newState: StateVars, taskId: string, labelId: string): void {
+    this.setState({
+      currentTask: taskId,
+      currentLabel: labelId,
+      stateVar: newState,
+    });
+  }
+
   render(): React.ReactNode {
     const { stateVar, labels, tasks, currentList } = this.state;
     const { changeTheme } = this.props;
 
     switch (stateVar) {
+      case StateVars.MainViewState:
+        return (
+          <div>
+            <MainView
+              tasks={tasks}
+              labels={labels}
+              currentList={currentList}
+              startTask={this.startTask}
+              taskDoneById={this.taskDoneById}
+              setCurrentList={this.setCurrentList}
+              appStateUpdate={this.appStateUpdate}
+              removeTask={this.removeTask}
+              removeLabel={this.removeLabel}
+              setFilter={this.setFilter}
+            />
+          </div>
+        );
       case StateVars.TaskRunningState:
         return (
           <div>
@@ -675,7 +628,7 @@ class App extends React.Component<AppProps, AppState> {
         return (
           <div>
             <EditSettingsView
-              closeEditSettingsView={this.closeEditSettingsView}
+              appStateUpdate={this.appStateUpdate}
               changeTheme={changeTheme}
             />
           </div>
@@ -689,7 +642,7 @@ class App extends React.Component<AppProps, AppState> {
               task={this.getCurrentTask()}
               labels={labels}
               editTask={this.editTask}
-              closeEditTaskView={this.closeEditTaskView}
+              appStateUpdate={this.appStateUpdate}
             />
           </div>
         );
@@ -702,29 +655,7 @@ class App extends React.Component<AppProps, AppState> {
               task={new Task(uuidv4(), "", "")}
               labels={labels}
               editTask={this.editTask}
-              closeEditTaskView={this.closeEditTaskView}
-            />
-          </div>
-        );
-      case StateVars.MainViewState:
-        return (
-          <div>
-            <MainView
-              tasks={tasks}
-              labels={labels}
-              currentList={currentList}
-              startTask={this.startTask}
-              taskDoneById={this.taskDoneById}
-              setCurrentList={this.setCurrentList}
-              openEditTaskView={this.openEditTaskView}
-              openAddTaskView={this.openAddTaskView}
-              openViewTaskView={this.openViewTaskView}
-              openViewLabelView={this.openViewLabelView}
-              openEditLabelView={this.openEditLabelView}
-              openAddLabelView={this.openAddLabelView}
-              removeTask={this.removeTask}
-              removeLabel={this.removeLabel}
-              setFilter={this.setFilter}
+              appStateUpdate={this.appStateUpdate}
             />
           </div>
         );
@@ -733,7 +664,7 @@ class App extends React.Component<AppProps, AppState> {
           <ViewTaskView
             task={this.getCurrentTask()}
             getLabelById={this.getLabelById}
-            closeViewTaskView={this.closeViewTaskView}
+            appStateUpdate={this.appStateUpdate}
           />
         );
       case StateVars.ViewLabelState:
@@ -741,7 +672,7 @@ class App extends React.Component<AppProps, AppState> {
           <ViewLabelView
             label={this.getCurrentLabel()}
             getLabelById={this.getLabelById}
-            closeViewLabelView={this.closeViewLabelView}
+            appStateUpdate={this.appStateUpdate}
           />
         );
       case StateVars.EditLabelState:
@@ -751,7 +682,7 @@ class App extends React.Component<AppProps, AppState> {
             label={this.getCurrentLabel()}
             labels={labels}
             editLabel={this.editLabel}
-            closeEditLabelView={this.closeEditLabelView}
+            appStateUpdate={this.appStateUpdate}
           />
         );
       case StateVars.AddNewLabelState:
@@ -761,7 +692,7 @@ class App extends React.Component<AppProps, AppState> {
             label={new Label(uuidv4())}
             labels={labels}
             editLabel={this.editLabel}
-            closeEditLabelView={this.closeEditLabelView}
+            appStateUpdate={this.appStateUpdate}
           />
         );
 

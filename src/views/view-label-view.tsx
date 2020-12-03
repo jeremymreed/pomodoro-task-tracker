@@ -24,6 +24,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import CancelIcon from "@material-ui/icons/Cancel";
 import Label from "../data-models/label";
+import StateVars from "../enums/state-vars-enum";
 
 const styles = () => ({
   name: {
@@ -44,7 +45,11 @@ const styles = () => ({
 
 interface Props extends WithStyles<typeof styles> {
   label: Label;
-  closeViewLabelView: () => void;
+  appStateUpdate: (
+    newState: StateVars,
+    taskId: string,
+    labelId: string
+  ) => void;
   getLabelById: (labelId: string) => Label;
 }
 
@@ -78,11 +83,11 @@ class ViewLabelView extends React.Component<Props, State> {
   }
 
   exit(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    const { closeViewLabelView } = this.props;
+    const { appStateUpdate } = this.props;
 
     event.preventDefault();
 
-    closeViewLabelView();
+    appStateUpdate(StateVars.MainViewState, "", "");
   }
 
   render() {

@@ -32,6 +32,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
 import Label from "../data-models/label";
+import StateVars from "../enums/state-vars-enum";
 
 const styles = createStyles({
   divTable: {
@@ -64,9 +65,11 @@ const styles = createStyles({
 
 interface Props extends WithStyles<typeof styles> {
   labels: Array<Label>;
-  openViewLabelView: (labelId: string) => void;
-  openEditLabelView: (labelId: string) => void;
-  openAddLabelView: () => void;
+  appStateUpdate: (
+    newState: StateVars,
+    taskId: string,
+    labelId: string
+  ) => void;
   removeLabel: (labelId: string) => void;
 }
 
@@ -77,22 +80,22 @@ function LabelList(props: Props) {
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     labelId: string
   ) => {
-    const { openViewLabelView } = props;
+    const { appStateUpdate } = props;
 
     event.preventDefault();
 
-    openViewLabelView(labelId);
+    appStateUpdate(StateVars.ViewLabelState, "", labelId);
   };
 
   const editLabel = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     labelId: string
   ) => {
-    const { openEditLabelView } = props;
+    const { appStateUpdate } = props;
 
     event.preventDefault();
 
-    openEditLabelView(labelId);
+    appStateUpdate(StateVars.EditLabelState, "", labelId);
   };
 
   const handleRemoveLabel = (
@@ -106,11 +109,11 @@ function LabelList(props: Props) {
   };
 
   const addLabel = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    const { openAddLabelView } = props;
+    const { appStateUpdate } = props;
 
     event.preventDefault();
 
-    openAddLabelView();
+    appStateUpdate(StateVars.AddNewLabelState, "", "");
   };
 
   const getEmptyLabelList = () => {
