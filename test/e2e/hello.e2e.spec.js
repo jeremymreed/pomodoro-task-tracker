@@ -1,7 +1,7 @@
 /* Mocha docs discourage the use of arrow functions */
 /* eslint-disable func-names */
 import { Application } from "spectron";
-import assert from "assert";
+import { assert } from "chai";
 import electronPath from "electron";
 import path from "path";
 
@@ -33,7 +33,7 @@ describe("Application launch", function () {
 
       // The following line tells spectron to look and use the main.js file
       // and the package.json located 1 level above.
-      args: [path.join(__dirname, "..")],
+      args: [path.join(__dirname, "../..")],
     });
     return this.app.start();
   });
