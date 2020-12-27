@@ -1,3 +1,5 @@
+/* Mocha docs discourage the use of arrow functions */
+/* eslint-disable func-names */
 import { Application } from "spectron";
 import assert from "assert";
 import electronPath from "electron";
