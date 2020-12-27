@@ -42,6 +42,8 @@ describe("Application launch", function () {
     if (this.app && this.app.isRunning()) {
       return this.app.stop();
     }
+
+    return null;
   });
 
   describe("basic tests", function () {
