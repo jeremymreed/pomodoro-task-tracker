@@ -21,7 +21,7 @@
     "setup-dev": "node build/scripts/setup.js pomodoro-task-tracker-dev",
     "seed": "node build/scripts/seed.js",
     "seed-dev": "node build/scripts/seed.js pomodoro-task-tracker-dev",
-    "test": "mocha -r esm tests/**/*.spec.js",
+    "test": "mocha -r esm test/**/*.spec.js",
     "clean": "rm -rf dist/ build/",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
