@@ -26,7 +26,7 @@ describe('Application launch', function () {
 
       // The following line tells spectron to look and use the main.js file
       // and the package.json located 1 level above.
-      // args: [path.join(__dirname, "../build")],
+      args: [path.join(__dirname, "..")],
     });
     return this.app.start();
   });
@@ -37,11 +37,19 @@ describe('Application launch', function () {
     }
   });
 
-  it('shows an initial window', function () {
-    return this.app.client.getWindowCount().then(function (count) {
-      assert.equal(count, 1);
-      // Please note that getWindowCount() will return 2 if `dev tools` are opened.
-      // assert.equal(count, 2)
+  describe("basic tests", function () {
+    it('shows an initial window', function () {
+      return this.app.client.getWindowCount().then(function (count) {
+        assert.equal(count, 1);
+        // Please note that getWindowCount() will return 2 if `dev tools` are opened.
+        // assert.equal(count, 2)
+      });
+    });
+
+    it("shows expected title", function () {
+      return this.app.client.getTitle().then(function (title) {
+        assert.strictEqual(title, "Pomodoro Task Tracker");
+      });
     });
   });
 });
