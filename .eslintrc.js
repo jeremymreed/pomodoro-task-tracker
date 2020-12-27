@@ -3,6 +3,7 @@ module.exports = {
     browser: true,
     es2020: true,
     node: true,
+    mocha: true,
   },
   extends: [
     "plugin:react/recommended",
@@ -18,7 +19,7 @@ module.exports = {
     ecmaVersion: 11,
     sourceType: "module",
   },
-  plugins: ["react", "@typescript-eslint", "prettier"],
+  plugins: ["react", "mocha", "@typescript-eslint", "prettier"],
   settings: {
     "import/core-modules": ["electron"],
     "import/resolver": {
