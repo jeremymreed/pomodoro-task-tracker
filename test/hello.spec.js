@@ -1,9 +1,14 @@
-const Application = require('spectron').Application;
-const assert = require('assert');
-const electronPath = require('electron'); // Require Electron from the binaries included in node_modules.
-const path = require('path');
+import { Application } from "spectron";
+import assert from "assert";
+import electronPath from "electron";
+import path from "path";
 
-describe('Application launch', function () {
+// const Application = require("spectron").Application;
+// const assert = require("assert");
+// const electronPath = require("electron"); // Require Electron from the binaries included in node_modules.
+// const path = require("path");
+
+describe("Application launch", function () {
   this.timeout(10000);
 
   beforeEach(function () {
@@ -38,7 +43,7 @@ describe('Application launch', function () {
   });
 
   describe("basic tests", function () {
-    it('shows an initial window', function () {
+    it("shows an initial window", function () {
       return this.app.client.getWindowCount().then(function (count) {
         assert.equal(count, 1);
         // Please note that getWindowCount() will return 2 if `dev tools` are opened.
