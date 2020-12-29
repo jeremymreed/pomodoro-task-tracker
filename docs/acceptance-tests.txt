@@ -1,3 +1,7 @@
+Setup:
+1. Dump test database.
+2. Run setup.  (setup indexes, seed test data)
+
 
 Tasks:
 1. View Task list.
@@ -51,3 +55,6 @@ Menu:
 24. Clicking Help->About should bring up a dialog.  Verify that the dialog has the expected message, and version number.
 25. Clicking Help->Toggle Dev Tools should bring up developer tools.
 26. Clicking Help->Toggle PouchDB debug should turn on/off PouchDB debug mode.  Verify by looking for PouchDB debug info in dev tools console. 
+
+Teardown:
+1. Delete test database.
