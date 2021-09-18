@@ -1,6 +1,6 @@
 {
   "name": "pomodoro-task-tracker",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "description": "Task Tracking using the Pomodoro technique",
   "private": true,
   "repository": {
@@ -21,7 +21,7 @@
     "setup-dev": "node build/scripts/setup.js pomodoro-task-tracker-dev",
     "seed": "node build/scripts/seed.js",
     "seed-dev": "node build/scripts/seed.js pomodoro-task-tracker-dev",
-    "test": "mocha -r esm tests/**/*.spec.js",
+    "test": "mocha -r esm test/**/*.spec.js",
     "clean": "rm -rf dist/ build/",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
@@ -54,7 +54,7 @@
     }
   },
   "devDependencies": {
-    "@babel/cli": "^7.11.6",
+    "@babel/cli": "^7.15.4",
     "@babel/core": "^7.11.6",
     "@babel/plugin-transform-runtime": "^7.11.5",
     "@babel/preset-env": "^7.11.5",
@@ -67,19 +67,21 @@
     "@typescript-eslint/eslint-plugin": "^4.2.0",
     "@typescript-eslint/parser": "^4.2.0",
     "chai": "^4.2.0",
-    "electron": "^9.3.0",
-    "electron-builder": "^22.8.0",
+    "electron": "^9.4.4",
+    "electron-builder": "^22.14.2",
     "eslint": "^7.9.0",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-mocha": "^8.0.0",
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.21.0",
     "eslint-plugin-react-hooks": "^4.1.2",
     "esm": "^3.2.25",
-    "mocha": "^8.1.1",
+    "mocha": "^8.2.1",
     "prettier": "2.1.2",
+    "spectron": "^11.1.0",
     "typescript": "^4.0.2"
   },
   "dependencies": {
