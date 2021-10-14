@@ -2,14 +2,14 @@
 
 ### Table of Contents
 
-1. [Purpose](https://gitlab.com/jeremymreed/pomodoro-task-tracker#purpose)
-2. [Usage](https://gitlab.com/jeremymreed/pomodoro-task-tracker#usage)
-3. [Config](https://gitlab.com/jeremymreed/pomodoro-task-tracker#license)
-4. [Debugging](https://gitlab.com/jeremymreed/pomodoro-task-tracker#debugging)
-5. [License](https://gitlab.com/jeremymreed/pomodoro-task-tracker#license)
+1. [Purpose](https://github.com/jeremymreed/pomodoro-task-tracker#purpose)
+2. [Usage](https://github.com/jeremymreed/pomodoro-task-tracker#usage)
+3. [Config](https://github.com/jeremymreed/pomodoro-task-tracker#license)
+4. [Debugging](https://github.com/jeremymreed/pomodoro-task-tracker#debugging)
+5. [License](https://github.com/jeremymreed/pomodoro-task-tracker#license)
 
 Screenshot:
-[![pomdoro-task-tracker-screenshot](images/task-list-with-task-done.png "Completed Task")](https://gitlab.com/jeremymreed/pomodoro-task-tracker/-/blob/master/images/task-list-with-task-done.png)
+[![pomdoro-task-tracker-screenshot](images/task-list-with-task-done.png "Completed Task")](https://github.com/jeremymreed/pomodoro-task-tracker/-/blob/master/images/task-list-with-task-done.png)
 
 # Purpose:
 
