@@ -8,9 +8,6 @@
 4. [Debugging](https://github.com/jeremymreed/pomodoro-task-tracker#debugging)
 5. [License](https://github.com/jeremymreed/pomodoro-task-tracker#license)
 
-<style type="text/css">
-  h1.{color: 'red';}
-</style>
 <h1>UPDATE: This repository is no longer being updated or maintained.</h1>
 
 Screenshot:
