@@ -3,10 +3,11 @@
 ### Table of Contents
 
 1. [Purpose](https://github.com/jeremymreed/pomodoro-task-tracker#purpose)
-2. [Usage](https://github.com/jeremymreed/pomodoro-task-tracker#usage)
-3. [Config](https://github.com/jeremymreed/pomodoro-task-tracker#license)
-4. [Debugging](https://github.com/jeremymreed/pomodoro-task-tracker#debugging)
-5. [License](https://github.com/jeremymreed/pomodoro-task-tracker#license)
+2. [Requirements](https://github.com/jeremymreed/pomodoro-task-tracker#requirements)
+3. [Usage](https://github.com/jeremymreed/pomodoro-task-tracker#usage)
+4. [Config](https://github.com/jeremymreed/pomodoro-task-tracker#license)
+5. [Debugging](https://github.com/jeremymreed/pomodoro-task-tracker#debugging)
+6. [License](https://github.com/jeremymreed/pomodoro-task-tracker#license)
 
 <h1>UPDATE: This repository is no longer being updated or maintained.</h1>
 
@@ -30,7 +31,14 @@ Strobing Green: It's time to take a rest.
 
 Warning: This software is very much alpha quality. Do not use this to track tasks in a production environment.
 
-I have only tested this software on Linux. (I use Manjaro KDE)
+I have only tested this software on Linux.
+
+# Requirements:
+
+This software has the following requirements:
+
+1. Xorg environment.  This software will not work on Wayland.
+2. nodejs v10.24.1 runtime.
 
 # Usage:
 
