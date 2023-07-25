@@ -21,7 +21,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import { BrowserWindow, app, ipcMain, Notification } from "electron";
 import path from "path";
 import electronSettings from "electron-settings";
-import LuxaforUtils from "./luxafor/luxafor-utils";
 import MenuGenerator from "./menu-generator";
 import NotificationOptions from "./utils/notification-options";
 
@@ -35,8 +34,6 @@ if (process.argv.length === 3) {
 const notificationOptions = new NotificationOptions();
 
 let mainWindow = null;
-const luxaforUtils = new LuxaforUtils();
-luxaforUtils.init();
 
 // TODO: This should live in a config module.
 // If there are no settings, set our initial setting state.
@@ -76,8 +73,6 @@ function createWindow() {
 // Passed to menu, ensure we clear luxafor flag properly when quitting.
 // window-all-closed event handler doesn't seem to fire when the user clicks quit in the menu, not sure why.
 function processQuit() {
-  luxaforUtils.color(0xff, 0, 0, 0);
-
   app.quit();
 }
 
@@ -93,9 +88,6 @@ app.on("browser-window-created", (event, window) => {
 // There, it's common for applications and their menu bar to stay active until the user quits
 // explictly with Cmd + Q.
 app.on("window-all-closed", () => {
-  // Be sure we've turned the luxafor off.
-  luxaforUtils.color(0xff, 0, 0, 0);
-
   if (process.platform !== "darwin") {
     app.quit();
   }
@@ -117,23 +109,23 @@ ipcMain.on("getDatabaseName", (event) => {
 });
 
 ipcMain.on("setLuxaforRest", () => {
-  luxaforUtils.color(0xff, 0, 255, 0);
+  // luxaforUtils.color(0xff, 0, 255, 0);
 });
 
 ipcMain.on("setLuxaforWork", () => {
-  luxaforUtils.color(0xff, 255, 0, 0);
+  // luxaforUtils.color(0xff, 255, 0, 0);
 });
 
 ipcMain.on("setLuxaforOff", () => {
-  luxaforUtils.color(0xff, 0, 0, 0);
+  // luxaforUtils.color(0xff, 0, 0, 0);
 });
 
 ipcMain.on("setLuxaforWorkStrobe", () => {
-  luxaforUtils.strobe(0xff, 255, 0, 0, 5, 0);
+  // luxaforUtils.strobe(0xff, 255, 0, 0, 5, 0);
 });
 
 ipcMain.on("setLuxaforRestStrobe", () => {
-  luxaforUtils.strobe(0xff, 0, 255, 0, 5, 0);
+  // luxaforUtils.strobe(0xff, 0, 255, 0, 5, 0);
 });
 
 ipcMain.on("showNotification", (event, notificationName) => {
