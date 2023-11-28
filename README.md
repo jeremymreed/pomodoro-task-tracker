@@ -39,7 +39,7 @@ Clone this repository. Go into the pomodoro-task-tracker directory.
 Run:
 
 ```
-npm ci
+npm install
 ```
 
 PRODUCTION:
