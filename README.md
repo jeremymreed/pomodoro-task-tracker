@@ -9,7 +9,7 @@
 5. [Debugging](https://github.com/jeremymreed/pomodoro-task-tracker#debugging)
 6. [License](https://github.com/jeremymreed/pomodoro-task-tracker#license)
 
-<h1>UPDATE: This repository is no longer being updated or maintained.</h1>
+<h1>This repository is not being maintained.</h1>
 
 Screenshot:
 [![pomdoro-task-tracker-screenshot](images/task-list-with-task-done.png "Completed Task")](https://github.com/jeremymreed/pomodoro-task-tracker/-/blob/master/images/task-list-with-task-done.png)
@@ -17,17 +17,6 @@ Screenshot:
 # Purpose:
 
 This is an electron app to track tasks, using the pomodoro technique.
-
-This software supports the [Luxafor Flag](https://luxafor.com). If the Luxafor flag hardware is set up and connected,
-the software will use the flag to display the current state of the pomodoro timer.
-It will light up as follows:
-Steady Red: Working.
-Steady Green: Resting.
-Strobing Red: It's time to start working.
-Strobing Green: It's time to take a rest.
-
-[Setting up a Luxafor Flag](https://luxafor.helpscoutdocs.com/article/6-luxafor-flag-set-up-and-use)
-[Linux instructions](https://github.com/jonathonball/fabufor)
 
 Warning: This software is very much alpha quality. Do not use this to track tasks in a production environment.
 
@@ -37,19 +26,20 @@ I have only tested this software on Linux.
 
 This software has the following requirements:
 
-1. Xorg environment.  This software will not work on Wayland.
-2. nodejs v10.24.1 runtime.
+1. nodejs v14.21.3 runtime.  This is the current lts/fermium release.
 
 # Usage:
 
 You will need to have [nodejs and npm](https://nodejs.org/en/) installed on your machine to use this software.
+
+I use [node version manager](https://github.com/nvm-sh/nvm) to manage my nodejs versions.
 
 Clone this repository. Go into the pomodoro-task-tracker directory.
 
 Run:
 
 ```
-npm ci && npm run rebuild-usb
+npm ci
 ```
 
 PRODUCTION:
