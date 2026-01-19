@@ -21,7 +21,7 @@ This is an electron app to track tasks, using the pomodoro technique.
 
 Warning: This software is very much alpha quality. Do not use this to track tasks in a production environment.
 
-I have only tested this software on Linux.
+I have only tested this software on Linux and MacOS.
 
 # Requirements:
 
