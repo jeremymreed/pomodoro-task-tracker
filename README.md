@@ -6,8 +6,9 @@
 2. [Requirements](https://github.com/jeremymreed/pomodoro-task-tracker#requirements)
 3. [Usage](https://github.com/jeremymreed/pomodoro-task-tracker#usage)
 4. [Config](https://github.com/jeremymreed/pomodoro-task-tracker#license)
-5. [Debugging](https://github.com/jeremymreed/pomodoro-task-tracker#debugging)
-6. [License](https://github.com/jeremymreed/pomodoro-task-tracker#license)
+5. [Files](https://github.com/jeremymreed/pomodoro-task-tracker#files)
+6. [Debugging](https://github.com/jeremymreed/pomodoro-task-tracker#debugging)
+7. [License](https://github.com/jeremymreed/pomodoro-task-tracker#license)
 
 <h1>This repository is not being maintained.</h1>
 
@@ -98,8 +99,15 @@ npm start-dev
 
 This program has a settings editor that can be accessed from the main screen.
 
-On Linux: The settings are stored in ~/config/pomdoro-task-tracker/settings.json
+On Linux: The settings are stored in ~/.config/pomdoro-task-tracker/settings.json
 On MacOS: The settings are stored in ~/Library/Application Support/pomodoro-task-tracker/settings.json
+
+# Files:
+For the config file, see the above section.
+
+The database is PouchDB, and is stored locally, on disk.
+On Linux:  The database is stored in ~/.config/pomdoro-task-tracker/
+On MacOS:  The database is stored in ~/Library/Preferences/pomodoro-task-tracker/
 
 # Debugging:
 
