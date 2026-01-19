@@ -5,7 +5,7 @@
 1. [Purpose](https://github.com/jeremymreed/pomodoro-task-tracker#purpose)
 2. [Requirements](https://github.com/jeremymreed/pomodoro-task-tracker#requirements)
 3. [Usage](https://github.com/jeremymreed/pomodoro-task-tracker#usage)
-4. [Config](https://github.com/jeremymreed/pomodoro-task-tracker#license)
+4. [Config](https://github.com/jeremymreed/pomodoro-task-tracker#config)
 5. [Files](https://github.com/jeremymreed/pomodoro-task-tracker#files)
 6. [Debugging](https://github.com/jeremymreed/pomodoro-task-tracker#debugging)
 7. [License](https://github.com/jeremymreed/pomodoro-task-tracker#license)
