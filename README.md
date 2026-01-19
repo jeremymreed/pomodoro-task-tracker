@@ -98,7 +98,8 @@ npm start-dev
 
 This program has a settings editor that can be accessed from the main screen.
 
-On Linux: The settings are stored in ~./config/pomdoro-task-tracker/settings.json
+On Linux: The settings are stored in ~/config/pomdoro-task-tracker/settings.json
+On MacOS: The settings are stored in ~/Library/Application Support/pomodoro-task-tracker/settings.json
 
 # Debugging:
 
